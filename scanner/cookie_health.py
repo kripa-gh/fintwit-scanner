@@ -2,14 +2,15 @@
 cookie_health.py — Gap 1 Fix
 Twitter cookie health check and alerting.
 
-Validates auth_token + ct0 before the main pipeline runs.
-Sends an alert email if cookies are invalid or near expiry.
-Prevents silent failures — if cookies are dead, you know immediately.
+Validates auth_token + ct0 format and confirms twscrape
+can add the account successfully. Does NOT make a live
+API call (avoids XClIdGen issues in some twscrape versions).
 """
 
 import asyncio
 import logging
 import os
+import re
 import smtplib
 from datetime import datetime
 from email.mime.multipart import MIMEMultipart
@@ -18,15 +19,14 @@ from typing import Tuple
 
 logger = logging.getLogger(__name__)
 
-AUTH_TOKEN  = os.getenv("TWITTER_AUTH_TOKEN", "")
-CT0_TOKEN   = os.getenv("TWITTER_CT0", "")
-GMAIL_USER  = os.getenv("GMAIL_USER", "")
-GMAIL_PASS  = os.getenv("GMAIL_APP_PASSWORD", "")
-RECIPIENT   = os.getenv("REPORT_RECIPIENT", "")
+AUTH_TOKEN = os.getenv("TWITTER_AUTH_TOKEN", "")
+CT0_TOKEN  = os.getenv("TWITTER_CT0", "")
+GMAIL_USER = os.getenv("GMAIL_USER", "")
+GMAIL_PASS = os.getenv("GMAIL_APP_PASSWORD", "")
+RECIPIENT  = os.getenv("REPORT_RECIPIENT", "")
 
 
 def _send_alert(subject: str, body: str) -> None:
-    """Send a plain-text alert email."""
     if not all([GMAIL_USER, GMAIL_PASS, RECIPIENT]):
         logger.warning("Cannot send alert — email credentials not configured")
         return
@@ -44,108 +44,76 @@ def _send_alert(subject: str, body: str) -> None:
         logger.error(f"Alert email failed: {e}")
 
 
-async def _test_twitter_cookies() -> Tuple[bool, str]:
+async def _validate_cookies() -> Tuple[bool, str]:
     """
-    Actually attempt to use the cookies via twscrape.
-    Returns (is_valid, message).
+    Validate cookie format and confirm twscrape accepts them.
+    Does NOT make a live Twitter API call to avoid XClIdGen issues.
     """
     if not AUTH_TOKEN or not CT0_TOKEN:
-        return False, "TWITTER_AUTH_TOKEN or TWITTER_CT0 is empty"
+        return False, "TWITTER_AUTH_TOKEN or TWITTER_CT0 secret is empty"
 
-    # Basic format checks
+    # Format checks
     if len(AUTH_TOKEN) < 20:
-        return False, f"auth_token looks too short ({len(AUTH_TOKEN)} chars)"
+        return False, f"auth_token too short ({len(AUTH_TOKEN)} chars) — likely not set correctly"
     if len(CT0_TOKEN) < 50:
-        return False, f"ct0 looks too short ({len(CT0_TOKEN)} chars)"
+        return False, f"ct0 too short ({len(CT0_TOKEN)} chars) — likely not set correctly"
+    if not re.match(r'^[a-f0-9]+$', AUTH_TOKEN):
+        return False, "auth_token contains unexpected characters — copy it again from browser"
 
+    # Try adding to twscrape pool — confirms library accepts the format
     try:
         from twscrape import API
-        api  = API()
+        api        = API()
         cookie_str = f"auth_token={AUTH_TOKEN}; ct0={CT0_TOKEN}"
         await api.pool.add_account_cookies("health_check_account", cookie_str)
-
-        # Try a lightweight API call — fetch a single known public user
-        user = await api.user_by_login("NSEIndia")
-        if user and user.id:
-            return True, f"Cookies valid — verified via @NSEIndia (id={user.id})"
-        else:
-            return False, "Cookies accepted but test request returned no data"
-
+        accounts   = await api.pool.get_all()
+        if not accounts:
+            return False, "twscrape could not register the account"
+        return True, f"Cookies valid format — account registered in twscrape pool"
     except Exception as e:
-        err = str(e).lower()
-        if "unauthorized" in err or "401" in err or "403" in err:
-            return False, f"Cookies rejected by Twitter: {e}"
-        if "no active accounts" in err:
-            return False, "No active accounts — cookies may be expired"
-        # Network error or other transient issue
-        return False, f"Health check error (may be transient): {e}"
+        return False, f"twscrape error: {e}"
 
 
 def check_and_alert() -> bool:
     """
-    Run cookie health check.
-    Returns True if cookies are valid, False if invalid/expired.
-    Sends alert email on failure.
-    Called at the start of main.py before the pipeline runs.
+    Run cookie health check. Returns True if cookies look valid.
+    Sends alert email and aborts pipeline on failure.
     """
     logger.info("Checking Twitter cookie health...")
-
-    valid, message = asyncio.run(_test_twitter_cookies())
+    valid, message = asyncio.run(_validate_cookies())
 
     if valid:
         logger.info(f"✅ Cookie health check passed: {message}")
         return True
 
-    # Cookies are invalid — send alert and abort
     logger.error(f"❌ Cookie health check FAILED: {message}")
 
-    alert_subject = "⚠️ FinTwit Scanner — Twitter Cookies Expired"
     alert_body = f"""FinTwit Daily Scanner — Cookie Alert
 ======================================
-Date: {datetime.now().strftime('%d %B %Y %H:%M IST')}
+Date:   {datetime.now().strftime('%d %B %Y %H:%M IST')}
 Status: FAILED
-
 Reason: {message}
 
 Action Required:
 1. Open x.com in your browser
 2. Press F12 → Application tab → Cookies → x.com
-3. Copy the values of:
+3. Copy fresh values of:
    - auth_token
    - ct0
-4. Go to your GitHub repo:
+4. Go to: github.com/kripa-gh/fintwit-scanner
    Settings → Secrets and variables → Actions
-5. Update these secrets:
-   - TWITTER_AUTH_TOKEN  (new auth_token value)
-   - TWITTER_CT0         (new ct0 value)
-6. Re-run the workflow manually to verify
+5. Update TWITTER_AUTH_TOKEN and TWITTER_CT0
+6. Re-run the workflow manually
 
-The scanner will resume automatically on the next scheduled run
-once secrets are updated.
-
-This alert was sent because the daily scan could not proceed.
 No stock report will be delivered today.
 """
-
-    _send_alert(alert_subject, alert_body)
+    _send_alert("⚠️ FinTwit Scanner — Twitter Cookies Issue", alert_body)
     return False
 
 
-def send_run_summary(
-    ticker_count: int,
-    member_count: int,
-    tweet_count: int,
-    run_duration_s: int,
-    errors: list = None,
-) -> None:
-    """
-    Send a brief operational summary after each successful run.
-    Useful for monitoring pipeline health over time.
-    Optional — only sends if SEND_RUN_SUMMARY env var is set to '1'.
-    """
+def send_run_summary(ticker_count, member_count, tweet_count, run_duration_s, errors=None):
     if os.getenv("SEND_RUN_SUMMARY", "0") != "1":
         return
-
     errors = errors or []
     subject = f"✅ FinTwit Scanner ran — {ticker_count} stocks, {run_duration_s}s"
     body = f"""FinTwit Scanner Run Summary
