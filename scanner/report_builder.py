@@ -90,9 +90,8 @@ def _correlation_panel(correlations):
     content = ""
     for g in groups[:3]:
         stocks = " + ".join(g.get("stocks",[]))
-        risk_div = f'<div style="font-size:10px;color:#f5a623;margin-top:3px">Risk: {g.get("risk","")}</div>' if g.get("risk") else ""
-        content += f'<div style="background:#0d1117;border:1px solid {BORDER};padding:8px 12px;margin-bottom:6px"><span style="font-family:monospace;font-size:11px;color:#58a6ff">{stocks}</span><span style="font-size:11px;color:{MUTED};margin-left:8px">— {g.get("reason","")}</span>{risk_div}</div>'
-        if note: content += f'<p style="font-size:11px;color:{MUTED};margin-top:8px">{note}</p>'
+        content += f'<div style="background:#0d1117;border:1px solid {BORDER};padding:8px 12px;margin-bottom:6px"><span style="font-family:monospace;font-size:11px;color:#58a6ff">{stocks}</span><span style="font-size:11px;color:{MUTED};margin-left:8px">— {g.get("reason","")}</span>{"<div style='font-size:10px;color:#f5a623;margin-top:3px'>Risk: " + g.get("risk","") + "</div>" if g.get("risk") else ""}</div>'
+    if note: content += f'<p style="font-size:11px;color:{MUTED};margin-top:8px">{note}</p>'
     return _section("🔗 Correlation & Concentration", content)
 
 def _stock_card(r, news_map, history):
