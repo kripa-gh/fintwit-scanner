@@ -295,7 +295,8 @@ def build_report(
     if weekly_debrief:
         gc = {"A":"#00c853","B":"#69f0ae","C":"#ffd600","D":"#ff1744"}.get(weekly_debrief.get("overall_grade","C"),"#8b949e")
         obs_html = "".join([f'<div style="font-size:11px;color:{MUTED};margin-bottom:3px">→ {o}</div>' for o in weekly_debrief.get("pattern_observations",[])])
-        debrief_content = f'<div style="background:{SURFACE};border:1px solid {BORDER};padding:16px 18px"><div style="display:flex;justify-content:space-between;margin-bottom:10px"><span style="font-size:13px;color:#e6edf3">{weekly_debrief.get("week_summary","")}</span><span style="font-family:monospace;font-size:18px;font-weight:600;color:{gc}">Grade: {weekly_debrief.get("overall_grade","?")}</span></div>{obs_html}{"<div style='font-size:11px;color:#f5a623;margin-top:8px'>💡 " + weekly_debrief.get("model_adjustment_suggestion","") + "</div>" if weekly_debrief.get("model_adjustment_suggestion") else ""}</div>'
+        adj_div = ("<div style='font-size:11px;color:#f5a623;margin-top:8px'>💡 " + weekly_debrief.get("model_adjustment_suggestion","") + "</div>") if weekly_debrief.get("model_adjustment_suggestion") else ""
+        debrief_content = f'<div style="background:{SURFACE};border:1px solid {BORDER};padding:16px 18px"><div style="display:flex;justify-content:space-between;margin-bottom:10px"><span style="font-size:13px;color:#e6edf3">{weekly_debrief.get("week_summary","")}</span><span style="font-family:monospace;font-size:18px;font-weight:600;color:{gc}">Grade: {weekly_debrief.get("overall_grade","?")}</span></div>{obs_html}{adj_div}</div>'
         html += _section("📊 Weekly Performance Debrief", debrief_content)
 
     html += _anomaly_panel(anomalies)
