@@ -1,0 +1,71 @@
+name: FinTwit Daily Stock Scanner v2
+
+on:
+  schedule:
+    - cron: "30 3 * * 1-5"   # 9:00 AM IST = 03:30 UTC, Mon–Fri
+  workflow_dispatch:
+    inputs:
+      lookback_hours:
+        description: "Tweet lookback window (hours)"
+        default: "24"
+      min_mentions:
+        description: "Min ticker mentions to include"
+        default: "1"
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+
+    # Needed to commit history back to repo (Gap 8)
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run FinTwit scanner
+        env:
+          TWITTER_LIST_ID:      ${{ secrets.TWITTER_LIST_ID }}
+          TWITTER_AUTH_TOKEN:   ${{ secrets.TWITTER_AUTH_TOKEN }}
+          TWITTER_CT0:          ${{ secrets.TWITTER_CT0 }}
+          TWEET_LOOKBACK_HOURS: ${{ github.event.inputs.lookback_hours || '24' }}
+          MAX_TWEETS:           "1000"
+          MIN_MENTIONS:         ${{ github.event.inputs.min_mentions || '1' }}
+          NEWS_LOOKBACK_DAYS:   "3"
+          GMAIL_USER:           ${{ secrets.GMAIL_USER }}
+          GMAIL_APP_PASSWORD:   ${{ secrets.GMAIL_APP_PASSWORD }}
+          REPORT_RECIPIENT:     ${{ secrets.REPORT_RECIPIENT }}
+          SEND_RUN_SUMMARY:     "0"    # set to "1" to also get a run-stats email
+        run: python main.py
+
+      # Gap 8: Commit updated history + caches back to repo
+      - name: Commit data files (history + symbol cache)
+        if: always()
+        run: |
+          git config user.name  "FinTwit Scanner Bot"
+          git config user.email "scanner-bot@github-actions"
+          git add data/run_history.json data/nse_symbols.json data/nse_holidays.json || true
+          git diff --staged --quiet || git commit -m "chore: update scan data [$(date -u '+%Y-%m-%d %H:%M UTC')]"
+          git push || true   # non-fatal if nothing to push
+
+      - name: Upload logs on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: scan-failure-${{ github.run_number }}
+          path: "*.log"
+          retention-days: 7
+          if-no-files-found: ignore
