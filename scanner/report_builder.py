@@ -164,7 +164,8 @@ def _stock_card(r, news_map, history):
     chart_html = ""
     if chart:
         flags = " | ".join(chart.get("caution_flags",[]))
-        chart_html = f'<div style="background:#0a0e14;border-left:3px solid #7c3aed;padding:8px 12px;margin-bottom:10px;font-size:11px"><span style="color:#a78bfa;font-family:monospace;font-size:9px;text-transform:uppercase">📈 Chart Analysis</span><br><span style="color:{TEXT}">Pattern: {chart.get("pattern","?")} | Trend: {chart.get("trend","?")} | Quality: {chart.get("setup_quality","?")}</span><br><span style="color:{MUTED}">{chart.get("trader_likely_pointing_to","")}</span>{"<br><span style='color:#f5a623'>⚠ " + flags + "</span>" if flags else ""}</div>'
+        flags_html = ("<br><span style='color:#f5a623'>⚠ " + flags + "</span>") if flags else ""
+        chart_html = f'<div style="background:#0a0e14;border-left:3px solid #7c3aed;padding:8px 12px;margin-bottom:10px;font-size:11px"><span style="color:#a78bfa;font-family:monospace;font-size:9px;text-transform:uppercase">📈 Chart Analysis</span><br><span style="color:{TEXT}">Pattern: {chart.get("pattern","?")} | Trend: {chart.get("trend","?")} | Quality: {chart.get("setup_quality","?")}</span><br><span style="color:{MUTED}">{chart.get("trader_likely_pointing_to","")}</span>{flags_html}</div>'
 
     # Raw news
     news = news_map.get(ticker,{})
