@@ -50,6 +50,22 @@
       "last_seen": "2026-06-23",
       "last_recommendation": "WATCH",
       "last_score": 9
+    },
+    "GRAPHITE": {
+      "first_seen": "2026-06-23",
+      "appearances": [
+        {
+          "date": "2026-06-23",
+          "recommendation": "AVOID",
+          "score": -7,
+          "price": 628.75,
+          "rsi": 33.4
+        }
+      ],
+      "consecutive_days": 1,
+      "last_seen": "2026-06-23",
+      "last_recommendation": "AVOID",
+      "last_score": -7
     }
   }
 }

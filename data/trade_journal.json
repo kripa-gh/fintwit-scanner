@@ -39,8 +39,21 @@
       "acted_on": null,
       "outcome": null,
       "return_pct": null
+    },
+    {
+      "date": "2026-06-23",
+      "ticker": "GRAPHITE",
+      "recommendation": "AVOID",
+      "score": -7,
+      "entry_zone": "\u20b9611\u2013\u20b9629",
+      "stop": 610.83,
+      "target": 682.51,
+      "setup_type": "pullback",
+      "acted_on": null,
+      "outcome": null,
+      "return_pct": null
     }
   ],
   "stats": {},
-  "last_updated": "2026-06-23T07:58:27.146115"
+  "last_updated": "2026-06-23T09:24:19.015159"
 }
