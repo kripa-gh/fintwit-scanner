@@ -22,7 +22,7 @@ from scanner.claude_client import call_json, call
 
 logger = logging.getLogger(__name__)
 
-BATCH_SIZE = 20   # tweets per Claude call (keeps prompt manageable)
+BATCH_SIZE = 12   # tweets per Claude call — smaller batches = fewer truncated responses = less wasted spend
 
 
 # ═══════════════════════════════════════════════════════════════════════════════

@@ -23,7 +23,7 @@ from scanner.claude_client import call_json
 logger = logging.getLogger(__name__)
 
 TRADER_DB_PATH = Path(__file__).parent.parent / "data" / "trader_intelligence.json"
-RECLASS_DAYS   = 14   # reclassify accounts every 14 days
+RECLASS_DAYS   = 30   # reclassify accounts every 30 days — classifications are stable
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -129,6 +129,11 @@ def classify_all_accounts(
         if cached:
             last = cached.get("last_classified", "2000-01-01")
             if (date.today() - date.fromisoformat(last)).days < RECLASS_DAYS:
+                continue
+            # Also skip if no tweets this run — no new data to reclassify from
+            if username not in tweets_by_user:
+                # Refresh timestamp so we don't re-check daily
+                cached["last_classified"] = date.today().isoformat()
                 continue
         to_classify.append(member)
 

@@ -416,10 +416,29 @@ def enrich_all_stocks(
     total = len(analysis_results)
     logger.info(f"Enriching {total} stocks with Claude intelligence...")
 
+    # Skip full enrichment for stocks with weak signal — saves ~2 Claude calls per stock
+    # A stock qualifies for full enrichment if it has 2+ mentions OR meaningful tweet sentiment
+    def _has_signal(r: Dict) -> bool:
+        mentions = r.get("mention_count", 0) or r.get("mentions", 0)
+        ts = tweet_signals.get(r["ticker"], {})
+        sentiment_score = abs(ts.get("sentiment_score", 0) or 0)
+        ta_score = r.get("score", 0)
+        return mentions >= 2 or sentiment_score >= 1.0 or ta_score >= 14
+
+    to_enrich    = [r for r in analysis_results if _has_signal(r)]
+    low_signal   = [r for r in analysis_results if not _has_signal(r)]
+
+    if low_signal:
+        logger.info(f"  Skipping full enrichment for {len(low_signal)} low-signal stocks: {[r['ticker'] for r in low_signal]}")
+        for r in low_signal:
+            r["news_summary"] = {}
+            r["narration"]    = {}
+            r["tweet_signal"] = tweet_signals.get(r["ticker"], {})
+
     enriched = []
-    for i, r in enumerate(analysis_results):
+    for i, r in enumerate(to_enrich):
         ticker = r["ticker"]
-        logger.info(f"  [{i+1}/{total}] Enriching {ticker}...")
+        logger.info(f"  [{i+1}/{len(to_enrich)}] Enriching {ticker}...")
 
         news   = news_map.get(ticker, {})
         ts     = tweet_signals.get(ticker, {})
@@ -444,14 +463,15 @@ def enrich_all_stocks(
 
     # 3. Correlation detection (once for all stocks)
     logger.info("  Running correlation analysis...")
-    correlations = detect_correlations(enriched)
+    all_results = enriched + low_signal
+    correlations = detect_correlations(all_results)
 
     # 4. Macro context
     logger.info("  Generating macro context...")
-    macro = generate_macro_context(market_env, enriched)
+    macro = generate_macro_context(market_env, all_results)
 
-    logger.info(f"✅ Stock intelligence complete: {len(enriched)} stocks enriched")
-    return enriched, correlations, macro
+    logger.info(f"✅ Stock intelligence complete: {len(enriched)} enriched, {len(low_signal)} skipped (low signal)")
+    return all_results, correlations, macro
 
 
 if __name__ == "__main__":
