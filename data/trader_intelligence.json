@@ -1,0 +1,1648 @@
+{
+  "accounts": {
+    "thechartist26": {
+      "account_type": "noise",
+      "signal_quality": 1,
+      "specificity": 1,
+      "credibility_score": 8,
+      "gives_price_levels": false,
+      "gives_stop_loss": false,
+      "typical_timeframe": "mixed",
+      "posts_charts": false,
+      "reasoning": "Only one tweet available and it contains zero trading content \u2014 just a travel announcement, making it impossible to evaluate signal quality or analytical capability.",
+      "recommended_weight": 0.0,
+      "should_remove": true,
+      "remove_reason": "Insufficient data to evaluate \u2014 only one non-trading tweet available; cannot assess signal quality, methodology, or analytical value with a single travel notice.",
+      "username": "thechartist26",
+      "last_classified": "2026-06-23",
+      "followers": 27094
+    },
+    "lonextrades": {
+      "username": "lonextrades",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "Tradewithabhay8": {
+      "username": "Tradewithabhay8",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "TheAlpha10X": {
+      "username": "TheAlpha10X",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "StocksRoyale1": {
+      "username": "StocksRoyale1",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "price_action_NS": {
+      "username": "price_action_NS",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "drsagarrv": {
+      "username": "drsagarrv",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "gaze_observer": {
+      "account_type": "noise",
+      "signal_quality": 1,
+      "specificity": 1,
+      "credibility_score": 4,
+      "gives_price_levels": false,
+      "gives_stop_loss": false,
+      "typical_timeframe": "mixed",
+      "posts_charts": false,
+      "reasoning": "Only one tweet available which is a casual, humorous reply with zero analytical content, price levels, or actionable information about IT stocks.",
+      "recommended_weight": 0.0,
+      "should_remove": true,
+      "remove_reason": "Insufficient tweet history to evaluate (only 1 tweet), and that single tweet is a joke reply with no signal value whatsoever.",
+      "username": "gaze_observer",
+      "last_classified": "2026-06-23",
+      "followers": 17953
+    },
+    "TheEquityMonk": {
+      "username": "TheEquityMonk",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "stonks_sensei": {
+      "username": "stonks_sensei",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "_M0neyMatters": {
+      "username": "_M0neyMatters",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "smesmartmoney": {
+      "username": "smesmartmoney",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "TradingMarvel": {
+      "username": "TradingMarvel",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "Starlight_T1": {
+      "account_type": "active_trader",
+      "signal_quality": 2,
+      "specificity": 2,
+      "credibility_score": 22,
+      "gives_price_levels": false,
+      "gives_stop_loss": true,
+      "typical_timeframe": "swing",
+      "posts_charts": true,
+      "reasoning": "Account shows casual, meme-like commentary on Adani stocks mixed with occasional technical references (20SMA, SL), but lacks actionable price levels, entry/exit specificity, and demonstrates low analytical rigor with emotional/humorous framing.",
+      "recommended_weight": 0.2,
+      "should_remove": true,
+      "remove_reason": "Predominantly noise-level content with casual humor and vague commentary; insufficient analytical depth or specificity to generate reliable trading signals.",
+      "username": "Starlight_T1",
+      "last_classified": "2026-06-23",
+      "followers": 11531
+    },
+    "inv_vin8": {
+      "username": "inv_vin8",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "50ematrader": {
+      "username": "50ematrader",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "RajStockWatch": {
+      "account_type": "serious_analyst",
+      "signal_quality": 3,
+      "specificity": 3,
+      "credibility_score": 52,
+      "gives_price_levels": false,
+      "gives_stop_loss": false,
+      "typical_timeframe": "positional",
+      "posts_charts": false,
+      "reasoning": "The single visible tweet shows investigative due-diligence work exposing a potentially fraudulent company (Blue Cloud Softech / SpaceX International Ltd), which is a legitimate and valuable service, but one tweet is grossly insufficient to evaluate overall signal quality, trading specificity, or methodology.",
+      "recommended_weight": 0.5,
+      "should_remove": false,
+      "remove_reason": null,
+      "username": "RajStockWatch",
+      "last_classified": "2026-06-23",
+      "followers": 25475
+    },
+    "VCPSwing": {
+      "account_type": "swing_trader",
+      "signal_quality": 1,
+      "specificity": 1,
+      "credibility_score": 12,
+      "gives_price_levels": false,
+      "gives_stop_loss": false,
+      "typical_timeframe": "swing",
+      "posts_charts": false,
+      "reasoning": "Only one vague portfolio update tweet with no stock names, price levels, or actionable data \u2014 essentially zero signal content despite 73K followers.",
+      "recommended_weight": 0.0,
+      "should_remove": true,
+      "remove_reason": "Single tweet provides no actionable information \u2014 no tickers, no levels, no charts, no trade setups; insufficient data to evaluate and current content is pure noise.",
+      "username": "VCPSwing",
+      "last_classified": "2026-06-23",
+      "followers": 73815
+    },
+    "mohan_koushik1": {
+      "username": "mohan_koushik1",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "TheFactFindr": {
+      "username": "TheFactFindr",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "GoldilocksWorld": {
+      "username": "GoldilocksWorld",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "UremO_24": {
+      "username": "UremO_24",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "StocksTreasures": {
+      "username": "StocksTreasures",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "tradingwick_": {
+      "username": "tradingwick_",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "_ChartWizard_": {
+      "username": "_ChartWizard_",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "subu_thetrader": {
+      "username": "subu_thetrader",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "GunavanthVaid": {
+      "username": "GunavanthVaid",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "thechartholic": {
+      "username": "thechartholic",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "Chins1729": {
+      "username": "Chins1729",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "VVVStockAnalyst": {
+      "account_type": "educator",
+      "signal_quality": 2,
+      "specificity": 1,
+      "credibility_score": 35,
+      "gives_price_levels": false,
+      "gives_stop_loss": false,
+      "typical_timeframe": "mixed",
+      "posts_charts": false,
+      "reasoning": "Only one visible tweet offering generic motivational/cautionary advice to new traders with no actionable signals, price levels, or analytical content visible.",
+      "recommended_weight": 0.3,
+      "should_remove": false,
+      "remove_reason": null,
+      "username": "VVVStockAnalyst",
+      "last_classified": "2026-06-23",
+      "followers": 126344
+    },
+    "chandan_sushant": {
+      "username": "chandan_sushant",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "dayendtrader": {
+      "username": "dayendtrader",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "StocksRoyale": {
+      "username": "StocksRoyale",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "IndianTechGuide": {
+      "account_type": "aggregator",
+      "signal_quality": 1,
+      "specificity": 1,
+      "credibility_score": 8,
+      "gives_price_levels": false,
+      "gives_stop_loss": false,
+      "typical_timeframe": "mixed",
+      "posts_charts": false,
+      "reasoning": "Single tweet about Instagram's TV app on Samsung has zero relevance to Indian stock market investing or trading signals.",
+      "recommended_weight": 0.0,
+      "should_remove": true,
+      "remove_reason": "Tech news aggregator with no stock market content, price levels, or trading signals \u2014 completely irrelevant to Indian equity market analysis.",
+      "username": "IndianTechGuide",
+      "last_classified": "2026-06-23",
+      "followers": 957292
+    },
+    "Disciplined_Inv": {
+      "username": "Disciplined_Inv",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "ShortTermStock1": {
+      "username": "ShortTermStock1",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "Stock_Precision": {
+      "username": "Stock_Precision",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "BeyondTrading07": {
+      "username": "BeyondTrading07",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "EquityInsightss": {
+      "account_type": "noise",
+      "signal_quality": 1,
+      "specificity": 1,
+      "credibility_score": 8,
+      "gives_price_levels": false,
+      "gives_stop_loss": false,
+      "typical_timeframe": "mixed",
+      "posts_charts": false,
+      "reasoning": "Only one tweet available and it's a sarcastic commentary on US tech stock valuations with zero actionable insight, price levels, or relevance to Indian markets.",
+      "recommended_weight": 0.0,
+      "should_remove": true,
+      "remove_reason": "Insufficient tweet history to evaluate (only 1 tweet), content is US-focused valuation humor with no Indian market signals, no actionable data, and no demonstrated analytical framework.",
+      "username": "EquityInsightss",
+      "last_classified": "2026-06-23",
+      "followers": 61318
+    },
+    "_chartitude": {
+      "username": "_chartitude",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "ItsVinay01": {
+      "account_type": "noise",
+      "signal_quality": 1,
+      "specificity": 1,
+      "credibility_score": 12,
+      "gives_price_levels": false,
+      "gives_stop_loss": false,
+      "typical_timeframe": "mixed",
+      "posts_charts": false,
+      "reasoning": "Only one visible tweet which is a vague sector question asking others to share ideas, providing zero actionable analysis, price levels, or original research.",
+      "recommended_weight": 0.0,
+      "should_remove": true,
+      "remove_reason": "Insufficient tweet history to evaluate, and the only visible tweet is a crowd-sourcing question with no original analysis or signal value.",
+      "username": "ItsVinay01",
+      "last_classified": "2026-06-23",
+      "followers": 33659
+    },
+    "MeyyappanPl1": {
+      "username": "MeyyappanPl1",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "Setups_Swing": {
+      "username": "Setups_Swing",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "_HealthZwealth": {
+      "username": "_HealthZwealth",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "KNMtrades": {
+      "username": "KNMtrades",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "scout_stock": {
+      "username": "scout_stock",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "dhruvrrawani": {
+      "username": "dhruvrrawani",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "charts_breakout": {
+      "username": "charts_breakout",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "AdeptMarket": {
+      "username": "AdeptMarket",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "BeatTheStreet10": {
+      "username": "BeatTheStreet10",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "dhanesh500": {
+      "username": "dhanesh500",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "soicfinance": {
+      "username": "soicfinance",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "BullMarkets1": {
+      "username": "BullMarkets1",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "mishika_chamria": {
+      "username": "mishika_chamria",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "option_square": {
+      "username": "option_square",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "Magicbullindia": {
+      "username": "Magicbullindia",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "vishnuchartist": {
+      "username": "vishnuchartist",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "pushpmegh21": {
+      "username": "pushpmegh21",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "naveenssharma11": {
+      "username": "naveenssharma11",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "ManasKale2": {
+      "username": "ManasKale2",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "itsTarH": {
+      "username": "itsTarH",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "MarketScientist": {
+      "account_type": "aggregator",
+      "signal_quality": 1,
+      "specificity": 2,
+      "credibility_score": 18,
+      "gives_price_levels": false,
+      "gives_stop_loss": false,
+      "typical_timeframe": "intraday",
+      "posts_charts": false,
+      "reasoning": "Single tweet with vague global market data points and a dramatic historical comparison ('29th May Repeating') with no actionable levels, context, or analysis \u2014 classic fear-mongering aggregator content with no signal value.",
+      "recommended_weight": 0.1,
+      "should_remove": true,
+      "remove_reason": "Only one tweet visible with no price levels, no stop losses, no trade setups, and sensationalist historical comparisons; high follower count does not compensate for zero actionable content or analytical depth.",
+      "username": "MarketScientist",
+      "last_classified": "2026-06-23",
+      "followers": 303332
+    },
+    "dmdsplyinvestor": {
+      "username": "dmdsplyinvestor",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "Sandeep_Majj": {
+      "account_type": "aggregator",
+      "signal_quality": 2,
+      "specificity": 2,
+      "credibility_score": 32,
+      "gives_price_levels": false,
+      "gives_stop_loss": false,
+      "typical_timeframe": "mixed",
+      "posts_charts": false,
+      "reasoning": "Only 2 tweets available showing macro commentary and market context without any actionable trade setups, price levels, or specific stock calls \u2014 appears to be a general market commentary account rather than a signal provider.",
+      "recommended_weight": 0.4,
+      "should_remove": false,
+      "remove_reason": null,
+      "username": "Sandeep_Majj",
+      "last_classified": "2026-06-23",
+      "followers": 33391
+    },
+    "finallynitin": {
+      "username": "finallynitin",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "Finstor85": {
+      "username": "Finstor85",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "AnsuAgarwal3": {
+      "username": "AnsuAgarwal3",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "badola_arjun": {
+      "username": "badola_arjun",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "Fintech00": {
+      "account_type": "active_trader",
+      "signal_quality": 2,
+      "specificity": 2,
+      "credibility_score": 22,
+      "gives_price_levels": false,
+      "gives_stop_loss": false,
+      "typical_timeframe": "intraday",
+      "posts_charts": false,
+      "reasoning": "Posts vague market commentary and stock names without entry/exit prices, stop losses, or any analytical rationale, making the signals nearly unusable for replication.",
+      "recommended_weight": 0.2,
+      "should_remove": false,
+      "remove_reason": null,
+      "username": "Fintech00",
+      "last_classified": "2026-06-23",
+      "followers": 40519
+    },
+    "sumitkbehal": {
+      "account_type": "noise",
+      "signal_quality": 1,
+      "specificity": 1,
+      "credibility_score": 12,
+      "gives_price_levels": false,
+      "gives_stop_loss": false,
+      "typical_timeframe": "mixed",
+      "posts_charts": false,
+      "reasoning": "Only 2 tweets visible, both are generic motivational/philosophical statements with zero actionable trading content, price levels, or market analysis.",
+      "recommended_weight": 0.0,
+      "should_remove": true,
+      "remove_reason": "Insufficient tweet history to evaluate and visible tweets contain only generic platitudes with no trading signals, price levels, or analytical content whatsoever.",
+      "username": "sumitkbehal",
+      "last_classified": "2026-06-23",
+      "followers": 31212
+    },
+    "REDBOXINDIA": {
+      "account_type": "aggregator",
+      "signal_quality": 2,
+      "specificity": 2,
+      "credibility_score": 38,
+      "gives_price_levels": false,
+      "gives_stop_loss": false,
+      "typical_timeframe": "mixed",
+      "posts_charts": false,
+      "reasoning": "Pure news aggregator mixing geopolitical headlines with corporate announcements and management commentary snippets, providing no actionable trading signals, price levels, or analytical context.",
+      "recommended_weight": 0.4,
+      "should_remove": false,
+      "remove_reason": null,
+      "username": "REDBOXINDIA",
+      "last_classified": "2026-06-23",
+      "followers": 433161
+    },
+    "SakatasHomma": {
+      "account_type": "swing_trader",
+      "signal_quality": 2,
+      "specificity": 2,
+      "credibility_score": 28,
+      "gives_price_levels": false,
+      "gives_stop_loss": false,
+      "typical_timeframe": "swing",
+      "posts_charts": true,
+      "reasoning": "Only 2 tweets visible with extremely vague commentary \u2014 no stock names, no price levels, no actionable specifics \u2014 making signal quality near zero despite a decent follower count.",
+      "recommended_weight": 0.3,
+      "should_remove": false,
+      "remove_reason": null,
+      "username": "SakatasHomma",
+      "last_classified": "2026-06-23",
+      "followers": 14192
+    },
+    "iArpanK": {
+      "username": "iArpanK",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "StocksAndStoics": {
+      "username": "StocksAndStoics",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "KetanM79": {
+      "username": "KetanM79",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "saxena_puru": {
+      "username": "saxena_puru",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "TradeSensei07": {
+      "username": "TradeSensei07",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "DhanValue": {
+      "username": "DhanValue",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "anishmoonka": {
+      "account_type": "noise",
+      "signal_quality": 1,
+      "specificity": 1,
+      "credibility_score": 2,
+      "gives_price_levels": false,
+      "gives_stop_loss": false,
+      "typical_timeframe": "mixed",
+      "posts_charts": false,
+      "reasoning": "The only visible tweet is a lifestyle/creative writing piece with zero financial or market content, making this account completely irrelevant for stock market signal evaluation.",
+      "recommended_weight": 0.0,
+      "should_remove": true,
+      "remove_reason": "No market-related content whatsoever; account appears to be a lifestyle/creative writing account with no investment signals or analysis.",
+      "username": "anishmoonka",
+      "last_classified": "2026-06-23",
+      "followers": 133043
+    },
+    "Accuracy_Invst": {
+      "username": "Accuracy_Invst",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "drprashantmish6": {
+      "username": "drprashantmish6",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "AdityaD_Shah": {
+      "username": "AdityaD_Shah",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "NiftyGranmaster": {
+      "username": "NiftyGranmaster",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "mehtanishit21": {
+      "username": "mehtanishit21",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "DilipSharma31": {
+      "username": "DilipSharma31",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "niveyshak": {
+      "username": "niveyshak",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "Prakashplutus": {
+      "username": "Prakashplutus",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "priceactiongann": {
+      "username": "priceactiongann",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "shubhfin": {
+      "username": "shubhfin",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "stocksgeeks": {
+      "account_type": "active_trader",
+      "signal_quality": 3,
+      "specificity": 3,
+      "credibility_score": 52,
+      "gives_price_levels": false,
+      "gives_stop_loss": true,
+      "typical_timeframe": "swing",
+      "posts_charts": true,
+      "reasoning": "Shows some accountability by posting actual trade outcomes including stop losses and breakevens, but the very limited tweet sample (only 3 tweets visible) with one being an emoji-only post makes comprehensive evaluation difficult.",
+      "recommended_weight": 0.8,
+      "should_remove": false,
+      "remove_reason": null,
+      "username": "stocksgeeks",
+      "last_classified": "2026-06-23",
+      "followers": 31058
+    },
+    "FundamentalGems": {
+      "username": "FundamentalGems",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "Goldforestinves": {
+      "username": "Goldforestinves",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "Investor_Mohit": {
+      "username": "Investor_Mohit",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "FI_InvestIndia": {
+      "username": "FI_InvestIndia",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "Milind4profits": {
+      "username": "Milind4profits",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "PAVLeader": {
+      "username": "PAVLeader",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "Trading0secrets": {
+      "username": "Trading0secrets",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "unseenvalue": {
+      "account_type": "serious_analyst",
+      "signal_quality": 4,
+      "specificity": 4,
+      "credibility_score": 72,
+      "gives_price_levels": false,
+      "gives_stop_loss": false,
+      "typical_timeframe": "positional",
+      "posts_charts": false,
+      "reasoning": "Publishes structured, multi-part fundamental research with named coverage initiations and follow-up updates, focused on long-term compounding themes in Indian manufacturing and deep-science sectors.",
+      "recommended_weight": 1.4,
+      "should_remove": false,
+      "remove_reason": null,
+      "username": "unseenvalue",
+      "last_classified": "2026-06-23",
+      "followers": 155572
+    },
+    "ParveenBhansali": {
+      "username": "ParveenBhansali",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "Chart_Wallah108": {
+      "username": "Chart_Wallah108",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "sahil_vi": {
+      "username": "sahil_vi",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "mgkreddy1": {
+      "username": "mgkreddy1",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "myvaluepicks": {
+      "username": "myvaluepicks",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "aswathiguna": {
+      "username": "aswathiguna",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "darvasboxtrader": {
+      "username": "darvasboxtrader",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "Equiideas09": {
+      "username": "Equiideas09",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "Asan_research": {
+      "username": "Asan_research",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "iramyram": {
+      "username": "iramyram",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "VMK100": {
+      "username": "VMK100",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "traders2345": {
+      "account_type": "active_trader",
+      "signal_quality": 2,
+      "specificity": 3,
+      "credibility_score": 28,
+      "gives_price_levels": true,
+      "gives_stop_loss": false,
+      "typical_timeframe": "intraday",
+      "posts_charts": false,
+      "reasoning": "Provides specific Nifty levels (24040) with some real-time commentary, but tweets are fragmented, poorly written, lack stop-losses, and appear to be post-hoc rationalization rather than actionable pre-market calls.",
+      "recommended_weight": 0.3,
+      "should_remove": false,
+      "remove_reason": null,
+      "username": "traders2345",
+      "last_classified": "2026-06-23",
+      "followers": 61421
+    },
+    "DIALWEALTH_IN": {
+      "username": "DIALWEALTH_IN",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "Jagadeesh0203": {
+      "username": "Jagadeesh0203",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "dhuperji": {
+      "username": "dhuperji",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "jitu_stock": {
+      "username": "jitu_stock",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "Hirengabani23": {
+      "account_type": "active_trader",
+      "signal_quality": 2,
+      "specificity": 2,
+      "credibility_score": 28,
+      "gives_price_levels": false,
+      "gives_stop_loss": true,
+      "typical_timeframe": "intraday",
+      "posts_charts": true,
+      "reasoning": "Only 2 tweets available with very limited data \u2014 one shows a stop-loss hit with portfolio risk disclosure (positive), but the other is vague 'getting ready for next move' commentary with no price levels or actionable specifics, making overall signal quality very low.",
+      "recommended_weight": 0.3,
+      "should_remove": false,
+      "remove_reason": null,
+      "username": "Hirengabani23",
+      "last_classified": "2026-06-23",
+      "followers": 28774
+    },
+    "vineetjain1101": {
+      "username": "vineetjain1101",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "Deishma": {
+      "username": "Deishma",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "MeetshahV": {
+      "username": "MeetshahV",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "padhucfp": {
+      "username": "padhucfp",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "alphaaffairsf2f": {
+      "username": "alphaaffairsf2f",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "krishnblue": {
+      "username": "krishnblue",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "anandchokshi19": {
+      "account_type": "aggregator",
+      "signal_quality": 1,
+      "specificity": 1,
+      "credibility_score": 12,
+      "gives_price_levels": false,
+      "gives_stop_loss": false,
+      "typical_timeframe": "mixed",
+      "posts_charts": false,
+      "reasoning": "Only one tweet available reporting a global market fact (KOSPI drop) with zero analysis, no price levels, no actionable insight, and no context relevant to Indian markets.",
+      "recommended_weight": 0.0,
+      "should_remove": true,
+      "remove_reason": "Insufficient tweet history to evaluate properly; the single available tweet is a bare news headline with no analysis, no Indian market relevance, and no actionable signal \u2014 cannot justify inclusion.",
+      "username": "anandchokshi19",
+      "last_classified": "2026-06-23",
+      "followers": 186423
+    },
+    "microcp2mltibgr": {
+      "account_type": "noise",
+      "signal_quality": 1,
+      "specificity": 1,
+      "credibility_score": 4,
+      "gives_price_levels": false,
+      "gives_stop_loss": false,
+      "typical_timeframe": "intraday",
+      "posts_charts": false,
+      "reasoning": "Single tweet is a casual, humorous commentary linking Nifty movement to Telegram's restart with no analysis, price levels, or actionable insight whatsoever.",
+      "recommended_weight": 0.0,
+      "should_remove": true,
+      "remove_reason": "Pure noise account \u2014 anecdotal, joke-style market commentary with zero analytical value, no price levels, no stop losses, and no trading signals despite having 82K followers.",
+      "username": "microcp2mltibgr",
+      "last_classified": "2026-06-23",
+      "followers": 82024
+    },
+    "ParthaAwe": {
+      "username": "ParthaAwe",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "iManasArora": {
+      "username": "iManasArora",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "VRtrendfollower": {
+      "username": "VRtrendfollower",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "Confident_AA": {
+      "username": "Confident_AA",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "scorpiomanojFRM": {
+      "username": "scorpiomanojFRM",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "KommawarSwapnil": {
+      "account_type": "educator",
+      "signal_quality": 2,
+      "specificity": 2,
+      "credibility_score": 28,
+      "gives_price_levels": false,
+      "gives_stop_loss": false,
+      "typical_timeframe": "swing",
+      "posts_charts": false,
+      "reasoning": "The only visible tweet is a generic, incomplete educational post about EMA/RSI strategy with no specific stock calls, price levels, or actionable signals \u2014 classic content-farm educator style with no demonstrated edge.",
+      "recommended_weight": 0.3,
+      "should_remove": false,
+      "remove_reason": null,
+      "username": "KommawarSwapnil",
+      "last_classified": "2026-06-23",
+      "followers": 103782
+    },
+    "LearningEleven": {
+      "username": "LearningEleven",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "MadAboutStocks_": {
+      "username": "MadAboutStocks_",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "chartbent": {
+      "username": "chartbent",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "Coolfundoo": {
+      "username": "Coolfundoo",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "Jai0409": {
+      "username": "Jai0409",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "swing_ka_sultan": {
+      "username": "swing_ka_sultan",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "nishkumar1977": {
+      "username": "nishkumar1977",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "Wealth_Counter": {
+      "username": "Wealth_Counter",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "sidd1307": {
+      "username": "sidd1307",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "ST_PYI": {
+      "username": "ST_PYI",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "BrkoutGeek": {
+      "username": "BrkoutGeek",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "gogrithekhabri": {
+      "username": "gogrithekhabri",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "niftywizard": {
+      "username": "niftywizard",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "KiranBhosale007": {
+      "username": "KiranBhosale007",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "TheTradeScout": {
+      "username": "TheTradeScout",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "Ravi_Riskmgmt": {
+      "username": "Ravi_Riskmgmt",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "KA_charts": {
+      "username": "KA_charts",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "contrarianEPS": {
+      "username": "contrarianEPS",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "nid_rockz": {
+      "username": "nid_rockz",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "TaPlot": {
+      "username": "TaPlot",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "Focus_SME": {
+      "username": "Focus_SME",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "ProdigalTrader": {
+      "username": "ProdigalTrader",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "valuepick": {
+      "username": "valuepick",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "rdkriplani": {
+      "username": "rdkriplani",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "rahul_saggi": {
+      "username": "rahul_saggi",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "Amit_Gulecha": {
+      "username": "Amit_Gulecha",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "kranchi_tweets": {
+      "username": "kranchi_tweets",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "piyushchaudhry": {
+      "username": "piyushchaudhry",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "SureshKBN": {
+      "username": "SureshKBN",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "Crazynaval": {
+      "account_type": "noise",
+      "signal_quality": 1,
+      "specificity": 1,
+      "credibility_score": 5,
+      "gives_price_levels": false,
+      "gives_stop_loss": false,
+      "typical_timeframe": "mixed",
+      "posts_charts": false,
+      "reasoning": "Only one vague, humorous tweet about a 'ministry index' with zero actionable trading content, price levels, or analysis to evaluate.",
+      "recommended_weight": 0.0,
+      "should_remove": true,
+      "remove_reason": "Insufficient data \u2014 only one tweet available, and it contains no trading signals, analysis, or actionable content whatsoever.",
+      "username": "Crazynaval",
+      "last_classified": "2026-06-23",
+      "followers": 22671
+    },
+    "BMTheEquityDesk": {
+      "username": "BMTheEquityDesk",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "eyesofmaya": {
+      "username": "eyesofmaya",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "TSG_Capital": {
+      "username": "TSG_Capital",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "chiragdashj": {
+      "username": "chiragdashj",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "shankarkavs": {
+      "username": "shankarkavs",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "sushilpathiyar": {
+      "username": "sushilpathiyar",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "Paritosh_G": {
+      "username": "Paritosh_G",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "murugavell": {
+      "username": "murugavell",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "saditya10p": {
+      "username": "saditya10p",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "sab_maya_hai__": {
+      "username": "sab_maya_hai__",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "tushar9590": {
+      "username": "tushar9590",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "caniravkaria": {
+      "username": "caniravkaria",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "MarhcandCorne": {
+      "username": "MarhcandCorne",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "safiranand": {
+      "account_type": "noise",
+      "signal_quality": 1,
+      "specificity": 1,
+      "credibility_score": 4,
+      "gives_price_levels": false,
+      "gives_stop_loss": false,
+      "typical_timeframe": "mixed",
+      "posts_charts": false,
+      "reasoning": "Only one vague philosophical tweet with no market content, price levels, analysis, or trading signals whatsoever.",
+      "recommended_weight": 0.0,
+      "should_remove": true,
+      "remove_reason": "Zero market-related content in recent tweets; account provides no actionable trading information or analysis.",
+      "username": "safiranand",
+      "last_classified": "2026-06-23",
+      "followers": 254251
+    },
+    "koolvicky": {
+      "username": "koolvicky",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "leading_nowhere": {
+      "username": "leading_nowhere",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-23"
+    },
+    "SandeepParekh": {
+      "account_type": "noise",
+      "signal_quality": 1,
+      "specificity": 1,
+      "credibility_score": 4,
+      "gives_price_levels": false,
+      "gives_stop_loss": false,
+      "typical_timeframe": "mixed",
+      "posts_charts": false,
+      "reasoning": "Only 2 tweets visible, both completely unrelated to markets \u2014 one is a random word and the other is a casual observation about traffic and rain, providing zero investment signal.",
+      "recommended_weight": 0.0,
+      "should_remove": true,
+      "remove_reason": "No market-related content whatsoever in recent tweets; account appears to post personal/random observations with no trading or analytical value.",
+      "username": "SandeepParekh",
+      "last_classified": "2026-06-23",
+      "followers": 71568
+    }
+  },
+  "calls": [],
+  "last_updated": "2026-06-23"
+}

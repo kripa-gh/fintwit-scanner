@@ -1,0 +1,46 @@
+{
+  "positions": [],
+  "log": [
+    {
+      "date": "2026-06-23",
+      "ticker": "FCL",
+      "recommendation": "WATCH",
+      "score": 12,
+      "entry_zone": "\u20b937\u2013\u20b943",
+      "stop": 37.32,
+      "target": 61.32,
+      "setup_type": "pullback",
+      "acted_on": null,
+      "outcome": null,
+      "return_pct": null
+    },
+    {
+      "date": "2026-06-23",
+      "ticker": "APOLLO",
+      "recommendation": "WATCH",
+      "score": 9,
+      "entry_zone": "\u20b9373\u2013\u20b9407",
+      "stop": 373.48,
+      "target": 507.56,
+      "setup_type": "pullback",
+      "acted_on": null,
+      "outcome": null,
+      "return_pct": null
+    },
+    {
+      "date": "2026-06-23",
+      "ticker": "ADANIENSOL",
+      "recommendation": "WATCH",
+      "score": 10,
+      "entry_zone": "\u20b91431\u2013\u20b91502",
+      "stop": 1430.55,
+      "target": 1717.55,
+      "setup_type": "pullback",
+      "acted_on": null,
+      "outcome": null,
+      "return_pct": null
+    }
+  ],
+  "stats": {},
+  "last_updated": "2026-06-23T07:58:27.146115"
+}

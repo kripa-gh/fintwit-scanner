@@ -1,0 +1,55 @@
+{
+  "runs": [
+    "2026-06-23"
+  ],
+  "tickers": {
+    "FCL": {
+      "first_seen": "2026-06-23",
+      "appearances": [
+        {
+          "date": "2026-06-23",
+          "recommendation": "WATCH",
+          "score": 12,
+          "price": 43.32,
+          "rsi": 61.6
+        }
+      ],
+      "consecutive_days": 1,
+      "last_seen": "2026-06-23",
+      "last_recommendation": "WATCH",
+      "last_score": 12
+    },
+    "ADANIENSOL": {
+      "first_seen": "2026-06-23",
+      "appearances": [
+        {
+          "date": "2026-06-23",
+          "recommendation": "WATCH",
+          "score": 10,
+          "price": 1502.3,
+          "rsi": 54.4
+        }
+      ],
+      "consecutive_days": 1,
+      "last_seen": "2026-06-23",
+      "last_recommendation": "WATCH",
+      "last_score": 10
+    },
+    "APOLLO": {
+      "first_seen": "2026-06-23",
+      "appearances": [
+        {
+          "date": "2026-06-23",
+          "recommendation": "WATCH",
+          "score": 9,
+          "price": 407.0,
+          "rsi": 53.6
+        }
+      ],
+      "consecutive_days": 1,
+      "last_seen": "2026-06-23",
+      "last_recommendation": "WATCH",
+      "last_score": 9
+    }
+  }
+}
