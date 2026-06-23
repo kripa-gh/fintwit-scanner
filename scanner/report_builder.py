@@ -3,8 +3,10 @@ report_builder.py v4
 Full HTML email report incorporating all Claude intelligence outputs.
 """
 
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
 from typing import Dict, List, Optional
+
+IST = timezone(timedelta(hours=5, minutes=30))
 
 
 def _pct_color(v):
@@ -245,7 +247,7 @@ def build_report(
     removed_illiquid=None, fii_dii=None, global_macro=None,
     upcoming_events=None,
 ):
-    run_date = run_date or datetime.now().strftime("%d %B %Y")
+    run_date = run_date or datetime.now(IST).strftime("%d %B %Y")
     market_data      = market_data or {}
     gate_status      = gate_status or {}
     short_candidates = short_candidates or []
@@ -253,7 +255,7 @@ def build_report(
     fii_dii          = fii_dii or {}
     global_macro     = global_macro or {}
     upcoming_events  = upcoming_events or []
-    run_time = datetime.now().strftime("%H:%M IST")
+    run_time = datetime.now(IST).strftime("%H:%M IST")
     history  = history or {}; market_env = market_env or {}
     macro_context = macro_context or {}; correlations = correlations or {}
     anomalies = anomalies or {}

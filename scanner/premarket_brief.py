@@ -15,7 +15,9 @@ Covers:
 
 import logging
 import os
-from datetime import date, datetime
+from datetime import date, datetime, timezone, timedelta
+
+IST = timezone(timedelta(hours=5, minutes=30))
 from typing import Dict, List, Optional
 
 from scanner.claude_client import call_json
@@ -278,7 +280,7 @@ def build_premarket_html(
 {"<div style='background:#2d0a0a;border-left:3px solid #ff1744;padding:8px 12px;margin-bottom:16px;font-size:12px;color:#ff6d00'><strong>Risk:</strong> " + risk_warn + "</div>" if risk_warn else ""}
 
 <div style="margin-top:20px;padding-top:12px;border-top:1px solid {BORDER};font-size:10px;color:{MUTED};font-family:monospace">
-  Pre-market brief generated at {datetime.now().strftime('%H:%M IST')} | Data: Yahoo Finance, NSE India
+  Pre-market brief generated at {datetime.now(IST).strftime('%H:%M IST')} | Data: Yahoo Finance, NSE India
 </div>
 </div></body></html>"""
 
@@ -298,7 +300,7 @@ def run_premarket_brief():
     logger.info("Pre-Market Brief — Starting")
     logger.info("=" * 50)
 
-    run_date  = datetime.now().strftime("%d %B %Y")
+    run_date  = datetime.now(IST).strftime("%d %B %Y")
 
     # 1. Fetch macro
     logger.info("Fetching global macro...")
@@ -337,7 +339,7 @@ def run_premarket_brief():
     icon = mood_icons.get(mood, "⚪")
     gap  = brief.get("gap_up_down", "")
 
-    subject = f"{icon} Pre-Market Brief {datetime.now().strftime('%d %b')} — {mood} | {gap}"
+    subject = f"{icon} Pre-Market Brief {datetime.now(IST).strftime('%d %b')} — {mood} | {gap}"
 
     from scanner.mailer import send_report
     ok = send_report(html, subject=subject)
