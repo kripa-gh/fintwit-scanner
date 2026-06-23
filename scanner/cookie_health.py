@@ -62,7 +62,7 @@ async def _test_twitter_cookies() -> Tuple[bool, str]:
         from twscrape import API
         api  = API()
         cookie_str = f"auth_token={AUTH_TOKEN}; ct0={CT0_TOKEN}"
-        await api.pool.add_cookie("health_check_account", cookie_str)
+        await api.pool.add_account_cookies("health_check_account", cookie_str)
 
         # Try a lightweight API call — fetch a single known public user
         user = await api.user_by_login("NSEIndia")

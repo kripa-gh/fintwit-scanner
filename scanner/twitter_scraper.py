@@ -29,7 +29,7 @@ async def _setup_api() -> API:
     if not AUTH_TOKEN or not CT0_TOKEN:
         raise ValueError("TWITTER_AUTH_TOKEN and TWITTER_CT0 must be set.")
     api = API()
-    await api.pool.add_cookie("fintwit_account", f"auth_token={AUTH_TOKEN}; ct0={CT0_TOKEN}")
+    await api.pool.add_account_cookies("fintwit_account", f"auth_token={AUTH_TOKEN}; ct0={CT0_TOKEN}")
     return api
 
 
