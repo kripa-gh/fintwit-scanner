@@ -240,8 +240,18 @@ def build_report(
     weekly_debrief=None, ai_cost=None, run_date=None,
     list_id="1506463545642217474", member_count=0,
     tweet_count=0, rt_dedupe_count=0, market_status=None,
+    market_data=None, gate_status=None, short_candidates=None,
+    removed_illiquid=None, fii_dii=None, global_macro=None,
+    upcoming_events=None,
 ):
     run_date = run_date or datetime.now().strftime("%d %B %Y")
+    market_data      = market_data or {}
+    gate_status      = gate_status or {}
+    short_candidates = short_candidates or []
+    removed_illiquid = removed_illiquid or []
+    fii_dii          = fii_dii or {}
+    global_macro     = global_macro or {}
+    upcoming_events  = upcoming_events or []
     run_time = datetime.now().strftime("%H:%M IST")
     history  = history or {}; market_env = market_env or {}
     macro_context = macro_context or {}; correlations = correlations or {}

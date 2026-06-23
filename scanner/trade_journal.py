@@ -1,0 +1,388 @@
+"""
+trade_journal.py
+Google Sheets-based trade journal integration.
+
+Connects to a user-specified Google Sheet to:
+  1. Read open positions (for position management advice)
+  2. Log new trade recommendations
+  3. Track outcomes (mark win/loss when price hits target/stop)
+  4. Compute personal win rate by setup type
+  5. Feed performance data back into Claude for personalised recommendations
+
+Setup:
+  - User creates a Google Sheet with two tabs: "Positions" and "Log"
+  - Share the sheet with the service account email or use public link
+  - Set TRADE_JOURNAL_SHEET_ID in GitHub Secrets
+
+Sheet format (Positions tab):
+  Ticker | Entry Date | Entry Price | Qty | Stop Loss | Target | Setup Type | Status
+
+Sheet format (Log tab):
+  Date | Ticker | Recommendation | Score | Entry Zone | Stop | Target | Outcome | Return%
+"""
+
+import json
+import logging
+import os
+import urllib.request
+import urllib.parse
+from datetime import date, datetime, timedelta
+from pathlib import Path
+from typing import Dict, List, Optional, Tuple
+
+logger = logging.getLogger(__name__)
+
+SHEET_ID  = os.getenv("TRADE_JOURNAL_SHEET_ID", "")
+API_KEY   = os.getenv("GOOGLE_SHEETS_API_KEY", "")   # optional read-only key
+LOCAL_JOURNAL_PATH = Path(__file__).parent.parent / "data" / "trade_journal.json"
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# LOCAL JOURNAL (no Google Sheets dependency — works out of the box)
+# ═══════════════════════════════════════════════════════════════════════════════
+
+def load_journal() -> Dict:
+    """Load local trade journal from JSON file."""
+    if not LOCAL_JOURNAL_PATH.exists():
+        return {
+            "positions": [],
+            "log":       [],
+            "stats":     {},
+            "last_updated": None,
+        }
+    try:
+        with open(LOCAL_JOURNAL_PATH) as f:
+            return json.load(f)
+    except Exception as e:
+        logger.warning(f"Journal load failed: {e}")
+        return {"positions": [], "log": [], "stats": {}, "last_updated": None}
+
+
+def save_journal(journal: Dict) -> None:
+    """Save journal to local JSON file (committed to repo by GitHub Actions)."""
+    LOCAL_JOURNAL_PATH.parent.mkdir(parents=True, exist_ok=True)
+    journal["last_updated"] = datetime.now().isoformat()
+    try:
+        with open(LOCAL_JOURNAL_PATH, "w") as f:
+            json.dump(journal, f, indent=2, default=str)
+        logger.info(f"Journal saved: {len(journal.get('positions',[]))} positions, {len(journal.get('log',[]))} log entries")
+    except Exception as e:
+        logger.error(f"Journal save failed: {e}")
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# POSITION MANAGEMENT
+# ═══════════════════════════════════════════════════════════════════════════════
+
+def get_open_positions(journal: Dict) -> List[Dict]:
+    """Return currently open positions."""
+    return [p for p in journal.get("positions", []) if p.get("status") == "OPEN"]
+
+
+def add_position(
+    journal: Dict,
+    ticker: str,
+    entry_price: float,
+    qty: int,
+    stop_loss: float,
+    target: float,
+    setup_type: str,
+    entry_date: str = None,
+) -> Dict:
+    """Log a new position entry."""
+    entry_date = entry_date or date.today().isoformat()
+    position = {
+        "id":          f"{ticker}_{entry_date}",
+        "ticker":      ticker,
+        "entry_date":  entry_date,
+        "entry_price": entry_price,
+        "qty":         qty,
+        "stop_loss":   stop_loss,
+        "target":      target,
+        "setup_type":  setup_type,
+        "status":      "OPEN",
+        "exit_price":  None,
+        "exit_date":   None,
+        "return_pct":  None,
+        "outcome":     None,
+    }
+    journal.setdefault("positions", []).append(position)
+    return journal
+
+
+def update_position_outcomes(journal: Dict, current_prices: Dict[str, float]) -> Dict:
+    """
+    Check open positions against current prices.
+    Auto-close positions where stop or target is hit.
+    """
+    positions = journal.get("positions", [])
+    updated   = 0
+
+    for pos in positions:
+        if pos.get("status") != "OPEN":
+            continue
+
+        ticker  = pos["ticker"]
+        current = current_prices.get(ticker)
+        if not current:
+            continue
+
+        sl     = pos.get("stop_loss", 0)
+        target = pos.get("target", float("inf"))
+        entry  = pos.get("entry_price", current)
+
+        if current <= sl:
+            pos["status"]     = "CLOSED"
+            pos["exit_price"] = current
+            pos["exit_date"]  = date.today().isoformat()
+            pos["return_pct"] = round(((current - entry) / entry) * 100, 2)
+            pos["outcome"]    = "STOP HIT"
+            updated += 1
+        elif current >= target:
+            pos["status"]     = "CLOSED"
+            pos["exit_price"] = current
+            pos["exit_date"]  = date.today().isoformat()
+            pos["return_pct"] = round(((current - entry) / entry) * 100, 2)
+            pos["outcome"]    = "TARGET HIT"
+            updated += 1
+
+    if updated:
+        logger.info(f"Closed {updated} positions (stop/target hit)")
+        _recompute_stats(journal)
+
+    return journal
+
+
+def _recompute_stats(journal: Dict) -> None:
+    """Recompute win rate and other stats from closed positions."""
+    closed = [p for p in journal.get("positions", []) if p.get("status") == "CLOSED"]
+    if not closed:
+        return
+
+    wins   = [p for p in closed if p.get("outcome") == "TARGET HIT"]
+    losses = [p for p in closed if p.get("outcome") == "STOP HIT"]
+    total  = len(wins) + len(losses)
+
+    win_rate     = round(len(wins) / max(total, 1) * 100, 1)
+    avg_win      = round(sum(p.get("return_pct", 0) for p in wins)   / max(len(wins), 1), 2)
+    avg_loss     = round(sum(p.get("return_pct", 0) for p in losses) / max(len(losses), 1), 2)
+    expectancy   = round((win_rate/100 * avg_win) + ((1-win_rate/100) * avg_loss), 2)
+
+    # By setup type
+    by_setup = {}
+    for p in closed:
+        st = p.get("setup_type", "Unknown")
+        if st not in by_setup:
+            by_setup[st] = {"wins": 0, "losses": 0, "returns": []}
+        if p.get("outcome") == "TARGET HIT":
+            by_setup[st]["wins"] += 1
+        else:
+            by_setup[st]["losses"] += 1
+        by_setup[st]["returns"].append(p.get("return_pct", 0))
+
+    setup_stats = {}
+    for st, data in by_setup.items():
+        total_st = data["wins"] + data["losses"]
+        setup_stats[st] = {
+            "win_rate":  round(data["wins"] / max(total_st, 1) * 100, 1),
+            "trades":    total_st,
+            "avg_return":round(sum(data["returns"]) / max(len(data["returns"]),1), 2),
+        }
+
+    journal["stats"] = {
+        "total_closed":  total,
+        "win_rate":      win_rate,
+        "avg_win_pct":   avg_win,
+        "avg_loss_pct":  avg_loss,
+        "expectancy":    expectancy,
+        "by_setup":      setup_stats,
+        "last_updated":  date.today().isoformat(),
+    }
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# LOG RECOMMENDATIONS
+# ═══════════════════════════════════════════════════════════════════════════════
+
+def log_recommendation(
+    journal: Dict,
+    ticker: str,
+    recommendation: str,
+    score: int,
+    entry_zone: str,
+    stop: float,
+    target: float,
+    setup_type: str,
+    run_date: str = None,
+) -> Dict:
+    """Log a system recommendation to the journal log."""
+    run_date = run_date or date.today().isoformat()
+    entry = {
+        "date":           run_date,
+        "ticker":         ticker,
+        "recommendation": recommendation,
+        "score":          score,
+        "entry_zone":     entry_zone,
+        "stop":           stop,
+        "target":         target,
+        "setup_type":     setup_type,
+        "acted_on":       None,   # user can manually update
+        "outcome":        None,
+        "return_pct":     None,
+    }
+    journal.setdefault("log", []).append(entry)
+    # Keep last 200 log entries
+    journal["log"] = journal["log"][-200:]
+    return journal
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# PERFORMANCE ANALYSIS FOR CLAUDE
+# ═══════════════════════════════════════════════════════════════════════════════
+
+def get_performance_context(journal: Dict) -> Dict:
+    """
+    Build a performance context dict for Claude to use in personalised recommendations.
+    Tells Claude what's working and what isn't for this specific trader.
+    """
+    stats    = journal.get("stats", {})
+    positions= journal.get("positions", [])
+    log      = journal.get("log", [])
+
+    open_pos = [p for p in positions if p.get("status") == "OPEN"]
+    open_tickers = [p["ticker"] for p in open_pos]
+
+    # Best and worst setup types
+    by_setup = stats.get("by_setup", {})
+    if by_setup:
+        best_setup  = max(by_setup, key=lambda s: by_setup[s].get("win_rate", 0))
+        worst_setup = min(by_setup, key=lambda s: by_setup[s].get("win_rate", 0))
+    else:
+        best_setup = worst_setup = None
+
+    # Recent performance (last 10 closed)
+    recent_closed = [
+        p for p in reversed(positions)
+        if p.get("status") == "CLOSED"
+    ][:10]
+    recent_win_rate = (
+        sum(1 for p in recent_closed if p.get("outcome") == "TARGET HIT") /
+        max(len(recent_closed), 1) * 100
+    )
+
+    return {
+        "open_positions":      open_tickers,
+        "open_count":          len(open_pos),
+        "total_trades":        stats.get("total_closed", 0),
+        "overall_win_rate":    stats.get("win_rate"),
+        "recent_win_rate":     round(recent_win_rate, 1),
+        "avg_win_pct":         stats.get("avg_win_pct"),
+        "avg_loss_pct":        stats.get("avg_loss_pct"),
+        "expectancy":          stats.get("expectancy"),
+        "best_setup":          best_setup,
+        "worst_setup":         worst_setup,
+        "setup_stats":         by_setup,
+        "has_data":            stats.get("total_closed", 0) >= 5,
+    }
+
+
+def get_position_context(journal: Dict, ticker: str) -> Optional[Dict]:
+    """Return open position details for a specific ticker, if any."""
+    for pos in journal.get("positions", []):
+        if pos["ticker"] == ticker and pos.get("status") == "OPEN":
+            return pos
+    return None
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# GOOGLE SHEETS SYNC (optional — requires TRADE_JOURNAL_SHEET_ID)
+# ═══════════════════════════════════════════════════════════════════════════════
+
+def sync_from_google_sheets(journal: Dict) -> Dict:
+    """
+    Optional: sync positions from a Google Sheet.
+    Only runs if TRADE_JOURNAL_SHEET_ID is set.
+    Sheet must be publicly readable or share with service account.
+    """
+    if not SHEET_ID:
+        return journal
+
+    try:
+        # Read Positions tab via Google Sheets API v4
+        url = (
+            f"https://sheets.googleapis.com/v4/spreadsheets/{SHEET_ID}"
+            f"/values/Positions!A:H"
+        )
+        if API_KEY:
+            url += f"?key={API_KEY}"
+
+        req  = urllib.request.Request(url, headers={"Accept": "application/json"})
+        with urllib.request.urlopen(req, timeout=10) as resp:
+            data = json.loads(resp.read())
+
+        rows = data.get("values", [])
+        if len(rows) < 2:   # header only
+            return journal
+
+        header = rows[0]
+        positions_from_sheet = []
+
+        for row in rows[1:]:
+            if not row or not row[0]:
+                continue
+            pos = {}
+            for i, col in enumerate(header):
+                pos[col.lower().replace(" ", "_")] = row[i] if i < len(row) else ""
+
+            # Normalise
+            positions_from_sheet.append({
+                "id":          f"{pos.get('ticker','')}_{pos.get('entry_date','')}",
+                "ticker":      pos.get("ticker", "").upper(),
+                "entry_date":  pos.get("entry_date", ""),
+                "entry_price": float(pos.get("entry_price", 0) or 0),
+                "qty":         int(pos.get("qty", 0) or 0),
+                "stop_loss":   float(pos.get("stop_loss", 0) or 0),
+                "target":      float(pos.get("target", 0) or 0),
+                "setup_type":  pos.get("setup_type", ""),
+                "status":      pos.get("status", "OPEN"),
+                "exit_price":  None,
+                "exit_date":   None,
+                "return_pct":  None,
+                "outcome":     None,
+            })
+
+        # Merge sheet positions into journal (sheet is source of truth for positions)
+        sheet_ids = {p["id"] for p in positions_from_sheet}
+        existing  = [p for p in journal.get("positions", []) if p["id"] not in sheet_ids]
+        journal["positions"] = existing + positions_from_sheet
+        logger.info(f"Synced {len(positions_from_sheet)} positions from Google Sheets")
+
+    except Exception as e:
+        logger.warning(f"Google Sheets sync failed: {e}")
+
+    return journal
+
+
+if __name__ == "__main__":
+    logging.basicConfig(level=logging.INFO)
+
+    # Test journal operations
+    journal = load_journal()
+
+    # Add a sample position
+    journal = add_position(journal, "WABAG", 1820.0, 5, 1700.0, 2100.0, "breakout", "2026-06-20")
+    journal = add_position(journal, "CLEANMAX", 1200.0, 3, 1100.0, 1450.0, "pullback", "2026-06-19")
+
+    # Simulate price updates
+    journal = update_position_outcomes(journal, {"WABAG": 2110.0, "CLEANMAX": 1095.0})
+
+    print("=== JOURNAL STATS ===")
+    print(json.dumps(journal["stats"], indent=2))
+
+    print("\n=== OPEN POSITIONS ===")
+    for p in get_open_positions(journal):
+        print(f"  {p['ticker']}: entry ₹{p['entry_price']} | SL ₹{p['stop_loss']} | T ₹{p['target']}")
+
+    print("\n=== PERFORMANCE CONTEXT ===")
+    ctx = get_performance_context(journal)
+    print(json.dumps(ctx, indent=2))

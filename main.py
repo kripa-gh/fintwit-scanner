@@ -1,29 +1,43 @@
 """
-main.py v4 — Full AI-powered pipeline
-All 10 gaps fixed + complete Claude intelligence suite
+main.py v5 — Full swing/positional trader pipeline
+All 12 gaps addressed.
 """
 
 import logging, os, sys
 from datetime import datetime, date
 
-logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(name)s — %(message)s", datefmt="%H:%M:%S")
+logging.basicConfig(level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(name)s — %(message)s", datefmt="%H:%M:%S")
 logger = logging.getLogger("main")
+
+# ── Pre-market brief mode ─────────────────────────────────────────────────────
+PREMARKET_MODE = os.getenv("PREMARKET_MODE", "0") == "1"
 
 
 def main():
     start    = datetime.now()
     run_date = date.today().isoformat()
-    errors   = []
+
+    # Pre-market brief (separate 8:30am run)
+    if PREMARKET_MODE:
+        logger.info("Running in PRE-MARKET BRIEF mode")
+        from scanner.premarket_brief import run_premarket_brief
+        run_premarket_brief()
+        return
 
     logger.info("=" * 60)
-    logger.info("FinTwit Daily Scanner v4 — AI-Powered")
+    logger.info("FinTwit Daily Scanner v5 — Swing/Positional Trader")
     logger.info("=" * 60)
 
-    # Reset Claude cost tracker
     from scanner.claude_client import reset_run_stats, get_run_stats
     reset_run_stats()
 
-    # ── Pre-flight ────────────────────────────────────────────────────────────
+    # ── Account config (from secrets or defaults) ─────────────────────────────
+    ACCOUNT_SIZE       = int(os.getenv("ACCOUNT_SIZE", "500000"))
+    RISK_PER_TRADE_PCT = float(os.getenv("RISK_PER_TRADE_PCT", "1.0"))
+    logger.info(f"Account: ₹{ACCOUNT_SIZE:,} | Risk per trade: {RISK_PER_TRADE_PCT}%")
+
+    # ── Pre-flight checks ─────────────────────────────────────────────────────
     from scanner.cookie_health import check_and_alert
     if not check_and_alert(): sys.exit(1)
 
@@ -33,7 +47,6 @@ def main():
 
     from scanner.nse_symbols import get_valid_symbols
     valid_symbols = get_valid_symbols()
-    logger.info(f"NSE symbols: {len(valid_symbols)}")
 
     from scanner.persistence import load_history, update_history, save_history
     history = load_history()
@@ -41,8 +54,12 @@ def main():
     from scanner.trader_intelligence import load_trader_db, save_trader_db
     trader_db = load_trader_db()
 
-    # ── Market environment ────────────────────────────────────────────────────
-    logger.info("STEP 0: Market environment...")
+    from scanner.trade_journal import load_journal, save_journal, get_open_positions, \
+        update_position_outcomes, log_recommendation, get_performance_context
+    journal = load_journal()
+
+    # ── STEP 0: Market environment + intelligence ─────────────────────────────
+    logger.info("STEP 0: Market environment + intelligence...")
     from scanner.market_environment import fetch_market_environment
     import yfinance as yf
     market_env  = fetch_market_environment()
@@ -54,10 +71,11 @@ def main():
             nifty_close = ndf["Close"].dropna()
     except Exception as e:
         logger.warning(f"Nifty fetch failed: {e}")
-    logger.info(f"  → {market_env['label']} | Nifty: {market_env['nifty']['trend']}")
 
-    # ── Twitter scrape ────────────────────────────────────────────────────────
-    logger.info("STEP 1/7 — Twitter scrape...")
+    logger.info(f"  → Market: {market_env['label']} | Nifty: {market_env['nifty']['trend']}")
+
+    # ── STEP 1: Twitter scrape ─────────────────────────────────────────────────
+    logger.info("STEP 1/8 — Twitter scrape...")
     from scanner.twitter_scraper import run as scrape_twitter
     try:
         tw = scrape_twitter()
@@ -70,78 +88,140 @@ def main():
 
     if not tweets:
         from scanner.mailer import send_report
-        send_report(f"<p>No tweets ({run_date}). {market_status['status_message']}</p>", subject=f"⚠ FinTwit — No Data ({run_date})")
+        send_report(f"<p>No tweets ({run_date}). {market_status['status_message']}</p>",
+                    subject=f"⚠ FinTwit — No Data ({run_date})")
         sys.exit(0)
 
-    # ── Claude tweet intelligence ─────────────────────────────────────────────
-    logger.info("STEP 2/7 — Claude tweet intelligence...")
+    # ── STEP 2: Claude tweet intelligence ─────────────────────────────────────
+    logger.info("STEP 2/8 — Claude tweet intelligence...")
     from scanner.tweet_intelligence import analyse_all_tweets, analyse_charts_for_tickers
     tweet_signals = analyse_all_tweets(tweets)
     tweet_signals = analyse_charts_for_tickers(tweet_signals)
     logger.info(f"  → {len(tweet_signals)} tickers with Claude sentiment")
 
-    # ── Trader classification (weekly, cached) ────────────────────────────────
-    logger.info("STEP 3/7 — Trader intelligence...")
-    from scanner.trader_intelligence import classify_all_accounts, update_call_outcomes
+    # ── STEP 3: Trader intelligence ───────────────────────────────────────────
+    logger.info("STEP 3/8 — Trader intelligence...")
+    from scanner.trader_intelligence import classify_all_accounts
     trader_db = classify_all_accounts(members, tweets, trader_db)
-    logger.info(f"  → {len(trader_db.get('accounts',{}))} accounts classified")
 
-    # ── Ticker extraction (weighted by trader credibility) ────────────────────
-    logger.info("STEP 4/7 — Ticker extraction...")
+    # ── STEP 4: Ticker extraction ──────────────────────────────────────────────
+    logger.info("STEP 4/8 — Ticker extraction...")
     from scanner.ticker_extractor import extract_tickers
-    # Merge tweet_signals into ticker extraction
     tickers = extract_tickers(tweets, retweet_counts, valid_symbols)
-    # Boost weighted_score by trader credibility + Claude sentiment
+
+    # Apply credibility weighting
     for t in tickers:
-        ticker = t["ticker"]
-        # Credibility weight from all mentioning traders
-        cred_weights = [trader_db.get("accounts",{}).get(u,{}).get("recommended_weight",1.0) for u in t.get("users",[])]
-        avg_cred = sum(cred_weights) / max(len(cred_weights),1)
-        # Sentiment boost from Claude
-        sig = tweet_signals.get(ticker,{})
-        sent_boost = max(0, sig.get("sentiment_score",0) * 0.5)
-        t["weighted_score"] = round(t["weighted_score"] * avg_cred + sent_boost, 2)
+        cred = [trader_db.get("accounts",{}).get(u,{}).get("recommended_weight",1.0) for u in t.get("users",[])]
+        avg_cred = sum(cred)/max(len(cred),1)
+        sig = tweet_signals.get(t["ticker"],{})
+        t["weighted_score"] = round(t["weighted_score"] * avg_cred + max(0,sig.get("sentiment_score",0)*0.5), 2)
     tickers.sort(key=lambda x: x["weighted_score"], reverse=True)
-    logger.info(f"  → {len(tickers)} valid tickers (credibility-weighted)")
+    logger.info(f"  → {len(tickers)} tickers extracted")
 
     if not tickers:
-        logger.warning("No valid tickers after filtering")
+        logger.warning("No valid tickers")
         sys.exit(0)
 
-    # ── Technical analysis ────────────────────────────────────────────────────
-    logger.info("STEP 5/7 — Technical analysis...")
+    ticker_list = [t["ticker"] for t in tickers]
+
+    # ── STEP 5: Market data (FII, bulk deals, liquidity, options, macro) ──────
+    logger.info("STEP 5/8 — Market intelligence...")
+    from scanner.market_data import fetch_all_market_data, fetch_bulk_deals, \
+        fetch_block_deals, get_deal_signal, fetch_insider_trades, get_insider_signal
+    market_data = fetch_all_market_data(ticker_list)
+    logger.info(f"  → FII: {market_data['fii_dii']['fii_signal']} | Global: {market_data['global_macro']['environment']}")
+    logger.info(f"  → {sum(1 for v in market_data['liquidity'].values() if not v.get('liquid'))} illiquid stocks flagged")
+
+    # ── STEP 6: Technical analysis ─────────────────────────────────────────────
+    logger.info("STEP 6/8 — Technical analysis...")
     from scanner.technical_analysis import analyse_all
-    analysis_results = analyse_all(tickers, min_mentions=int(os.getenv("MIN_MENTIONS","1")),
-                                   market_env=market_env, nifty_close=nifty_close)
+    min_mentions = int(os.getenv("MIN_MENTIONS","1"))
+
+    # Build deal/insider signals per ticker
+    bulk_deals  = market_data.get("bulk_deals", {})
+    block_deals = market_data.get("block_deals", {})
+
+    analysis_results = analyse_all(
+        tickers,
+        min_mentions   = min_mentions,
+        market_env     = market_env,
+        nifty_close    = nifty_close,
+    )
+
+    # Enrich with deal signals and insider activity
+    for r in analysis_results:
+        ticker = r["ticker"]
+        bulk   = bulk_deals.get(ticker, [])
+        block  = block_deals.get(ticker, [])
+        deal   = get_deal_signal(ticker, bulk, block)
+        r["deal_signal"] = deal
+
+        insider_trades = fetch_insider_trades(ticker)
+        insider = get_insider_signal(insider_trades)
+        r["insider_signal"]  = insider
+        r["insider_trades"]  = insider_trades
+
+        # Add options data
+        r["options_data"] = market_data.get("options", {}).get(ticker, {})
+
+    # Update trade journal with current prices for stop/target tracking
+    current_prices = {r["ticker"]: r["current_price"] for r in analysis_results}
+    journal = update_position_outcomes(journal, current_prices)
+
     logger.info(f"  → {len(analysis_results)} stocks analysed")
     history = update_history(history, analysis_results, run_date)
 
-    # ── News fetch ────────────────────────────────────────────────────────────
-    logger.info("STEP 6/7 — News & catalysts...")
+    # ── STEP 6b: Gate filters + ranking ───────────────────────────────────────
+    logger.info("STEP 6b/8 — Applying gate filters...")
+    from scanner.gate_filters import apply_all_filters
+    open_positions = get_open_positions(journal)
+    journal_context = {
+        "open_positions_detail": [
+            {**p, "sector": next((r.get("sector") for r in analysis_results if r["ticker"]==p["ticker"]), "Unknown")}
+            for p in open_positions
+        ]
+    }
+    perf_context = get_performance_context(journal)
+
+    filter_result = apply_all_filters(
+        analysis_results,
+        market_env       = market_env,
+        nifty_close      = nifty_close,
+        liquidity_data   = market_data["liquidity"],
+        market_data      = market_data,
+        journal_context  = journal_context,
+        account_size     = ACCOUNT_SIZE,
+        risk_per_trade_pct = RISK_PER_TRADE_PCT,
+    )
+    analysis_results  = filter_result["results"]
+    gate_status       = filter_result["gate_status"]
+    removed_illiquid  = filter_result["removed_illiquid"]
+    short_candidates  = filter_result["short_candidates"]
+    logger.info(f"  → {len(analysis_results)} stocks after filtering | Gate: {gate_status['mode']}")
+
+    # Log recommendations to journal
+    for r in analysis_results:
+        log_recommendation(journal, r["ticker"], r["recommendation"], r["score"],
+                          f"₹{r.get('suggested_stop',0):.0f}–₹{r.get('current_price',0):.0f}",
+                          r.get("suggested_stop",0), r.get("suggested_target",0),
+                          r.get("entry_context","unknown"), run_date)
+
+    # ── STEP 7: News + Claude stock intelligence ──────────────────────────────
+    logger.info("STEP 7/8 — News + AI intelligence...")
     from scanner.news_fetcher import fetch_all_news
     news_map = fetch_all_news(analysis_results)
 
-    # ── Claude stock intelligence ─────────────────────────────────────────────
-    logger.info("STEP 6b/7 — Claude stock intelligence...")
-    from scanner.stock_intelligence import enrich_all_stocks, generate_premarket_brief
+    from scanner.stock_intelligence import enrich_all_stocks
     analysis_results, correlations, macro_context = enrich_all_stocks(
-        analysis_results, news_map, tweet_signals, market_env
+        analysis_results, news_map, tweet_signals, market_env,
     )
 
-    # ── Anomaly detection ─────────────────────────────────────────────────────
     from scanner.performance_tracker import detect_anomalies, generate_weekly_debrief
-    anomalies     = detect_anomalies(tweet_signals, history, trader_db)
-    weekly_debrief= generate_weekly_debrief(history, market_env)
+    anomalies      = detect_anomalies(tweet_signals, history, trader_db)
+    weekly_debrief = generate_weekly_debrief(history, market_env)
 
-    # Log trader calls for accuracy tracking
-    for ticker, sig in tweet_signals.items():
-        for trader in sig.get("traders",[])[:3]:
-            from scanner.trader_intelligence import log_trader_call
-            log_trader_call(trader_db, trader, ticker, sig.get("sentiment_label","neutral"),
-                           sig.get("trader_entry"), sig.get("trader_target"), run_date)
-
-    # ── Build & send report ───────────────────────────────────────────────────
-    logger.info("STEP 7/7 — Report & email...")
+    # ── STEP 8: Build report + send ───────────────────────────────────────────
+    logger.info("STEP 8/8 — Report + email...")
     ai_cost = get_run_stats()
     logger.info(f"  → AI cost: ${ai_cost['total_cost_usd']:.3f} (₹{ai_cost['total_cost_inr']:.2f}) | {ai_cost['calls']} calls")
 
@@ -164,27 +244,37 @@ def main():
         tweet_count      = len(tweets),
         rt_dedupe_count  = stats["rt_dedupe_count"],
         market_status    = market_status,
+        market_data      = market_data,
+        gate_status      = gate_status,
+        short_candidates = short_candidates,
+        removed_illiquid = removed_illiquid,
+        fii_dii          = market_data.get("fii_dii", {}),
+        global_macro     = market_data.get("global_macro", {}),
+        upcoming_events  = market_data.get("upcoming_events", []),
     )
 
     buys  = sum(1 for r in analysis_results if r.get("recommendation") in ("BUY","STRONG BUY"))
     watch = sum(1 for r in analysis_results if r.get("recommendation") == "WATCH")
     hot   = [r["ticker"] for r in analysis_results if r.get("consecutive_days",0) >= 3]
+    gate_icon = "🔴" if gate_status.get("mode") == "bearish" else "🟡" if gate_status.get("mode") == "cautious" else "🟢"
+
     subject = (
-        f"📊 FinTwit {start.strftime('%d %b')} [{market_env['label']}] — "
+        f"📊 FinTwit {start.strftime('%d %b')} {gate_icon} [{market_env['label']}] — "
         f"{buys} Buy · {watch} Watch · {len(analysis_results)} stocks"
         + (f" 🔥 {','.join(hot)}" if hot else "")
+        + (f" | {len(short_candidates)} short ideas" if short_candidates else "")
     )
 
     ok = send_report(html, subject=subject)
     if ok:
         save_history(history)
         save_trader_db(trader_db)
+        save_journal(journal)
 
     elapsed = (datetime.now() - start).seconds
     from scanner.cookie_health import send_run_summary
-    send_run_summary(len(analysis_results), len(members), len(tweets), elapsed, errors)
-
-    logger.info(f"{'✅' if ok else '❌'} Done in {elapsed}s | AI cost ₹{ai_cost['total_cost_inr']:.2f}")
+    send_run_summary(len(analysis_results), len(members), len(tweets), elapsed, [])
+    logger.info(f"{'✅' if ok else '❌'} Done in {elapsed}s | AI ₹{ai_cost['total_cost_inr']:.2f}")
     if not ok: sys.exit(1)
 
 

@@ -133,6 +133,7 @@ def analyse_ticker(
     users: List[str],
     market_env: Optional[Dict] = None,
     nifty_close: Optional[pd.Series] = None,
+    **kwargs,
 ) -> Optional[Dict]:
     """Full technical analysis for one NSE ticker."""
 
@@ -296,6 +297,22 @@ def analyse_ticker(
     for p in adv["patterns"]["patterns"]:
         reasons.append(f"✅ [PATTERN] {p}")
 
+    # ── DEAL + INSIDER SIGNAL (from market_data) ─────────────────────────────
+    deal_score   = 0
+    insider_score= 0
+    deal_sig     = kwargs.get('deal_signal', {})
+    insider_sig  = kwargs.get('insider_signal', {})
+    if deal_sig:
+        deal_score = deal_sig.get('score', 0)
+        if deal_score != 0:
+            prefix = '✅' if deal_score > 0 else '⚠'
+            reasons.append(f'{prefix} [DEALS] {deal_sig.get("signal","")}')
+    if insider_sig:
+        insider_score = insider_sig.get('score', 0)
+        if insider_score != 0:
+            prefix = '✅' if insider_score > 0 else '⚠'
+            reasons.append(f'{prefix} [INSIDER] {insider_sig.get("signal","")}')
+
     # ── MARKET ENVIRONMENT ADJUSTMENT ─────────────────────────────────────────
     env_score = 0
     env_label = "Unknown"
@@ -308,8 +325,8 @@ def analyse_ticker(
             reasons.append(f"⚠ [MARKET] {env_label} — headwind")
 
     # ── TOTAL SCORE ───────────────────────────────────────────────────────────
-    total_score = base_score + adv_score + env_score
-    max_score   = 28   # 12 base + 16 advanced (env not counted in max, it's a modifier)
+    total_score = base_score + adv_score + env_score + deal_score + insider_score
+    max_score   = 32   # 12 base + 16 advanced + 4 deal/insider (env not counted in max, it's a modifier)
 
     # ── RECOMMENDATION ────────────────────────────────────────────────────────
     if total_score >= 18:  rec, col = "STRONG BUY", "#00c853"

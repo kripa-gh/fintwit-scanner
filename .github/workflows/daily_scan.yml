@@ -1,11 +1,14 @@
-name: FinTwit Daily Stock Scanner v4
+name: FinTwit Daily Scanner v5
 
 on:
   schedule:
-    - cron: "30 10 * * 1-5"   # 4:00 PM IST = 10:30 UTC Mon–Fri
-    - cron: "30 3 * * 1-5"    # 9:00 AM IST = 03:30 UTC (pre-market brief)
+    - cron: "0 3 * * 1-5"    # 8:30 AM IST = 03:00 UTC — Pre-market brief
+    - cron: "30 10 * * 1-5"  # 4:00 PM IST = 10:30 UTC — Main scan
   workflow_dispatch:
     inputs:
+      mode:
+        description: "Run mode: main or premarket"
+        default: "main"
       lookback_hours:
         description: "Tweet lookback (hours)"
         default: "48"
@@ -16,7 +19,7 @@ on:
 jobs:
   scan:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 35
     permissions:
       contents: write
 
@@ -34,16 +37,25 @@ jobs:
 
       - name: Run scanner
         env:
+          # Twitter
           TWITTER_LIST_ID:      ${{ secrets.TWITTER_LIST_ID }}
           TWITTER_AUTH_TOKEN:   ${{ secrets.TWITTER_AUTH_TOKEN }}
           TWITTER_CT0:          ${{ secrets.TWITTER_CT0 }}
           TWEET_LOOKBACK_HOURS: ${{ github.event.inputs.lookback_hours || '48' }}
           MAX_TWEETS:           "1000"
           MIN_MENTIONS:         ${{ github.event.inputs.min_mentions || '1' }}
+          # AI
           ANTHROPIC_API_KEY:    ${{ secrets.ANTHROPIC_API_KEY }}
+          # Email
           GMAIL_USER:           ${{ secrets.GMAIL_USER }}
           GMAIL_APP_PASSWORD:   ${{ secrets.GMAIL_APP_PASSWORD }}
           REPORT_RECIPIENT:     ${{ secrets.REPORT_RECIPIENT }}
+          # Trading config
+          ACCOUNT_SIZE:         ${{ secrets.ACCOUNT_SIZE }}
+          RISK_PER_TRADE_PCT:   ${{ secrets.RISK_PER_TRADE_PCT }}
+          TRADE_JOURNAL_SHEET_ID: ${{ secrets.TRADE_JOURNAL_SHEET_ID }}
+          # Mode
+          PREMARKET_MODE:       ${{ github.event.inputs.mode == 'premarket' && '1' || (github.event.schedule == '0 3 * * 1-5' && '1' || '0') }}
           SEND_RUN_SUMMARY:     "0"
         run: python main.py
 
@@ -53,7 +65,7 @@ jobs:
           git config user.name  "FinTwit Bot"
           git config user.email "bot@github-actions"
           git add data/ || true
-          git diff --staged --quiet || git commit -m "chore: update scan data [$(date -u '+%Y-%m-%d %H:%M UTC')]"
+          git diff --staged --quiet || git commit -m "chore: scan data [$(date -u '+%Y-%m-%d %H:%M UTC')]"
           git push || true
 
       - name: Upload logs on failure
