@@ -92,10 +92,49 @@ def main():
                     subject=f"⚠ FinTwit — No Data ({run_date})")
         sys.exit(0)
 
+    # ── STEP 1b: Telegram scrape ──────────────────────────────────────────────
+    logger.info("STEP 1b — Telegram scrape...")
+    from scanner.telegram_scraper import (
+        fetch_telegram_messages,
+        telegram_available,
+        normalise_for_pipeline,
+    )
+
+    telegram_tweets = []
+    if telegram_available():
+        try:
+            raw_tg = fetch_telegram_messages(lookback_hours=48)
+            telegram_tweets = normalise_for_pipeline(raw_tg)
+            tg_channels = len(set(m["channel"] for m in raw_tg))
+            logger.info(
+                f"  → {len(telegram_tweets)} Telegram messages "
+                f"from {tg_channels} channels"
+            )
+        except Exception as e:
+            logger.warning(f"  → Telegram failed, continuing without it: {e}")
+    else:
+        logger.info("  → Telegram secrets not configured, skipping")
+
+    # Merge Twitter + Telegram for STEP 2 and STEP 4.
+    # `tweets` (Twitter only) is kept unchanged for STEP 3 — classify_all_accounts
+    # expects Twitter account profiles, not Telegram channels.
+    all_messages = tweets + telegram_tweets
+    logger.info(
+        f"  → Combined pipeline: {len(all_messages)} messages "
+        f"({len(tweets)} Twitter + {len(telegram_tweets)} Telegram)"
+    )
+
+    # Channel credibility map — used in STEP 4 weighting block.
+    # Keys are channel names (same value written to `username` after normalisation).
+    channel_cred_map = {
+        m["channel"]: m.get("channel_credibility", 0.5)
+        for m in telegram_tweets
+    }
+
     # ── STEP 2: Claude tweet intelligence ─────────────────────────────────────
     logger.info("STEP 2/8 — Claude tweet intelligence...")
     from scanner.tweet_intelligence import analyse_all_tweets, analyse_charts_for_tickers
-    tweet_signals = analyse_all_tweets(tweets)
+    tweet_signals = analyse_all_tweets(all_messages)
     tweet_signals = analyse_charts_for_tickers(tweet_signals)
     logger.info(f"  → {len(tweet_signals)} tickers with Claude sentiment")
 
@@ -107,14 +146,29 @@ def main():
     # ── STEP 4: Ticker extraction ──────────────────────────────────────────────
     logger.info("STEP 4/8 — Ticker extraction...")
     from scanner.ticker_extractor import extract_tickers
-    tickers = extract_tickers(tweets, retweet_counts, valid_symbols)
+    tickers = extract_tickers(all_messages, retweet_counts, valid_symbols)
 
     # Apply credibility weighting
     for t in tickers:
-        cred = [trader_db.get("accounts",{}).get(u,{}).get("recommended_weight",1.0) for u in t.get("users",[])]
-        avg_cred = sum(cred)/max(len(cred),1)
-        sig = tweet_signals.get(t["ticker"],{})
-        t["weighted_score"] = round(t["weighted_score"] * avg_cred + max(0,sig.get("sentiment_score",0)*0.5), 2)
+        cred = []
+        for u in t.get("users", []):
+            if u in channel_cred_map:
+                # Telegram channel: use credibility from telegram_channels.py (0–1 scale)
+                cred.append(channel_cred_map[u])
+            else:
+                # Twitter account: use trader_db recommended_weight as before
+                cred.append(
+                    trader_db.get("accounts", {})
+                              .get(u, {})
+                              .get("recommended_weight", 1.0)
+                )
+        avg_cred = sum(cred) / max(len(cred), 1)
+        sig = tweet_signals.get(t["ticker"], {})
+        t["weighted_score"] = round(
+            t["weighted_score"] * avg_cred
+            + max(0, sig.get("sentiment_score", 0) * 0.5),
+            2,
+        )
     tickers.sort(key=lambda x: x["weighted_score"], reverse=True)
     logger.info(f"  → {len(tickers)} tickers extracted")
 

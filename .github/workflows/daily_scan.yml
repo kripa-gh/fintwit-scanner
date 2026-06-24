@@ -1,5 +1,4 @@
 name: FinTwit Daily Scanner v5
-
 on:
   schedule:
     - cron: "0 3 * * 1-5"    # 8:30 AM IST = 03:00 UTC — Pre-market brief
@@ -15,26 +14,21 @@ on:
       min_mentions:
         description: "Min mentions"
         default: "1"
-
 jobs:
   scan:
     runs-on: ubuntu-latest
     timeout-minutes: 35
     permissions:
       contents: write
-
     steps:
       - uses: actions/checkout@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
           cache: "pip"
-
       - run: pip install -r requirements.txt
-
       - name: Run scanner
         env:
           # Twitter
@@ -44,6 +38,10 @@ jobs:
           TWEET_LOOKBACK_HOURS: ${{ github.event.inputs.lookback_hours || '48' }}
           MAX_TWEETS:           "1000"
           MIN_MENTIONS:         ${{ github.event.inputs.min_mentions || '1' }}
+          # Telegram
+          TELEGRAM_API_ID:      ${{ secrets.TELEGRAM_API_ID }}
+          TELEGRAM_API_HASH:    ${{ secrets.TELEGRAM_API_HASH }}
+          TELEGRAM_SESSION_STRING: ${{ secrets.TELEGRAM_SESSION_STRING }}
           # AI
           ANTHROPIC_API_KEY:    ${{ secrets.ANTHROPIC_API_KEY }}
           # Email
@@ -58,7 +56,6 @@ jobs:
           PREMARKET_MODE:       ${{ github.event.inputs.mode == 'premarket' && '1' || (github.event.schedule == '0 3 * * 1-5' && '1' || '0') }}
           SEND_RUN_SUMMARY:     "0"
         run: python main.py
-
       - name: Commit data files
         if: always()
         run: |
@@ -67,7 +64,6 @@ jobs:
           git add data/ || true
           git diff --staged --quiet || git commit -m "chore: scan data [$(date -u '+%Y-%m-%d %H:%M UTC')]"
           git push || true
-
       - name: Upload logs on failure
         if: failure()
         uses: actions/upload-artifact@v4
