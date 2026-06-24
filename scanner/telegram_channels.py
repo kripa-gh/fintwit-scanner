@@ -1,117 +1,90 @@
 # scanner/telegram_channels.py
 # Telegram channel registry with credibility weights.
 #
-# credibility : 0.0–1.0  — multiplied into conviction score downstream
-# type        : used for source tagging in the report
-# public      : True = no group membership required
+# All channels now use permanent numeric IDs instead of usernames.
+# Numeric IDs never change even if the channel is renamed.
 #
-# BEFORE GOING LIVE: open each channel in Telegram, read a week of posts,
-# confirm it is what it claims to be. Remove any that look like pump channels.
-# Channel usernames change — if a fetch returns 0 messages, the channel
-# may have been renamed or deleted.
+# credibility     : 0.0–1.0 — multiplied into conviction score downstream
+# type            : used for source tagging in the report
+# public          : True = no group membership required
+# whitelist_users : optional list of Telegram user IDs — if set, only messages
+#                   from those users are kept. Leave empty [] to include everyone.
+#                   To get a user's ID: forward their message to @userinfobot.
 
 TELEGRAM_CHANNELS = {
 
     # ------------------------------------------------------------------ #
-    # HIGH CREDIBILITY — data/regulatory feeds, minimal opinion           #
+    # PUBLIC CHANNELS — permanent numeric IDs                             #
     # ------------------------------------------------------------------ #
-    "NSEIndia": {
-        "credibility": 1.0,
-        "type": "regulatory",
-        "description": "NSE India official channel",
-        "public": True,
-    },
-    "bseindia": {
-        "credibility": 1.0,
-        "type": "regulatory",
-        "description": "BSE India official channel",
-        "public": True,
-    },
-    "sebiupdates": {
-        "credibility": 1.0,
-        "type": "regulatory",
-        "description": "SEBI regulatory updates",
-        "public": True,
-    },
-    "fiiDiidata": {
-        "credibility": 0.90,
-        "type": "institutional_flow",
-        "description": "Daily FII/DII provisional and final flow data",
-        "public": True,
-    },
-    "nseoptionchain": {
-        "credibility": 0.85,
-        "type": "options_flow",
-        "description": "NSE options chain data — PCR, OI changes, max pain",
-        "public": True,
-    },
-    "cnbctv18news": {
-        "credibility": 0.80,
-        "type": "news",
-        "description": "CNBC TV18 market news",
-        "public": True,
-    },
-    "economictimes": {
-        "credibility": 0.80,
-        "type": "news",
-        "description": "Economic Times markets feed",
-        "public": True,
-    },
-
-    # ------------------------------------------------------------------ #
-    # MEDIUM CREDIBILITY — established TA / institutional commentary      #
-    # ------------------------------------------------------------------ #
-    "nifty_technicals": {
-        "credibility": 0.65,
-        "type": "technical",
-        "description": "Nifty and Bank Nifty technical levels",
-        "public": True,
-    },
-    "stockbreakoutalerts": {
+    "-1001306340643": {
         "credibility": 0.60,
         "type": "technical",
-        "description": "Breakout scanner alerts — volume + price action",
+        "description": "Momentum Trades — breakout and swing setups",
         "public": True,
+        "whitelist_users": [],
     },
-    "bulkblockdeals": {
-        "credibility": 0.75,
-        "type": "institutional_flow",
-        "description": "BSE/NSE bulk and block deal aggregator",
+    "-1002347392788": {
+        "credibility": 0.60,
+        "type": "technical",
+        "description": "Ruthless Trader — technical analysis and calls",
         "public": True,
+        "whitelist_users": [],
     },
-    "quarterly_results_india": {
-        "credibility": 0.75,
-        "type": "fundamental",
-        "description": "Quarterly results summaries — beat/miss/guidance",
+    "-1002470006457": {
+        "credibility": 0.60,
+        "type": "technical",
+        "description": "STR / Sunrice Trading Room — swing and positional trades",
         "public": True,
+        "whitelist_users": [],
+    },
+    "-1001671811240": {
+        "credibility": 0.65,
+        "type": "technical",
+        "description": "Buy Before Breakout — pre-breakout stock alerts",
+        "public": True,
+        "whitelist_users": [],
+    },
+    "-1001642892147": {
+        "credibility": 0.60,
+        "type": "technical",
+        "description": "Breakout Charts — chart pattern alerts",
+        "public": True,
+        "whitelist_users": [],
+    },
+    "-1001739800283": {
+        "credibility": 0.60,
+        "type": "technical",
+        "description": "UremO — Indian market trade ideas",
+        "public": True,
+        "whitelist_users": [],
     },
 
     # ------------------------------------------------------------------ #
-    # LOWER CREDIBILITY — retail/social flow, high noise                  #
-    # Keep threshold at 0.45 so these still make it through,             #
-    # but their conviction scores are discounted automatically.           #
+    # PRIVATE CHANNELS                                                     #
     # ------------------------------------------------------------------ #
-    "dalal_street_talks": {
-        "credibility": 0.45,
-        "type": "social",
-        "description": "Retail market discussion — Dalal Street community",
-        "public": True,
+    "-1001729217563": {
+        "credibility": 0.70,
+        "type": "technical",
+        "description": "UremO Premium — private channel, all members",
+        "public": False,
+        "whitelist_users": [],   # empty = include all members
+    },
+    "-1001427374929": {
+        "credibility": 0.75,
+        "type": "technical",
+        "description": "VIES-Family — Dinesh Agrawal picks only",
+        "public": False,
+        "whitelist_users": [
+            463054735,   # Dinesh Agrawal
+            # Add more trusted member IDs here via @userinfobot
+        ],
     },
 }
 
 # ----------------------------------------------------------------------- #
-# Pipeline thresholds — tune after first week of runs                      #
+# Pipeline thresholds                                                       #
 # ----------------------------------------------------------------------- #
 
-# Messages from channels below this credibility are fetched but discarded
-# before being sent to Claude. Saves tokens on pure noise.
 CREDIBILITY_THRESHOLD = 0.45
-
-# Channel types that bypass the signal threshold check in main.py
-# (regulatory and institutional data always passes through regardless
-# of mention count or sentiment score)
 HIGH_TRUST_TYPES = {"regulatory", "institutional_flow", "news", "fundamental"}
-
-# Per-channel message cap — prevents a single high-volume channel
-# from flooding the pipeline and dominating Claude's context
 MAX_MESSAGES_PER_CHANNEL = 50

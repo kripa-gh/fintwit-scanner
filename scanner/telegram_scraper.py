@@ -108,8 +108,15 @@ class TelegramScraper:
         """Fetch messages from a single channel newer than cutoff."""
         messages: list[dict] = []
 
+        # Numeric string IDs (e.g. "-1001234567890") must be passed as int
+        # Username strings (e.g. "channelname") are passed as-is
+        try:
+            entity = int(username)
+        except ValueError:
+            entity = username
+
         async for msg in self.client.iter_messages(
-            username, limit=MAX_MESSAGES_PER_CHANNEL
+            entity, limit=MAX_MESSAGES_PER_CHANNEL
         ):
             # iter_messages returns newest → oldest.
             # Use continue (not break) — Telegram channels occasionally
@@ -120,6 +127,11 @@ class TelegramScraper:
 
             msg_time = msg.date.replace(tzinfo=timezone.utc)
             if msg_time < cutoff:
+                continue
+
+            # Whitelist filter — if set, only keep messages from trusted users
+            whitelist = meta.get("whitelist_users", [])
+            if whitelist and msg.sender_id not in whitelist:
                 continue
 
             text = (msg.text or "").strip()
