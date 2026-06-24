@@ -83,6 +83,38 @@
       "last_seen": "2026-06-24",
       "last_recommendation": "WATCH",
       "last_score": 12
+    },
+    "SHAKTIPUMP": {
+      "first_seen": "2026-06-24",
+      "appearances": [
+        {
+          "date": "2026-06-24",
+          "recommendation": "WATCH",
+          "score": 12,
+          "price": 589.5,
+          "rsi": 69.6
+        }
+      ],
+      "consecutive_days": 1,
+      "last_seen": "2026-06-24",
+      "last_recommendation": "WATCH",
+      "last_score": 12
+    },
+    "OSWALPUMPS": {
+      "first_seen": "2026-06-24",
+      "appearances": [
+        {
+          "date": "2026-06-24",
+          "recommendation": "WATCH",
+          "score": 10,
+          "price": 438.9,
+          "rsi": 66.1
+        }
+      ],
+      "consecutive_days": 1,
+      "last_seen": "2026-06-24",
+      "last_recommendation": "WATCH",
+      "last_score": 10
     }
   }
 }

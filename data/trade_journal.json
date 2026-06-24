@@ -65,8 +65,34 @@
       "acted_on": null,
       "outcome": null,
       "return_pct": null
+    },
+    {
+      "date": "2026-06-24",
+      "ticker": "OSWALPUMPS",
+      "recommendation": "WATCH",
+      "score": 10,
+      "entry_zone": "\u20b9402\u2013\u20b9439",
+      "stop": 401.9,
+      "target": 549.9,
+      "setup_type": "breakout",
+      "acted_on": null,
+      "outcome": null,
+      "return_pct": null
+    },
+    {
+      "date": "2026-06-24",
+      "ticker": "SHAKTIPUMP",
+      "recommendation": "WATCH",
+      "score": 12,
+      "entry_zone": "\u20b9547\u2013\u20b9590",
+      "stop": 547.47,
+      "target": 715.59,
+      "setup_type": "breakout",
+      "acted_on": null,
+      "outcome": null,
+      "return_pct": null
     }
   ],
   "stats": {},
-  "last_updated": "2026-06-24T04:59:29.198906"
+  "last_updated": "2026-06-24T09:44:36.918346"
 }
