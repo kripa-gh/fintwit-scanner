@@ -1641,8 +1641,33 @@
       "username": "SandeepParekh",
       "last_classified": "2026-06-23",
       "followers": 71568
+    },
+    "stockspicker_": {
+      "account_type": "noise",
+      "signal_quality": 1,
+      "specificity": 1,
+      "credibility_score": 4,
+      "gives_price_levels": false,
+      "gives_stop_loss": false,
+      "typical_timeframe": "mixed",
+      "posts_charts": false,
+      "reasoning": "Only one tweet visible with just a stock ticker hashtag and an emoji with no analysis, price levels, rationale, or any actionable information whatsoever.",
+      "recommended_weight": 0.0,
+      "should_remove": true,
+      "remove_reason": "Insufficient tweet history to evaluate and the single available tweet contains zero analytical content \u2014 just a hashtag and emoji, indicating pure noise or pump-and-dump behavior.",
+      "username": "stockspicker_",
+      "last_classified": "2026-06-24",
+      "followers": 9190
+    },
+    "BasedTrader_": {
+      "username": "BasedTrader_",
+      "account_type": "active_trader",
+      "credibility_score": 50,
+      "recommended_weight": 1.0,
+      "should_remove": false,
+      "last_classified": "2026-06-24"
     }
   },
   "calls": [],
-  "last_updated": "2026-06-23"
+  "last_updated": "2026-06-24"
 }

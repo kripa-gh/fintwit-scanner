@@ -52,8 +52,21 @@
       "acted_on": null,
       "outcome": null,
       "return_pct": null
+    },
+    {
+      "date": "2026-06-24",
+      "ticker": "RUBICON",
+      "recommendation": "WATCH",
+      "score": 12,
+      "entry_zone": "\u20b91275\u2013\u20b91437",
+      "stop": 1274.8,
+      "target": 1923.6,
+      "setup_type": "breakout",
+      "acted_on": null,
+      "outcome": null,
+      "return_pct": null
     }
   ],
   "stats": {},
-  "last_updated": "2026-06-23T09:24:19.015159"
+  "last_updated": "2026-06-24T04:59:29.198906"
 }

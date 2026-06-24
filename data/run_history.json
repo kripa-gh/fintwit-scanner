@@ -1,6 +1,7 @@
 {
   "runs": [
-    "2026-06-23"
+    "2026-06-23",
+    "2026-06-24"
   ],
   "tickers": {
     "FCL": {
@@ -66,6 +67,22 @@
       "last_seen": "2026-06-23",
       "last_recommendation": "AVOID",
       "last_score": -7
+    },
+    "RUBICON": {
+      "first_seen": "2026-06-24",
+      "appearances": [
+        {
+          "date": "2026-06-24",
+          "recommendation": "WATCH",
+          "score": 12,
+          "price": 1437.0,
+          "rsi": 73.8
+        }
+      ],
+      "consecutive_days": 1,
+      "last_seen": "2026-06-24",
+      "last_recommendation": "WATCH",
+      "last_score": 12
     }
   }
 }
