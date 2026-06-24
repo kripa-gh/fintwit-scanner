@@ -91,8 +91,47 @@
       "acted_on": null,
       "outcome": null,
       "return_pct": null
+    },
+    {
+      "date": "2026-06-24",
+      "ticker": "PARAS",
+      "recommendation": "WATCH",
+      "score": 13,
+      "entry_zone": "\u20b91121\u2013\u20b91288",
+      "stop": 1121.2,
+      "target": 1790.2,
+      "setup_type": "pullback",
+      "acted_on": null,
+      "outcome": null,
+      "return_pct": null
+    },
+    {
+      "date": "2026-06-24",
+      "ticker": "ASTRAMICRO",
+      "recommendation": "CAUTION",
+      "score": 7,
+      "entry_zone": "\u20b91516\u2013\u20b91663",
+      "stop": 1515.95,
+      "target": 2102.55,
+      "setup_type": "pullback",
+      "acted_on": null,
+      "outcome": null,
+      "return_pct": null
+    },
+    {
+      "date": "2026-06-24",
+      "ticker": "KIRLPNU",
+      "recommendation": "WATCH",
+      "score": 13,
+      "entry_zone": "\u20b91675\u2013\u20b91909",
+      "stop": 1674.62,
+      "target": 2612.94,
+      "setup_type": "pullback",
+      "acted_on": null,
+      "outcome": null,
+      "return_pct": null
     }
   ],
   "stats": {},
-  "last_updated": "2026-06-24T09:44:36.918346"
+  "last_updated": "2026-06-24T10:55:42.214815"
 }
