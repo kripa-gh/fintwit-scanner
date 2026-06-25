@@ -4,7 +4,9 @@ All 12 gaps addressed.
 """
 
 import logging, os, sys
-from datetime import datetime, date
+from datetime import datetime, date, timezone, timedelta
+
+IST = timezone(timedelta(hours=5, minutes=30))
 
 logging.basicConfig(level=logging.INFO,
     format="%(asctime)s [%(levelname)s] %(name)s — %(message)s", datefmt="%H:%M:%S")
@@ -15,8 +17,8 @@ PREMARKET_MODE = os.getenv("PREMARKET_MODE", "0") == "1"
 
 
 def main():
-    start    = datetime.now()
-    run_date = date.today().isoformat()
+    start    = datetime.now(IST)   # IST-aware so report date/subject never drift at UTC midnight
+    run_date = datetime.now(IST).date().isoformat()
 
     # Pre-market brief (separate 8:30am run)
     if PREMARKET_MODE:
@@ -411,7 +413,7 @@ def main():
         save_trader_db(trader_db)
         save_journal(journal)
 
-    elapsed = (datetime.now() - start).seconds
+    elapsed = (datetime.now(IST) - start).seconds
     from scanner.cookie_health import send_run_summary
     send_run_summary(len(analysis_results), len(members), len(tweets), elapsed, [])
     logger.info(f"{'✅' if ok else '❌'} Done in {elapsed}s | AI ₹{ai_cost['total_cost_inr']:.2f}")

@@ -14,6 +14,7 @@ import json
 import logging
 import os
 import re
+import threading
 import time
 from typing import Any, Dict, List, Optional, Union
 
@@ -26,8 +27,11 @@ MODEL     = "claude-sonnet-4-6"
 API_URL   = "https://api.anthropic.com/v1/messages"
 MAX_RETRIES = 3
 
-# Cost tracking (accumulated per run)
+# Cost tracking (accumulated per run). Updated from multiple threads during
+# parallel enrichment, so all mutations go through _stats_lock — `dict[k] += n`
+# is a non-atomic read-modify-write and would otherwise lose updates.
 _run_stats = {"input_tokens": 0, "output_tokens": 0, "calls": 0, "errors": 0}
+_stats_lock = threading.Lock()
 
 # Sonnet 4.6 pricing per million tokens
 INPUT_COST_PER_MTK  = 3.0   # $3.00
@@ -101,16 +105,18 @@ def call(
 
             if resp.status_code != 200:
                 logger.warning(f"Claude API {resp.status_code}: {resp.text[:200]}")
-                _run_stats["errors"] += 1
+                with _stats_lock:
+                    _run_stats["errors"] += 1
                 return None
 
             data = resp.json()
 
-            # Track usage
+            # Track usage (thread-safe)
             usage = data.get("usage", {})
-            _run_stats["input_tokens"]  += usage.get("input_tokens", 0)
-            _run_stats["output_tokens"] += usage.get("output_tokens", 0)
-            _run_stats["calls"]         += 1
+            with _stats_lock:
+                _run_stats["input_tokens"]  += usage.get("input_tokens", 0)
+                _run_stats["output_tokens"] += usage.get("output_tokens", 0)
+                _run_stats["calls"]         += 1
 
             text = data["content"][0]["text"].strip()
 
@@ -126,7 +132,8 @@ def call(
             time.sleep(2 ** attempt)
         except Exception as e:
             logger.warning(f"Claude call error: {e}")
-            _run_stats["errors"] += 1
+            with _stats_lock:
+                _run_stats["errors"] += 1
             return None
 
     return None

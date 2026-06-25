@@ -12,7 +12,9 @@ Covers:
 """
 
 import logging
+import os
 import time
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import Dict, List, Optional
 
 from scanner.claude_client import call, call_json
@@ -249,7 +251,7 @@ def detect_correlations(analysis_results: List[Dict]) -> Dict:
     result = call_json(
         prompt=CORRELATION_PROMPT.format(stocks=stocks_text),
         system=CORRELATION_SYSTEM,
-        max_tokens=1500,   # 600 truncated mid-reason on multi-group output
+        max_tokens=2500,   # 1500 still truncated on 3-stock OMC group (char 5635)
         fallback={"portfolio_note": "Correlation analysis unavailable"},
     )
     return result or {}
@@ -435,31 +437,54 @@ def enrich_all_stocks(
             r["narration"]    = {}
             r["tweet_signal"] = tweet_signals.get(r["ticker"], {})
 
-    enriched = []
-    for i, r in enumerate(to_enrich):
+    # Enrich each qualifying stock with 2 Claude calls (news summary → narration).
+    # The two calls per stock are sequential (narration consumes news_summary),
+    # but stocks are independent, so we run them concurrently. This is the runtime
+    # bottleneck: serial it was ~19s/stock; parallel it collapses to roughly the
+    # slowest few stocks. Worker count is capped to stay well under API rate limits;
+    # claude_client already retries 429s with backoff, so no per-call sleep needed.
+    def _enrich_one(r: Dict) -> Dict:
         ticker = r["ticker"]
-        logger.info(f"  [{i+1}/{len(to_enrich)}] Enriching {ticker}...")
-
         news   = news_map.get(ticker, {})
         ts     = tweet_signals.get(ticker, {})
 
-        # 1. Deep news summary
         news_summary = summarise_news(
             ticker,
             news.get("news", []),
             news.get("filings", []),
         )
-        time.sleep(0.3)
-
-        # 2. Setup narration
         narration = narrate_setup(ticker, r, ts, news_summary)
-        time.sleep(0.3)
 
-        # Merge into result
-        r["news_summary"]   = news_summary
-        r["narration"]      = narration
-        r["tweet_signal"]   = ts
-        enriched.append(r)
+        r["news_summary"] = news_summary
+        r["narration"]    = narration
+        r["tweet_signal"] = ts
+        return r
+
+    max_workers = int(os.getenv("ENRICH_WORKERS", "5"))
+    enriched = [None] * len(to_enrich)   # preserve input order for stable ranking
+    if to_enrich:
+        with ThreadPoolExecutor(max_workers=max_workers) as pool:
+            future_to_idx = {
+                pool.submit(_enrich_one, r): i
+                for i, r in enumerate(to_enrich)
+            }
+            done = 0
+            for fut in as_completed(future_to_idx):
+                idx = future_to_idx[fut]
+                done += 1
+                ticker = to_enrich[idx]["ticker"]
+                try:
+                    enriched[idx] = fut.result()
+                    logger.info(f"  [{done}/{len(to_enrich)}] Enriched {ticker}")
+                except Exception as e:
+                    logger.warning(f"  Enrichment failed for {ticker}: {e}")
+                    # Fall back to un-enriched record so the stock still appears
+                    r = to_enrich[idx]
+                    r.setdefault("news_summary", {})
+                    r.setdefault("narration", {})
+                    r["tweet_signal"] = tweet_signals.get(ticker, {})
+                    enriched[idx] = r
+    enriched = [r for r in enriched if r is not None]
 
     # 3. Correlation detection (once for all stocks)
     logger.info("  Running correlation analysis...")
