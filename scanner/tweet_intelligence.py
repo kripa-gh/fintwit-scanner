@@ -25,6 +25,30 @@ logger = logging.getLogger(__name__)
 BATCH_SIZE = 12   # tweets per Claude call — smaller batches = fewer truncated responses = less wasted spend
 
 
+# ─────────────────────────────────────────────────────────────────────────────
+# Telegram actionable-intent keywords.
+# Telegram channels post a stock once, in plain text, often with intent language
+# rather than #/$ cashtags. These phrases rescue intentional but low-conviction
+# mentions ("keep an eye on ABC", "ABC on watchlist") that Claude's conviction
+# score alone would flatten to noise. Used as a secondary promotion gate in
+# main.py STEP 4b — Claude's signal_type/conviction is the primary gate.
+# ─────────────────────────────────────────────────────────────────────────────
+ACTIONABLE_KEYWORDS = (
+    "keep an eye on", "eye on", "added", "adding", "accumulating",
+    "loading", "loaded", "watchlist", "watch list", "explosive",
+    "firework", "fireworks", "blast", "blasting", "rocket",
+    "breakout", "mega move", "big move", "alert", "buy zone", "accumulate",
+)
+
+
+def _has_actionable_keyword(text: str) -> bool:
+    """True if the raw message text contains any actionable-intent phrase."""
+    if not text:
+        return False
+    low = text.lower()
+    return any(kw in low for kw in ACTIONABLE_KEYWORDS)
+
+
 # ═══════════════════════════════════════════════════════════════════════════════
 # 1. BATCH TWEET SENTIMENT + CONVICTION + PRICE EXTRACTION
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -144,6 +168,9 @@ def _aggregate_by_ticker(analyses: List[Dict], raw_tweets: List[Dict]) -> Dict[s
         "traders":        [],
         "high_quality_mentions": 0,
         "chart_images":   [],
+        "from_telegram":  False,
+        "from_twitter":   False,
+        "keyword_hit":    False,
     })
 
     # Map tweet_id → username for enrichment
@@ -157,6 +184,13 @@ def _aggregate_by_ticker(analyses: List[Dict], raw_tweets: List[Dict]) -> Dict[s
         quality   = analysis.get("tweet_quality", "low")
         has_chart = analysis.get("has_chart_image", False)
         chart_url = analysis.get("chart_image_url")
+
+        # Recover the original message to determine source + keyword intent.
+        # Source detection is robust: it falls back to the message's own
+        # `source` field (Telegram messages carry source="telegram").
+        raw_msg    = id_to_tweet.get(tweet_id, {})
+        msg_source = raw_msg.get("source", "twitter")
+        msg_kw_hit = _has_actionable_keyword(raw_msg.get("text", ""))
 
         for ticker_info in analysis.get("tickers", []):
             if not isinstance(ticker_info, dict):
@@ -179,6 +213,14 @@ def _aggregate_by_ticker(analyses: List[Dict], raw_tweets: List[Dict]) -> Dict[s
             d["total_conviction"] += conviction
             d[sentiment]          += 1
             d["traders"].append(username)
+
+            # Source + intent tracking (used by main.py STEP 4b gate)
+            if msg_source == "telegram":
+                d["from_telegram"] = True
+            else:
+                d["from_twitter"] = True
+            if msg_kw_hit:
+                d["keyword_hit"] = True
 
             # Sentiment score: bullish=+1, exit=-0.5, bearish=-1, neutral=0
             weight = {"bullish": 1.0, "bearish": -1.0, "exit": -0.5, "neutral": 0.0}.get(sentiment, 0)
@@ -236,6 +278,9 @@ def _aggregate_by_ticker(analyses: List[Dict], raw_tweets: List[Dict]) -> Dict[s
             "dominant_signal_type":  sig_common,
             "key_reasons":           d["key_reasons"][:5],
             "chart_image_urls":      d["chart_images"][:3],
+            "from_telegram":         d["from_telegram"],
+            "from_twitter":          d["from_twitter"],
+            "keyword_hit":           d["keyword_hit"],
         }
 
     return result

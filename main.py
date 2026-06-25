@@ -170,7 +170,89 @@ def main():
             2,
         )
     tickers.sort(key=lambda x: x["weighted_score"], reverse=True)
-    logger.info(f"  → {len(tickers)} tickers extracted")
+    logger.info(f"  → {len(tickers)} tickers extracted (regex)")
+
+    # ── STEP 4b: Promote actionable Claude-NLP tickers (Telegram plain-text) ──────────────────────
+    # Telegram channels post a stock ONCE, in plain text — no #/$ cashtags — so
+    # the regex in extract_tickers() catches almost none of them. Claude already
+    # identified these tickers semantically in STEP 2 (tweet_signals).
+    #
+    # Mention-count weighting (the Twitter model) does NOT apply: a single
+    # high-conviction Telegram call is signal, not noise. So we promote a
+    # Claude-found ticker (not already caught by regex, and a valid NSE symbol)
+    # only if Claude judged it ACTIONABLE — not passive chatter. Gate, promote
+    # if ANY of:
+    #   1. conviction >= 3                      (incl. price-only calls like "ABC 450 sl 430 tgt 510")
+    #   2. signal_type is directional           (breakout/pullback/reversal/momentum/value)
+    #   3. directional sentiment + conviction>=2 (clear bull/bear, not neutral)
+    #   4. actionable keyword in raw text        ("watchlist", "added", "explosive", ...)
+    # Pure neutral conviction-1 chatter with no keyword is dropped.
+    DIRECTIONAL_SIGNALS = {"breakout", "pullback", "reversal", "momentum", "value"}
+    regex_ticker_set = {t["ticker"] for t in tickers}
+    nlp_added = 0
+
+    for sym, sig in tweet_signals.items():
+        if sym in regex_ticker_set:
+            continue  # regex already found it; STEP 4 credibility already applied
+        if valid_symbols and sym not in valid_symbols:
+            continue  # Claude hallucinated a non-NSE symbol — discard
+
+        conviction   = sig.get("avg_conviction", 0) or 0
+        sig_type     = sig.get("dominant_signal_type", "informational")
+        sent_score   = sig.get("sentiment_score", 0) or 0
+        keyword_hit  = sig.get("keyword_hit", False)
+
+        actionable = (
+            conviction >= 3
+            or sig_type in DIRECTIONAL_SIGNALS
+            or (abs(sent_score) >= 0.5 and conviction >= 2)
+            or keyword_hit
+        )
+        if not actionable:
+            continue  # passive chatter — skip
+
+        # Source-aware credibility: Telegram channel cred (0–1) for channel
+        # authors, trader_db recommended_weight for any Twitter authors.
+        cred = []
+        for u in sig.get("traders", []):
+            if u in channel_cred_map:
+                cred.append(channel_cred_map[u])
+            else:
+                cred.append(
+                    trader_db.get("accounts", {})
+                              .get(u, {})
+                              .get("recommended_weight", 1.0)
+                )
+        avg_cred = sum(cred) / max(len(cred), 1)
+
+        # Telegram scoring — credibility × conviction × sentiment clarity.
+        # NO mention count: Telegram stocks appear once by design.
+        if   abs(sent_score) >= 1.0: sent_mult = 1.5
+        elif abs(sent_score) >= 0.5: sent_mult = 1.2
+        else:                        sent_mult = 1.0
+        weighted = round(avg_cred * (max(conviction, 1) / 3) * sent_mult, 2)
+
+        tickers.append({
+            "ticker":         sym,
+            "mentions":       sig.get("mentions", 1),
+            "amplification":  0,
+            "weighted_score": weighted,
+            "users":          sig.get("traders", []),
+            "tweets":         [],
+            "source":         "telegram" if sig.get("from_telegram") else "claude_nlp",
+            "promotion_reason": (
+                f"conv={conviction} type={sig_type} "
+                f"sent={sent_score} kw={keyword_hit}"
+            ),
+        })
+        nlp_added += 1
+
+    if nlp_added:
+        tickers.sort(key=lambda x: x["weighted_score"], reverse=True)
+        logger.info(
+            f"  → STEP 4b: {nlp_added} actionable Claude-NLP tickers promoted "
+            f"(Telegram plain-text). Total: {len(tickers)}"
+        )
 
     if not tickers:
         logger.warning("No valid tickers")
