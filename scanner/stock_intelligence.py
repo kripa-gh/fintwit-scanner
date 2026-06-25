@@ -249,7 +249,7 @@ def detect_correlations(analysis_results: List[Dict]) -> Dict:
     result = call_json(
         prompt=CORRELATION_PROMPT.format(stocks=stocks_text),
         system=CORRELATION_SYSTEM,
-        max_tokens=600,
+        max_tokens=1500,   # 600 truncated mid-reason on multi-group output
         fallback={"portfolio_note": "Correlation analysis unavailable"},
     )
     return result or {}

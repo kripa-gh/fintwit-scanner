@@ -112,7 +112,7 @@ def analyse_tweets_batch(tweets: List[Dict]) -> List[Dict]:
     result = call_json(
         prompt=TWEET_ANALYSIS_PROMPT.format(tweets=tweet_text),
         system=TWEET_ANALYSIS_SYSTEM,
-        max_tokens=2000,
+        max_tokens=4000,   # Telegram batches are ticker-dense; 2000 truncated mid-array (silent data loss)
         fallback=[],
     )
 

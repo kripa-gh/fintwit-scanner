@@ -204,7 +204,7 @@ def detect_anomalies(
             trader_activity = trader_text,
         ),
         system=ANOMALY_SYSTEM,
-        max_tokens=600,
+        max_tokens=1200,   # 600 truncated mid-description on multi-anomaly output
         fallback={"anomalies": [], "summary": "No anomalies detected"},
     )
     return result or {}

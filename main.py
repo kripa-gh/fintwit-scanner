@@ -135,7 +135,11 @@ def main():
     logger.info("STEP 2/8 — Claude tweet intelligence...")
     from scanner.tweet_intelligence import analyse_all_tweets, analyse_charts_for_tickers
     tweet_signals = analyse_all_tweets(all_messages)
-    tweet_signals = analyse_charts_for_tickers(tweet_signals)
+    # Chart-image analysis disabled by default — Telegram charts aren't extracted and
+    # broken Twitter image URLs waste Claude calls (400 "Could not process image").
+    # Set ENABLE_CHART_ANALYSIS=1 to re-enable.
+    if os.getenv("ENABLE_CHART_ANALYSIS", "0") == "1":
+        tweet_signals = analyse_charts_for_tickers(tweet_signals)
     logger.info(f"  → {len(tweet_signals)} tickers with Claude sentiment")
 
     # ── STEP 3: Trader intelligence ───────────────────────────────────────────
