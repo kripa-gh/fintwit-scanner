@@ -84,7 +84,8 @@ For each tweet return:
   ],
   "has_chart_image": true | false,
   "chart_image_url": "url or null",
-  "tweet_quality": "high" | "medium" | "low"
+  "tweet_quality": "high" | "medium" | "low",
+  "is_promo": true | false
 }}
 
 Rules:
@@ -92,6 +93,10 @@ Rules:
 - "exit" sentiment = trader exiting/booking profits
 - conviction 5 = "highest conviction", "adding aggressively"; 1 = "just watching"
 - tweet_quality "high" = specific prices/levels/reasons; "low" = vague/noise
+- "is_promo" true = BACKWARD-LOOKING bragging about gains already made ("recommended at 1438,
+  now 3147", "our members booked 100%", "X became a multibagger", "rallied 98% from our call")
+  OR paywall solicitation ("join premium", "DM to subscribe", "limited seats"). A FORWARD trade
+  idea (buy/target/SL, "added for long term") is NOT promo, even from a tip channel. When unsure, false.
 - If no stocks mentioned, return empty tickers array
 - Return ONLY the JSON array, nothing else"""
 
@@ -194,6 +199,7 @@ def _aggregate_by_ticker(analyses: List[Dict], raw_tweets: List[Dict]) -> Dict[s
         msg_source = raw_msg.get("source", "twitter")
         msg_kw_hit = _has_actionable_keyword(raw_msg.get("text", ""))
         msg_promo  = classify_message(raw_msg.get("text", ""))
+        claude_promo = bool(analysis.get("is_promo", False))
 
         for ticker_info in analysis.get("tickers", []):
             if not isinstance(ticker_info, dict):
@@ -214,15 +220,16 @@ def _aggregate_by_ticker(analyses: List[Dict], raw_tweets: List[Dict]) -> Dict[s
             d = ticker_data[sym]
 
             # ── Promo / distribution down-scoring ────────────────────────────
-            # A realized-gain brag or paywall solicitation framed as bullish
-            # ("recommended at 1438, now 3147, 100% for members") is a LATE /
-            # distribution tell, not a fresh entry signal. Neutralise its score
-            # contribution but keep the mention visible and tagged. ONLY bullish
-            # messages are touched — exit / bearish signals are always preserved
-            # (a genuine "booked profits" exit must keep its -0.5 weight).
-            if msg_promo.is_promo and sentiment == "bullish":
-                sentiment = "neutral"
-                reason = f"[PROMO:{msg_promo.kind}] {reason}".strip()
+            # Union of two detectors:
+            #   • Claude's is_promo flag — understands Hinglish/shorthand, catches what regex misses
+            #   • the raw-text regex backstop — deterministic, free
+            # A realized-gain brag / solicitation framed as bullish is a LATE / distribution
+            # tell, not a fresh entry signal. Neutralise its score but keep it visible + tagged.
+            # ONLY bullish messages are touched — exit / bearish are always preserved.
+            if (msg_promo.is_promo or claude_promo) and sentiment == "bullish":
+                sentiment  = "neutral"
+                promo_kind = msg_promo.kind if msg_promo.is_promo else "claude_flag"
+                reason     = f"[PROMO:{promo_kind}] {reason}".strip()
                 d["promo"] += 1
 
             d["mentions"]         += 1

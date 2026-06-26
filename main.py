@@ -43,9 +43,19 @@ def main():
     from scanner.cookie_health import check_and_alert
     if not check_and_alert(): sys.exit(1)
 
-    from scanner.market_calendar import market_status_message
+    from scanner.market_calendar import market_status_message, is_trading_day
     market_status = market_status_message()
     logger.info(f"Market: {market_status['status_message']}")
+
+    # E1: skip the full ₹39 Claude pipeline when NSE is closed (weekend/holiday).
+    # Fail-safe by design — only skips when is_trading_day() is False, so a stale
+    # holiday list errs toward RUNNING (waste ₹39), never toward silently skipping a
+    # real trading day. Manual workflow_dispatch always runs; FORCE_RUN=1 also overrides.
+    _manual_run = os.getenv("GITHUB_EVENT_NAME") == "workflow_dispatch"
+    if not is_trading_day() and not _manual_run and os.getenv("FORCE_RUN", "0") != "1":
+        logger.info("Market closed today — skipping scan to save cost "
+                    "(manual dispatch or FORCE_RUN=1 overrides).")
+        return
 
     from scanner.nse_symbols import get_valid_symbols
     valid_symbols = get_valid_symbols()
