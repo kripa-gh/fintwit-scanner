@@ -160,13 +160,21 @@ def analyse_ticker(
     day_pct   = ret(2)
     week_pct  = ret(6)  if len(close) >= 6  else 0
     month_pct = ret(22) if len(close) >= 22 else 0
-    # period="1y" yields ~248-250 trading days (<252) and dropna() trims more, so a
-    # bare rolling(252) never fills its window → every row NaN → nan 52W range.
-    # min_periods lets the last row compute over available data (~250d ≈ 52 weeks).
-    high_52w  = float(high.rolling(252, min_periods=100).max().iloc[-1])
-    low_52w   = float(low.rolling(252, min_periods=100).min().iloc[-1])
-    pct_52h   = ((current - high_52w) / high_52w) * 100
-    pct_52l   = ((current - low_52w)  / low_52w)  * 100
+    # 52W range — NaN-proof. The earlier rolling(min_periods) approach STILL produced
+    # NaN in production (rendered as "₹nan"), so the rolling window wasn't the real cause
+    # (likely odd/duplicate yfinance columns or an all-NaN slice). Compute over the cleaned
+    # tail with explicit numeric coercion and a current-price fallback — can never be NaN.
+    def _extreme(series, kind):
+        s = series.iloc[:, 0] if isinstance(series, pd.DataFrame) else series  # collapse 2-D
+        s = pd.to_numeric(s, errors="coerce").dropna()
+        if len(s) == 0:
+            return current
+        v = float(s.iloc[-252:].max() if kind == "max" else s.iloc[-252:].min())
+        return v if v == v else current   # NaN != NaN guard
+    high_52w  = _extreme(high, "max")
+    low_52w   = _extreme(low,  "min")
+    pct_52h   = ((current - high_52w) / high_52w) * 100 if high_52w else 0.0
+    pct_52l   = ((current - low_52w)  / low_52w)  * 100 if low_52w  else 0.0
 
     # ── EMAs ─────────────────────────────────────────────────────────────────
     ema20  = close.ewm(span=EMA_SHORT, adjust=False).mean()

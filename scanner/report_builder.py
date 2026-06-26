@@ -106,6 +106,9 @@ def _stock_card(r, news_map, history):
     chart  = ts.get("chart_analysis")
     dc     = _pct_color(r.get("day_change_pct",0))
     ema_count = sum([r.get("above_ema20",False),r.get("above_ema50",False),r.get("above_ema200",False)])
+    ema_label = ("Price > all 3 EMAs" if ema_count == 3
+                 else "Price < all 3 EMAs" if ema_count == 0
+                 else f"Price > {ema_count}/3 EMAs")
     sent_label= ts.get("sentiment_label","")
     sent_c    = _sent_color(sent_label)
     consec    = r.get("consecutive_days",1)
@@ -222,7 +225,7 @@ def _stock_card(r, news_map, history):
       </td>
       <td style="width:33%;vertical-align:top">
         <div style="font-family:monospace;font-size:9px;color:{MUTED};text-transform:uppercase;letter-spacing:0.1em;margin-bottom:4px">EMA Stack</div>
-        <div style="font-family:monospace;font-size:11px;color:{ema_c}">{ema_count}/3 EMAs aligned</div>
+        <div style="font-family:monospace;font-size:11px;color:{ema_c}">{ema_label}</div>
         <div style="font-size:10px;color:{MUTED};margin-top:2px">{"🌟 Golden Cross" if r.get("golden_cross") else "💀 Death Cross" if r.get("death_cross") else "—"}{"&nbsp;|&nbsp; 🎯 BB Squeeze" if r.get("bb_squeeze_alert") else ""}</div>
         {"<div style='font-family:monospace;font-size:10px;color:#58a6ff;margin-top:3px'>Score: " + sparkline + "</div>" if sparkline else ""}
       </td>

@@ -56,12 +56,15 @@ GENERIC_HEADERS = {
 # ── NSE session (shared, initialised once) ────────────────────────────────────
 _nse_opener = None
 _nse_ok     = False
+_nse_failed = False   # circuit breaker: once NSE blocks this runner, stop retrying
 
 
 def _init_nse() -> bool:
-    global _nse_opener, _nse_ok
+    global _nse_opener, _nse_ok, _nse_failed
     if _nse_ok:
         return True
+    if _nse_failed:
+        return False   # already failed this run — don't hammer NSE ~20x (datacenter IPs stay blocked)
     try:
         import http.cookiejar
         jar    = http.cookiejar.CookieJar()
@@ -75,7 +78,8 @@ def _init_nse() -> bool:
         logger.debug("NSE session established")
         return True
     except Exception as e:
-        logger.warning(f"NSE session failed: {e}")
+        _nse_failed = True
+        logger.warning(f"NSE unreachable — disabling NSE sources for this run ({e})")
         return False
 
 
@@ -210,6 +214,8 @@ def _fii_dii_from_yfinance_proxy() -> Optional[Dict]:
         return {
             "fii_net_cr":  fii_est,
             "dii_net_cr":  0,  # DII not estimable from ETF
+            "estimated":     True,    # this is a directional guess from ETF flow, NOT real institutional data
+            "dii_available": False,   # DII genuinely unknown from an ETF proxy — do not present ₹0 as fact
             "history":     [],
             "source":      "yfinance-INDA-proxy",
             "note":        f"INDA proxy: {chg_pct:+.2f}% on {vol_ratio:.1f}x volume (estimated ≈₹{fii_est:.0f}Cr)",
@@ -241,28 +247,40 @@ def fetch_fii_dii() -> Dict:
                     else:
                         break
 
-                # Signal
-                if fii_net > 2000:   fii_sig, fii_score = "Strong Buying", 2
+                estimated     = bool(result.get("estimated", False))
+                dii_available = result.get("dii_available", True)
+
+                # Signal — a directional ETF *guess* must not move the market read.
+                if   estimated:        fii_sig, fii_score = "Estimated — low confidence", 0
+                elif fii_net > 2000:   fii_sig, fii_score = "Strong Buying", 2
                 elif fii_net > 500:  fii_sig, fii_score = "Mild Buying", 1
                 elif fii_net < -2000:fii_sig, fii_score = "Heavy Selling", -2
                 elif fii_net < -500: fii_sig, fii_score = "Mild Selling", -1
                 else:                fii_sig, fii_score = "Neutral", 0
 
-                logger.info(f"  FII/DII [{source}]: ₹{fii_net:+.0f}Cr FII | ₹{dii_net:+.0f}Cr DII")
+                fii_str = (f"FII ≈₹{abs(fii_net):.0f}Cr (est.)" if estimated
+                           else f"FII {'bought' if fii_net>0 else 'sold'} ₹{abs(fii_net):.0f}Cr")
+                dii_str = (f"DII {'bought' if dii_net>0 else 'sold'} ₹{abs(dii_net):.0f}Cr"
+                           if dii_available else "DII unavailable")
+
+                logger.info(
+                    "  FII/DII [{}]: {}".format(
+                        source,
+                        f"≈₹{fii_net:+.0f}Cr FII (estimated) | DII unavailable" if estimated
+                        else f"₹{fii_net:+.0f}Cr FII | ₹{dii_net:+.0f}Cr DII")
+                )
                 return {
-                    "fii_net_cr":  round(fii_net, 1),
-                    "dii_net_cr":  round(dii_net, 1),
-                    "fii_signal":  fii_sig,
-                    "fii_score":   fii_score,
-                    "fii_streak":  streak,
-                    "history":     history,
-                    "source":      source,
-                    "note":        result.get("note", ""),
-                    "summary": (
-                        f"FII {'bought' if fii_net>0 else 'sold'} ₹{abs(fii_net):.0f}Cr | "
-                        f"DII {'bought' if dii_net>0 else 'sold'} ₹{abs(dii_net):.0f}Cr"
-                        f" [{source}]"
-                    ),
+                    "fii_net_cr":    round(fii_net, 1),
+                    "dii_net_cr":    round(dii_net, 1),
+                    "fii_signal":    fii_sig,
+                    "fii_score":     fii_score,
+                    "fii_streak":    streak,
+                    "estimated":     estimated,
+                    "dii_available": dii_available,
+                    "history":       history,
+                    "source":        source,
+                    "note":          result.get("note", ""),
+                    "summary":       f"{fii_str} | {dii_str} [{source}]",
                 }
         except Exception as e:
             logger.debug(f"FII source failed: {e}")
