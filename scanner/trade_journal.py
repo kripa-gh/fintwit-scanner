@@ -36,6 +36,11 @@ SHEET_ID  = os.getenv("TRADE_JOURNAL_SHEET_ID", "")
 API_KEY   = os.getenv("GOOGLE_SHEETS_API_KEY", "")   # optional read-only key
 LOCAL_JOURNAL_PATH = Path(__file__).parent.parent / "data" / "trade_journal.json"
 
+# ── A4: forward-return scoring of logged calls ────────────────────────────────
+SCORE_HORIZONS   = (5, 20)   # trading days at which each call's forward return is measured
+RETENTION_DAYS   = 120       # keep fully-scored calls this long for the rollup window
+_MAX_LOG_ENTRIES = 5000      # hard safety cap on log size
+
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # LOCAL JOURNAL (no Google Sheets dependency — works out of the box)
@@ -214,26 +219,188 @@ def log_recommendation(
     target: float,
     setup_type: str,
     run_date: str = None,
+    entry_price: float = None,
 ) -> Dict:
-    """Log a system recommendation to the journal log."""
+    """Log a system recommendation to the journal log.
+
+    entry_price (the price at flag time) is what makes the call measurable later:
+    score_pending_calls() reads it to compute forward returns. A call logged without
+    it can never be scored, so always pass current_price here.
+    """
     run_date = run_date or date.today().isoformat()
     entry = {
         "date":           run_date,
         "ticker":         ticker,
         "recommendation": recommendation,
         "score":          score,
+        "entry_price":    round(float(entry_price), 2) if entry_price else None,
         "entry_zone":     entry_zone,
         "stop":           stop,
         "target":         target,
         "setup_type":     setup_type,
         "acted_on":       None,   # user can manually update
-        "outcome":        None,
-        "return_pct":     None,
+        "ret_5d":         None,   # forward returns (%), filled by score_pending_calls()
+        "ret_20d":        None,
+        "outcome":        None,   # "win"/"loss" at 20d — was the call directionally right?
+        "scored":         False,  # True once the 20d return has been recorded
     }
     journal.setdefault("log", []).append(entry)
-    # Keep last 200 log entries
-    journal["log"] = journal["log"][-200:]
+    # Retention: NEVER drop a call before it is fully scored. Forward returns need up
+    # to 20 trading days to mature; the old [-200:] cap deleted calls in ~6 days, which
+    # is exactly why nothing was ever measured. Keep every unscored call, plus scored
+    # calls within RETENTION_DAYS for the rollup window. Hard cap is a safety net only.
+    cutoff = (date.today() - timedelta(days=RETENTION_DAYS)).isoformat()
+    journal["log"] = [
+        e for e in journal["log"]
+        if (not e.get("scored")) or (e.get("date", "") >= cutoff)
+    ][-_MAX_LOG_ENTRIES:]
     return journal
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# A4: FORWARD-RETURN SCORING — is the scanner's judgment actually any good?
+# Every run already logs each call (ticker, date, score, recommendation, entry price).
+# This scores those calls against forward price moves so accuracy becomes a NUMBER,
+# split by score bucket and recommendation. Returns come from yfinance price history —
+# no broker token, no manual logging.
+# ═══════════════════════════════════════════════════════════════════════════════
+
+def _call_outcome(entry: Dict) -> Optional[str]:
+    """Was the call directionally right at the longest horizon? -> win / loss / None."""
+    ret = entry.get(f"ret_{max(SCORE_HORIZONS)}d")
+    if ret is None:
+        return None
+    rec     = (entry.get("recommendation") or "").upper()
+    bullish = any(k in rec for k in ("BUY", "WATCH", "ACCUMULATE", "ADD", "LONG"))
+    bearish = any(k in rec for k in ("AVOID", "SHORT", "SELL", "EXIT", "REDUCE"))
+    if bullish and not bearish:
+        return "win" if ret > 0 else "loss"
+    if bearish and not bullish:
+        return "win" if ret < 0 else "loss"
+    return None   # neutral / unclassifiable recommendation — not scored for direction
+
+
+def _fill_forward_returns(symbol: str, entries: List[Dict]) -> None:
+    """Fill ret_5d / ret_20d for one ticker's pending entries, in place.
+    Uses the price series' own index as the trading-day calendar, so 'N trading days
+    later' = N rows after the flag date — no holiday arithmetic, and the base is the
+    captured entry_price (the exact price the scanner acted on)."""
+    import yfinance as yf
+    import pandas as pd
+    try:
+        df = yf.download(f"{symbol}.NS", period="1y", interval="1d",
+                         progress=False, auto_adjust=True)
+        if df is None or len(df) == 0:
+            return
+        if isinstance(df.columns, pd.MultiIndex):
+            df.columns = [c[0] for c in df.columns]
+        close = pd.to_numeric(df["Close"], errors="coerce").dropna()
+    except Exception as e:
+        logger.debug(f"Scoreboard price fetch failed for {symbol}: {e}")
+        return
+    if len(close) == 0:
+        return
+    idx_dates = [d.date() for d in close.index]
+    for e in entries:
+        entry_px = e.get("entry_price")
+        if not entry_px:
+            continue
+        try:
+            entry_d = date.fromisoformat(e["date"])
+        except Exception:
+            continue
+        pos = next((i for i, d in enumerate(idx_dates) if d >= entry_d), None)
+        if pos is None:
+            continue
+        for h in SCORE_HORIZONS:
+            key = f"ret_{h}d"
+            if e.get(key) is not None:
+                continue
+            if pos + h < len(close):
+                fwd = float(close.iloc[pos + h])
+                e[key] = round((fwd - entry_px) / entry_px * 100, 2)
+        if e.get(f"ret_{max(SCORE_HORIZONS)}d") is not None and not e.get("scored"):
+            e["scored"]  = True
+            e["outcome"] = _call_outcome(e)
+
+
+def score_pending_calls(journal: Dict, today: date = None) -> Dict:
+    """Fill forward returns for matured calls. Cheap and idempotent: only fetches
+    tickers with at least one unscored call old enough to (possibly) score, and only
+    fills horizons whose forward bar already exists. Safe to call every run."""
+    today = today or date.today()
+    pending: Dict[str, List[Dict]] = {}
+    for e in journal.get("log", []):
+        if e.get("scored") or e.get("entry_price") is None:
+            continue
+        try:
+            age = (today - date.fromisoformat(e["date"])).days
+        except Exception:
+            continue
+        if age < min(SCORE_HORIZONS):   # too soon for even the 5-day bar
+            continue
+        pending.setdefault(e["ticker"], []).append(e)
+    if not pending:
+        return journal
+    n = sum(len(v) for v in pending.values())
+    logger.info(f"Scoreboard: scoring {n} matured call(s) across {len(pending)} ticker(s)")
+    for symbol, entries in pending.items():
+        _fill_forward_returns(symbol, entries)
+    journal["last_scored"] = today.isoformat()
+    return journal
+
+
+def _score_bucket(score) -> str:
+    if score is None:  return "unknown"
+    if score >= 7:     return "high (score ≥7)"
+    if score >= 4:     return "mid (score 4–6)"
+    return "low (score ≤3)"
+
+
+def _agg(entries: List[Dict]) -> Optional[Dict]:
+    n = len(entries)
+    if n == 0:
+        return None
+    wins = sum(1 for e in entries if e.get("outcome") == "win")
+    r5   = [e["ret_5d"]  for e in entries if e.get("ret_5d")  is not None]
+    r20  = [e["ret_20d"] for e in entries if e.get("ret_20d") is not None]
+    return {
+        "n":           n,
+        "hit_rate":    round(wins / n * 100, 1),
+        "avg_ret_5d":  round(sum(r5)  / len(r5),  2) if r5  else None,
+        "avg_ret_20d": round(sum(r20) / len(r20), 2) if r20 else None,
+    }
+
+
+def compute_call_scoreboard(journal: Dict) -> Dict:
+    """Aggregate scored calls into hit-rate + avg forward return, split by score
+    bucket and recommendation. This is the 'is the scanner any good' number — the
+    thing no display fix could ever tell you."""
+    log     = journal.get("log", [])
+    scored  = [e for e in log if e.get("outcome") in ("win", "loss")]
+    pending = sum(1 for e in log if e.get("entry_price") is not None and not e.get("scored"))
+
+    by_score = {}
+    for b in ("high (score ≥7)", "mid (score 4–6)", "low (score ≤3)", "unknown"):
+        a = _agg([e for e in scored if _score_bucket(e.get("score")) == b])
+        if a:
+            by_score[b] = a
+
+    groups: Dict[str, List[Dict]] = {}
+    for e in scored:
+        groups.setdefault((e.get("recommendation") or "?").upper(), []).append(e)
+    by_rec = {k: _agg(v) for k, v in groups.items()}
+
+    logged_dates = [e["date"] for e in log if e.get("entry_price") is not None]
+    return {
+        "scored_count":  len(scored),
+        "pending_count": pending,
+        "overall":       _agg(scored),
+        "by_score":      by_score,
+        "by_rec":        by_rec,
+        "first_logged":  min(logged_dates) if logged_dates else None,
+        "has_data":      len(scored) >= 10,   # below this, the numbers are noise
+    }
 
 
 # ═══════════════════════════════════════════════════════════════════════════════

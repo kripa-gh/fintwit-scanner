@@ -240,6 +240,59 @@ def _stock_card(r, news_map, history):
 </div>"""
 
 
+def _track_record_panel(tr):
+    """A4: the scanner's actual track record — hit-rate + avg forward return by score
+    bucket. Honest 'accumulating' state until enough calls reach 20-day maturity."""
+    if not tr:
+        return ""
+    scored  = tr.get("scored_count", 0)
+    pending = tr.get("pending_count", 0)
+    first   = tr.get("first_logged")
+
+    if not tr.get("has_data"):
+        msg = (f"Logging every call for forward-return scoring — no judgement on quality yet. "
+               f"<b style='color:#e6edf3'>{scored}</b> scored · "
+               f"<b style='color:#e6edf3'>{pending}</b> awaiting 20-day maturity"
+               + (f" · first logged {first}" if first else "")
+               + ". Hit-rates appear once ≥10 calls reach the 20-trading-day mark (~4 weeks).")
+        content = (f'<div style="background:{SURFACE};border:1px solid {BORDER};padding:14px 16px;'
+                   f'font-size:12px;color:{MUTED}">{msg}</div>')
+        return _section("📈 Track Record (accumulating)", content)
+
+    def _fmt(v):
+        return "—" if v is None else f"{v:+.1f}%"
+
+    def _row(label, a, label_color="#e6edf3"):
+        if not a:
+            return ""
+        hr  = a["hit_rate"]
+        hrc = "#00c853" if hr >= 55 else "#ffd600" if hr >= 45 else "#ff1744"
+        r20c = _pct_color(a["avg_ret_20d"] or 0)
+        return (f'<tr style="border-bottom:1px solid {BORDER}">'
+                f'<td style="padding:7px 10px;font-size:11px;color:{label_color}">{label}</td>'
+                f'<td style="padding:7px 10px;text-align:center;font-family:monospace;font-size:11px;color:{MUTED}">{a["n"]}</td>'
+                f'<td style="padding:7px 10px;text-align:center;font-family:monospace;font-size:11px;color:{hrc}">{hr:.0f}%</td>'
+                f'<td style="padding:7px 10px;text-align:right;font-family:monospace;font-size:11px;color:{MUTED}">{_fmt(a["avg_ret_5d"])}</td>'
+                f'<td style="padding:7px 10px;text-align:right;font-family:monospace;font-size:11px;color:{r20c}">{_fmt(a["avg_ret_20d"])}</td></tr>')
+
+    head = (f'<thead><tr style="background:{SURFACE};border-bottom:2px solid {BORDER}">'
+            f'<th style="padding:7px 10px;text-align:left;font-family:monospace;font-size:9px;color:{MUTED};text-transform:uppercase">Bucket</th>'
+            f'<th style="padding:7px 10px;text-align:center;font-family:monospace;font-size:9px;color:{MUTED};text-transform:uppercase">N</th>'
+            f'<th style="padding:7px 10px;text-align:center;font-family:monospace;font-size:9px;color:{MUTED};text-transform:uppercase">Hit</th>'
+            f'<th style="padding:7px 10px;text-align:right;font-family:monospace;font-size:9px;color:{MUTED};text-transform:uppercase">Avg 5d</th>'
+            f'<th style="padding:7px 10px;text-align:right;font-family:monospace;font-size:9px;color:{MUTED};text-transform:uppercase">Avg 20d</th></tr></thead>')
+    rows = _row("Overall", tr.get("overall"), "#e6edf3")
+    for b in ("high (score ≥7)", "mid (score 4–6)", "low (score ≤3)"):
+        if b in tr.get("by_score", {}):
+            rows += _row(b, tr["by_score"][b])
+    body = (f'<table width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse">'
+            f'{head}<tbody>{rows}</tbody></table>')
+    note = (f'<div style="font-size:10px;color:{MUTED};margin-top:8px">'
+            f'{scored} calls scored · {pending} maturing. "Hit" = directionally right at 20 trading days. '
+            f'If the high-score bucket doesn\'t beat the low one, the score isn\'t predictive — that\'s the test.</div>')
+    return _section("📈 Track Record — are the calls working?", body + note)
+
+
 def build_report(
     analysis_results, news_map, history=None, market_env=None,
     macro_context=None, correlations=None, anomalies=None,
@@ -248,7 +301,7 @@ def build_report(
     tweet_count=0, rt_dedupe_count=0, market_status=None,
     market_data=None, gate_status=None, short_candidates=None,
     removed_illiquid=None, fii_dii=None, global_macro=None,
-    upcoming_events=None,
+    upcoming_events=None, track_record=None,
 ):
     run_date = run_date or datetime.now(IST).strftime("%d %B %Y")
     market_data      = market_data or {}
@@ -297,6 +350,8 @@ def build_report(
 </table>"""
 
     html += _market_env_panel(market_env, macro_context)
+
+    html += _track_record_panel(track_record)
 
     if weekly_debrief:
         gc = {"A":"#00c853","B":"#69f0ae","C":"#ffd600","D":"#ff1744"}.get(weekly_debrief.get("overall_grade","C"),"#8b949e")

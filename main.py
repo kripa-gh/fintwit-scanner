@@ -321,6 +321,9 @@ def main():
     # Update trade journal with current prices for stop/target tracking
     current_prices = {r["ticker"]: r["current_price"] for r in analysis_results}
     journal = update_position_outcomes(journal, current_prices)
+    # A4: score past calls that have now matured (5d / 20d forward returns from price history)
+    from scanner.trade_journal import score_pending_calls, compute_call_scoreboard
+    journal = score_pending_calls(journal)
 
     logger.info(f"  → {len(analysis_results)} stocks analysed")
     history = update_history(history, analysis_results, run_date)
@@ -353,12 +356,16 @@ def main():
     short_candidates  = filter_result["short_candidates"]
     logger.info(f"  → {len(analysis_results)} stocks after filtering | Gate: {gate_status['mode']}")
 
-    # Log recommendations to journal
+    # Log recommendations to journal — entry_price is what makes each call measurable (A4)
     for r in analysis_results:
         log_recommendation(journal, r["ticker"], r["recommendation"], r["score"],
                           f"₹{r.get('suggested_stop',0):.0f}–₹{r.get('current_price',0):.0f}",
                           r.get("suggested_stop",0), r.get("suggested_target",0),
-                          r.get("entry_context","unknown"), run_date)
+                          r.get("entry_context","unknown"), run_date,
+                          entry_price=r.get("current_price"))
+
+    # A4: build the track-record scoreboard (hit-rate + avg forward return by score bucket)
+    scoreboard = compute_call_scoreboard(journal)
 
     # ── STEP 7: News + Claude stock intelligence ──────────────────────────────
     logger.info("STEP 7/8 — News + AI intelligence...")
@@ -405,6 +412,7 @@ def main():
         fii_dii          = market_data.get("fii_dii", {}),
         global_macro     = market_data.get("global_macro", {}),
         upcoming_events  = market_data.get("upcoming_events", []),
+        track_record     = scoreboard,
     )
 
     buys  = sum(1 for r in analysis_results if r.get("recommendation") in ("BUY","STRONG BUY"))
