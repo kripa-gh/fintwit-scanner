@@ -450,6 +450,13 @@
           "score": 12,
           "price": 413.55,
           "rsi": 77.6
+        },
+        {
+          "date": "2026-06-26",
+          "recommendation": "WATCH",
+          "score": 12,
+          "price": 413.55,
+          "rsi": 77.6
         }
       ],
       "consecutive_days": 1,
@@ -517,12 +524,19 @@
           "score": 5,
           "price": 315.85,
           "rsi": 60.2
+        },
+        {
+          "date": "2026-06-26",
+          "recommendation": "CAUTION",
+          "score": 6,
+          "price": 309.75,
+          "rsi": 54.8
         }
       ],
-      "consecutive_days": 1,
-      "last_seen": "2026-06-25",
+      "consecutive_days": 2,
+      "last_seen": "2026-06-26",
       "last_recommendation": "CAUTION",
-      "last_score": 5
+      "last_score": 6
     },
     "IOC": {
       "first_seen": "2026-06-25",
@@ -554,9 +568,16 @@
           "score": 3,
           "price": 143.89,
           "rsi": 53.3
+        },
+        {
+          "date": "2026-06-26",
+          "recommendation": "AVOID",
+          "score": 3,
+          "price": 143.89,
+          "rsi": 53.3
         }
       ],
-      "consecutive_days": 2,
+      "consecutive_days": 1,
       "last_seen": "2026-06-26",
       "last_recommendation": "AVOID",
       "last_score": 3
@@ -665,6 +686,13 @@
         },
         {
           "date": "2026-06-25",
+          "recommendation": "WATCH",
+          "score": 12,
+          "price": 475.5,
+          "rsi": 59.6
+        },
+        {
+          "date": "2026-06-26",
           "recommendation": "WATCH",
           "score": 12,
           "price": 475.5,
@@ -835,12 +863,19 @@
           "score": 6,
           "price": 413.7,
           "rsi": 62.4
+        },
+        {
+          "date": "2026-06-26",
+          "recommendation": "CAUTION",
+          "score": 7,
+          "price": 409.25,
+          "rsi": 59.8
         }
       ],
-      "consecutive_days": 1,
-      "last_seen": "2026-06-25",
+      "consecutive_days": 2,
+      "last_seen": "2026-06-26",
       "last_recommendation": "CAUTION",
-      "last_score": 6
+      "last_score": 7
     },
     "SKIPPER": {
       "first_seen": "2026-06-25",
@@ -886,6 +921,13 @@
         },
         {
           "date": "2026-06-25",
+          "recommendation": "WATCH",
+          "score": 10,
+          "price": 2110.8,
+          "rsi": 86.4
+        },
+        {
+          "date": "2026-06-26",
           "recommendation": "WATCH",
           "score": 10,
           "price": 2110.8,
@@ -969,6 +1011,13 @@
       "appearances": [
         {
           "date": "2026-06-25",
+          "recommendation": "WATCH",
+          "score": 11,
+          "price": 709.8,
+          "rsi": 83.4
+        },
+        {
+          "date": "2026-06-26",
           "recommendation": "WATCH",
           "score": 11,
           "price": 709.8,
@@ -1098,6 +1147,13 @@
           "score": 7,
           "price": 7659.0,
           "rsi": 48.2
+        },
+        {
+          "date": "2026-06-26",
+          "recommendation": "CAUTION",
+          "score": 7,
+          "price": 7659.0,
+          "rsi": 48.2
         }
       ],
       "consecutive_days": 1,
@@ -1147,6 +1203,13 @@
       "appearances": [
         {
           "date": "2026-06-25",
+          "recommendation": "AVOID",
+          "score": 2,
+          "price": 182.46,
+          "rsi": 52.7
+        },
+        {
+          "date": "2026-06-26",
           "recommendation": "AVOID",
           "score": 2,
           "price": 182.46,
@@ -1255,6 +1318,13 @@
           "score": 12,
           "price": 26.76,
           "rsi": 62.9
+        },
+        {
+          "date": "2026-06-26",
+          "recommendation": "WATCH",
+          "score": 12,
+          "price": 26.76,
+          "rsi": 62.9
         }
       ],
       "consecutive_days": 1,
@@ -1313,6 +1383,13 @@
     "CGPOWER": {
       "first_seen": "2026-06-26",
       "appearances": [
+        {
+          "date": "2026-06-26",
+          "recommendation": "WATCH",
+          "score": 11,
+          "price": 942.1,
+          "rsi": 57.5
+        },
         {
           "date": "2026-06-26",
           "recommendation": "WATCH",
@@ -1438,6 +1515,13 @@
           "score": 10,
           "price": 288.1,
           "rsi": 50.1
+        },
+        {
+          "date": "2026-06-26",
+          "recommendation": "WATCH",
+          "score": 10,
+          "price": 288.1,
+          "rsi": 50.1
         }
       ],
       "consecutive_days": 1,
@@ -1448,6 +1532,13 @@
     "BSE": {
       "first_seen": "2026-06-26",
       "appearances": [
+        {
+          "date": "2026-06-26",
+          "recommendation": "AVOID",
+          "score": 0,
+          "price": 3872.1,
+          "rsi": 44.1
+        },
         {
           "date": "2026-06-26",
           "recommendation": "AVOID",
@@ -1494,6 +1585,13 @@
     "BANSALWIRE": {
       "first_seen": "2026-06-26",
       "appearances": [
+        {
+          "date": "2026-06-26",
+          "recommendation": "CAUTION",
+          "score": 8,
+          "price": 314.9,
+          "rsi": 55.1
+        },
         {
           "date": "2026-06-26",
           "recommendation": "CAUTION",
