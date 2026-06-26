@@ -202,6 +202,8 @@ def main():
             continue  # regex already found it; STEP 4 credibility already applied
         if valid_symbols and sym not in valid_symbols:
             continue  # Claude hallucinated a non-NSE symbol — discard
+        if sig.get("promo_count", 0) >= sig.get("mentions", 1):
+            continue  # every mention was a promo / realized-gain brag — no genuine signal
 
         conviction   = sig.get("avg_conviction", 0) or 0
         sig_type     = sig.get("dominant_signal_type", "informational")
