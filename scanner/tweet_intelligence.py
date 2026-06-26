@@ -19,6 +19,7 @@ from urllib.request import urlopen
 from urllib.error import URLError
 
 from scanner.claude_client import call_json, call
+from scanner.promo_filter import classify_message
 
 logger = logging.getLogger(__name__)
 
@@ -171,6 +172,7 @@ def _aggregate_by_ticker(analyses: List[Dict], raw_tweets: List[Dict]) -> Dict[s
         "from_telegram":  False,
         "from_twitter":   False,
         "keyword_hit":    False,
+        "promo":          0,
     })
 
     # Map tweet_id → username for enrichment
@@ -191,6 +193,7 @@ def _aggregate_by_ticker(analyses: List[Dict], raw_tweets: List[Dict]) -> Dict[s
         raw_msg    = id_to_tweet.get(tweet_id, {})
         msg_source = raw_msg.get("source", "twitter")
         msg_kw_hit = _has_actionable_keyword(raw_msg.get("text", ""))
+        msg_promo  = classify_message(raw_msg.get("text", ""))
 
         for ticker_info in analysis.get("tickers", []):
             if not isinstance(ticker_info, dict):
@@ -209,6 +212,19 @@ def _aggregate_by_ticker(analyses: List[Dict], raw_tweets: List[Dict]) -> Dict[s
             reason     = ticker_info.get("key_reason", "")
 
             d = ticker_data[sym]
+
+            # ── Promo / distribution down-scoring ────────────────────────────
+            # A realized-gain brag or paywall solicitation framed as bullish
+            # ("recommended at 1438, now 3147, 100% for members") is a LATE /
+            # distribution tell, not a fresh entry signal. Neutralise its score
+            # contribution but keep the mention visible and tagged. ONLY bullish
+            # messages are touched — exit / bearish signals are always preserved
+            # (a genuine "booked profits" exit must keep its -0.5 weight).
+            if msg_promo.is_promo and sentiment == "bullish":
+                sentiment = "neutral"
+                reason = f"[PROMO:{msg_promo.kind}] {reason}".strip()
+                d["promo"] += 1
+
             d["mentions"]         += 1
             d["total_conviction"] += conviction
             d[sentiment]          += 1
@@ -281,6 +297,7 @@ def _aggregate_by_ticker(analyses: List[Dict], raw_tweets: List[Dict]) -> Dict[s
             "from_telegram":         d["from_telegram"],
             "from_twitter":          d["from_twitter"],
             "keyword_hit":           d["keyword_hit"],
+            "promo_count":           d["promo"],
         }
 
     return result
