@@ -220,6 +220,7 @@ def log_recommendation(
     setup_type: str,
     run_date: str = None,
     entry_price: float = None,
+    origin: str = "unknown",
 ) -> Dict:
     """Log a system recommendation to the journal log.
 
@@ -238,6 +239,7 @@ def log_recommendation(
         "stop":           stop,
         "target":         target,
         "setup_type":     setup_type,
+        "origin":         origin,   # telegram_only / twitter_only / both — for source-split scoring
         "acted_on":       None,   # user can manually update
         "ret_5d":         None,   # forward returns (%), filled by score_pending_calls()
         "ret_20d":        None,
@@ -391,6 +393,11 @@ def compute_call_scoreboard(journal: Dict) -> Dict:
         groups.setdefault((e.get("recommendation") or "?").upper(), []).append(e)
     by_rec = {k: _agg(v) for k, v in groups.items()}
 
+    ogroups: Dict[str, List[Dict]] = {}
+    for e in scored:
+        ogroups.setdefault(e.get("origin") or "unknown", []).append(e)
+    by_origin = {k: _agg(v) for k, v in ogroups.items()}
+
     logged_dates = [e["date"] for e in log if e.get("entry_price") is not None]
     return {
         "scored_count":  len(scored),
@@ -398,6 +405,7 @@ def compute_call_scoreboard(journal: Dict) -> Dict:
         "overall":       _agg(scored),
         "by_score":      by_score,
         "by_rec":        by_rec,
+        "by_origin":     by_origin,
         "first_logged":  min(logged_dates) if logged_dates else None,
         "has_data":      len(scored) >= 10,   # below this, the numbers are noise
     }

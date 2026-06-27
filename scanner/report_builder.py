@@ -285,11 +285,25 @@ def _track_record_panel(tr):
     for b in ("high (score ≥7)", "mid (score 4–6)", "low (score ≤3)"):
         if b in tr.get("by_score", {}):
             rows += _row(b, tr["by_score"][b])
+
+    # Source split — the funnel test: do Telegram-sourced calls actually beat Twitter?
+    origin_labels = {"telegram_only": "Telegram only", "twitter_only": "Twitter only",
+                     "both": "Both sources", "unknown": "Unknown source"}
+    bo = tr.get("by_origin", {})
+    if bo:
+        rows += (f'<tr><td colspan="5" style="padding:9px 10px 3px;font-family:monospace;'
+                 f'font-size:9px;color:{MUTED};text-transform:uppercase;border-top:1px solid {BORDER}">'
+                 f'By source</td></tr>')
+        for key in ("telegram_only", "twitter_only", "both", "unknown"):
+            if key in bo:
+                rows += _row(origin_labels[key], bo[key])
+
     body = (f'<table width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse">'
             f'{head}<tbody>{rows}</tbody></table>')
     note = (f'<div style="font-size:10px;color:{MUTED};margin-top:8px">'
             f'{scored} calls scored · {pending} maturing. "Hit" = directionally right at 20 trading days. '
-            f'If the high-score bucket doesn\'t beat the low one, the score isn\'t predictive — that\'s the test.</div>')
+            f'If the high-score bucket doesn\'t beat the low one, the score isn\'t predictive. '
+            f'If Telegram-sourced calls don\'t beat Twitter, the scraping funnel isn\'t earning its cost.</div>')
     return _section("📈 Track Record — are the calls working?", body + note)
 
 

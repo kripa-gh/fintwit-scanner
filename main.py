@@ -154,6 +154,20 @@ def main():
         tweet_signals = analyse_charts_for_tickers(tweet_signals)
     logger.info(f"  → {len(tweet_signals)} tickers with Claude sentiment")
 
+    # Per-ticker source attribution (telegram_only / twitter_only / both). The signal
+    # already carries both flags; we collapse them into one label here so it can ride
+    # through to the A4 journal and let the scoreboard split performance by source —
+    # the actual test of whether the Telegram funnel beats Twitter.
+    def _origin(tg, tw):
+        if tg and tw: return "both"
+        if tg:        return "telegram_only"
+        if tw:        return "twitter_only"
+        return "unknown"
+    origin_map = {
+        sym.upper(): _origin(sig.get("from_telegram"), sig.get("from_twitter"))
+        for sym, sig in tweet_signals.items()
+    }
+
     # ── STEP 3: Trader intelligence ───────────────────────────────────────────
     logger.info("STEP 3/8 — Trader intelligence...")
     from scanner.trader_intelligence import classify_all_accounts
@@ -258,6 +272,7 @@ def main():
             "users":          sig.get("traders", []),
             "tweets":         [],
             "source":         "telegram" if sig.get("from_telegram") else "claude_nlp",
+            "origin":         origin_map.get(sym, "unknown"),
             "promotion_reason": (
                 f"conv={conviction} type={sig_type} "
                 f"sent={sent_score} kw={keyword_hit}"
@@ -362,7 +377,8 @@ def main():
                           f"₹{r.get('suggested_stop',0):.0f}–₹{r.get('current_price',0):.0f}",
                           r.get("suggested_stop",0), r.get("suggested_target",0),
                           r.get("entry_context","unknown"), run_date,
-                          entry_price=r.get("current_price"))
+                          entry_price=r.get("current_price"),
+                          origin=origin_map.get(r["ticker"].upper(), "unknown"))
 
     # A4: build the track-record scoreboard (hit-rate + avg forward return by score bucket)
     scoreboard = compute_call_scoreboard(journal)
