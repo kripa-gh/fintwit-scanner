@@ -4,7 +4,8 @@
     "2026-06-24",
     "2026-06-25",
     "2026-06-26",
-    "2026-06-27"
+    "2026-06-27",
+    "2026-06-28"
   ],
   "tickers": {
     "FCL": {
@@ -1650,10 +1651,17 @@
           "score": 8,
           "price": 4368.7,
           "rsi": 51.2
+        },
+        {
+          "date": "2026-06-28",
+          "recommendation": "CAUTION",
+          "score": 8,
+          "price": 4368.7,
+          "rsi": 51.2
         }
       ],
-      "consecutive_days": 1,
-      "last_seen": "2026-06-27",
+      "consecutive_days": 2,
+      "last_seen": "2026-06-28",
       "last_recommendation": "CAUTION",
       "last_score": 8
     },
@@ -1666,12 +1674,51 @@
           "score": 8,
           "price": 2724.8,
           "rsi": 50.5
+        },
+        {
+          "date": "2026-06-28",
+          "recommendation": "CAUTION",
+          "score": 8,
+          "price": 2724.8,
+          "rsi": 50.5
+        }
+      ],
+      "consecutive_days": 2,
+      "last_seen": "2026-06-28",
+      "last_recommendation": "CAUTION",
+      "last_score": 8
+    },
+    "ABCAPITAL": {
+      "first_seen": "2026-06-28",
+      "appearances": [
+        {
+          "date": "2026-06-28",
+          "recommendation": "BUY",
+          "score": 14,
+          "price": 390.8,
+          "rsi": 63.6
         }
       ],
       "consecutive_days": 1,
-      "last_seen": "2026-06-27",
-      "last_recommendation": "CAUTION",
-      "last_score": 8
+      "last_seen": "2026-06-28",
+      "last_recommendation": "BUY",
+      "last_score": 14
+    },
+    "POWERICA": {
+      "first_seen": "2026-06-28",
+      "appearances": [
+        {
+          "date": "2026-06-28",
+          "recommendation": "WATCH",
+          "score": 11,
+          "price": 660.25,
+          "rsi": 75.2
+        }
+      ],
+      "consecutive_days": 1,
+      "last_seen": "2026-06-28",
+      "last_recommendation": "WATCH",
+      "last_score": 11
     }
   }
 }
