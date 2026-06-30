@@ -6,7 +6,8 @@
     "2026-06-26",
     "2026-06-27",
     "2026-06-28",
-    "2026-06-29"
+    "2026-06-29",
+    "2026-06-30"
   ],
   "tickers": {
     "FCL": {
@@ -788,12 +789,19 @@
           "score": 10,
           "price": 57.14,
           "rsi": 54.6
+        },
+        {
+          "date": "2026-06-30",
+          "recommendation": "BUY",
+          "score": 14,
+          "price": 58.9,
+          "rsi": 61.3
         }
       ],
-      "consecutive_days": 1,
-      "last_seen": "2026-06-29",
-      "last_recommendation": "WATCH",
-      "last_score": 10
+      "consecutive_days": 2,
+      "last_seen": "2026-06-30",
+      "last_recommendation": "BUY",
+      "last_score": 14
     },
     "BHARATCOAL": {
       "first_seen": "2026-06-25",
@@ -926,12 +934,19 @@
           "score": 9,
           "price": 3080.6,
           "rsi": 66.1
+        },
+        {
+          "date": "2026-06-30",
+          "recommendation": "BUY",
+          "score": 15,
+          "price": 3036.0,
+          "rsi": 59.7
         }
       ],
       "consecutive_days": 1,
-      "last_seen": "2026-06-25",
-      "last_recommendation": "WATCH",
-      "last_score": 9
+      "last_seen": "2026-06-30",
+      "last_recommendation": "BUY",
+      "last_score": 15
     },
     "WABAG": {
       "first_seen": "2026-06-25",
@@ -1095,12 +1110,19 @@
           "score": 10,
           "price": 709.8,
           "rsi": 83.4
+        },
+        {
+          "date": "2026-06-30",
+          "recommendation": "WATCH",
+          "score": 11,
+          "price": 836.05,
+          "rsi": 89.2
         }
       ],
-      "consecutive_days": 1,
-      "last_seen": "2026-06-29",
+      "consecutive_days": 2,
+      "last_seen": "2026-06-30",
       "last_recommendation": "WATCH",
-      "last_score": 10
+      "last_score": 11
     },
     "SYRMA": {
       "first_seen": "2026-06-25",
@@ -1132,12 +1154,19 @@
           "score": 8,
           "price": 1440.5,
           "rsi": 83.2
+        },
+        {
+          "date": "2026-06-30",
+          "recommendation": "WATCH",
+          "score": 10,
+          "price": 1396.3,
+          "rsi": 69.0
         }
       ],
-      "consecutive_days": 1,
-      "last_seen": "2026-06-29",
-      "last_recommendation": "CAUTION",
-      "last_score": 8
+      "consecutive_days": 2,
+      "last_seen": "2026-06-30",
+      "last_recommendation": "WATCH",
+      "last_score": 10
     },
     "LICI": {
       "first_seen": "2026-06-25",
@@ -1618,12 +1647,19 @@
           "score": 0,
           "price": 3872.1,
           "rsi": 44.1
+        },
+        {
+          "date": "2026-06-30",
+          "recommendation": "CAUTION",
+          "score": 4,
+          "price": 3865.6,
+          "rsi": 43.8
         }
       ],
       "consecutive_days": 1,
-      "last_seen": "2026-06-26",
-      "last_recommendation": "AVOID",
-      "last_score": 0
+      "last_seen": "2026-06-30",
+      "last_recommendation": "CAUTION",
+      "last_score": 4
     },
     "NATCOPHARM": {
       "first_seen": "2026-06-26",
@@ -1774,12 +1810,19 @@
           "score": 10,
           "price": 200.03,
           "rsi": 57.8
+        },
+        {
+          "date": "2026-06-30",
+          "recommendation": "BUY",
+          "score": 15,
+          "price": 202.81,
+          "rsi": 59.6
         }
       ],
-      "consecutive_days": 1,
-      "last_seen": "2026-06-29",
-      "last_recommendation": "WATCH",
-      "last_score": 10
+      "consecutive_days": 2,
+      "last_seen": "2026-06-30",
+      "last_recommendation": "BUY",
+      "last_score": 15
     },
     "DRREDDY": {
       "first_seen": "2026-06-29",
@@ -1790,12 +1833,19 @@
           "score": 9,
           "price": 1350.5,
           "rsi": 69.8
+        },
+        {
+          "date": "2026-06-30",
+          "recommendation": "WATCH",
+          "score": 11,
+          "price": 1357.1,
+          "rsi": 66.3
         }
       ],
-      "consecutive_days": 1,
-      "last_seen": "2026-06-29",
+      "consecutive_days": 2,
+      "last_seen": "2026-06-30",
       "last_recommendation": "WATCH",
-      "last_score": 9
+      "last_score": 11
     },
     "LALPATHLAB": {
       "first_seen": "2026-06-29",
@@ -1870,12 +1920,19 @@
           "score": 0,
           "price": 467.65,
           "rsi": 41.0
+        },
+        {
+          "date": "2026-06-30",
+          "recommendation": "AVOID",
+          "score": -1,
+          "price": 453.45,
+          "rsi": 35.9
         }
       ],
-      "consecutive_days": 1,
-      "last_seen": "2026-06-29",
+      "consecutive_days": 2,
+      "last_seen": "2026-06-30",
       "last_recommendation": "AVOID",
-      "last_score": 0
+      "last_score": -1
     },
     "MAZDOCK": {
       "first_seen": "2026-06-29",
@@ -1918,10 +1975,209 @@
           "score": -7,
           "price": 84.94,
           "rsi": 38.3
+        },
+        {
+          "date": "2026-06-30",
+          "recommendation": "AVOID",
+          "score": -3,
+          "price": 85.16,
+          "rsi": 39.5
+        }
+      ],
+      "consecutive_days": 2,
+      "last_seen": "2026-06-30",
+      "last_recommendation": "AVOID",
+      "last_score": -3
+    },
+    "RAMCOIND": {
+      "first_seen": "2026-06-30",
+      "appearances": [
+        {
+          "date": "2026-06-30",
+          "recommendation": "BUY",
+          "score": 16,
+          "price": 338.85,
+          "rsi": 65.4
         }
       ],
       "consecutive_days": 1,
-      "last_seen": "2026-06-29",
+      "last_seen": "2026-06-30",
+      "last_recommendation": "BUY",
+      "last_score": 16
+    },
+    "TARIL": {
+      "first_seen": "2026-06-30",
+      "appearances": [
+        {
+          "date": "2026-06-30",
+          "recommendation": "BUY",
+          "score": 16,
+          "price": 351.35,
+          "rsi": 62.4
+        }
+      ],
+      "consecutive_days": 1,
+      "last_seen": "2026-06-30",
+      "last_recommendation": "BUY",
+      "last_score": 16
+    },
+    "SHYAMCENT": {
+      "first_seen": "2026-06-30",
+      "appearances": [
+        {
+          "date": "2026-06-30",
+          "recommendation": "WATCH",
+          "score": 12,
+          "price": 5.94,
+          "rsi": 75.4
+        }
+      ],
+      "consecutive_days": 1,
+      "last_seen": "2026-06-30",
+      "last_recommendation": "WATCH",
+      "last_score": 12
+    },
+    "ACE": {
+      "first_seen": "2026-06-30",
+      "appearances": [
+        {
+          "date": "2026-06-30",
+          "recommendation": "WATCH",
+          "score": 12,
+          "price": 1024.0,
+          "rsi": 70.9
+        }
+      ],
+      "consecutive_days": 1,
+      "last_seen": "2026-06-30",
+      "last_recommendation": "WATCH",
+      "last_score": 12
+    },
+    "CDSL": {
+      "first_seen": "2026-06-30",
+      "appearances": [
+        {
+          "date": "2026-06-30",
+          "recommendation": "WATCH",
+          "score": 12,
+          "price": 1305.5,
+          "rsi": 55.7
+        }
+      ],
+      "consecutive_days": 1,
+      "last_seen": "2026-06-30",
+      "last_recommendation": "WATCH",
+      "last_score": 12
+    },
+    "VISAKAIND": {
+      "first_seen": "2026-06-30",
+      "appearances": [
+        {
+          "date": "2026-06-30",
+          "recommendation": "WATCH",
+          "score": 12,
+          "price": 79.06,
+          "rsi": 64.0
+        }
+      ],
+      "consecutive_days": 1,
+      "last_seen": "2026-06-30",
+      "last_recommendation": "WATCH",
+      "last_score": 12
+    },
+    "BALAMINES": {
+      "first_seen": "2026-06-30",
+      "appearances": [
+        {
+          "date": "2026-06-30",
+          "recommendation": "WATCH",
+          "score": 12,
+          "price": 2035.9,
+          "rsi": 53.7
+        }
+      ],
+      "consecutive_days": 1,
+      "last_seen": "2026-06-30",
+      "last_recommendation": "WATCH",
+      "last_score": 12
+    },
+    "SOLARA": {
+      "first_seen": "2026-06-30",
+      "appearances": [
+        {
+          "date": "2026-06-30",
+          "recommendation": "WATCH",
+          "score": 10,
+          "price": 575.7,
+          "rsi": 54.6
+        }
+      ],
+      "consecutive_days": 1,
+      "last_seen": "2026-06-30",
+      "last_recommendation": "WATCH",
+      "last_score": 10
+    },
+    "MCX": {
+      "first_seen": "2026-06-30",
+      "appearances": [
+        {
+          "date": "2026-06-30",
+          "recommendation": "CAUTION",
+          "score": 5,
+          "price": 2837.2,
+          "rsi": 45.1
+        }
+      ],
+      "consecutive_days": 1,
+      "last_seen": "2026-06-30",
+      "last_recommendation": "CAUTION",
+      "last_score": 5
+    },
+    "SPMLINFRA": {
+      "first_seen": "2026-06-30",
+      "appearances": [
+        {
+          "date": "2026-06-30",
+          "recommendation": "AVOID",
+          "score": 3,
+          "price": 196.82,
+          "rsi": 48.5
+        }
+      ],
+      "consecutive_days": 1,
+      "last_seen": "2026-06-30",
+      "last_recommendation": "AVOID",
+      "last_score": 3
+    },
+    "SYNCOMF": {
+      "first_seen": "2026-06-30",
+      "appearances": [
+        {
+          "date": "2026-06-30",
+          "recommendation": "AVOID",
+          "score": 3,
+          "price": 14.26,
+          "rsi": 51.2
+        }
+      ],
+      "consecutive_days": 1,
+      "last_seen": "2026-06-30",
+      "last_recommendation": "AVOID",
+      "last_score": 3
+    },
+    "INFY": {
+      "first_seen": "2026-06-30",
+      "appearances": [
+        {
+          "date": "2026-06-30",
+          "recommendation": "AVOID",
+          "score": -7,
+          "price": 1000.4,
+          "rsi": 31.0
+        }
+      ],
+      "consecutive_days": 1,
+      "last_seen": "2026-06-30",
       "last_recommendation": "AVOID",
       "last_score": -7
     }
