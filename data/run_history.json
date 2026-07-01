@@ -7,7 +7,8 @@
     "2026-06-27",
     "2026-06-28",
     "2026-06-29",
-    "2026-06-30"
+    "2026-06-30",
+    "2026-07-01"
   ],
   "tickers": {
     "FCL": {
@@ -796,12 +797,19 @@
           "score": 14,
           "price": 58.9,
           "rsi": 61.3
+        },
+        {
+          "date": "2026-07-01",
+          "recommendation": "WATCH",
+          "score": 13,
+          "price": 58.35,
+          "rsi": 58.4
         }
       ],
-      "consecutive_days": 2,
-      "last_seen": "2026-06-30",
-      "last_recommendation": "BUY",
-      "last_score": 14
+      "consecutive_days": 3,
+      "last_seen": "2026-07-01",
+      "last_recommendation": "WATCH",
+      "last_score": 13
     },
     "BHARATCOAL": {
       "first_seen": "2026-06-25",
@@ -918,12 +926,19 @@
           "score": 3,
           "price": 532.85,
           "rsi": 52.6
+        },
+        {
+          "date": "2026-07-01",
+          "recommendation": "WATCH",
+          "score": 9,
+          "price": 557.4,
+          "rsi": 61.4
         }
       ],
       "consecutive_days": 1,
-      "last_seen": "2026-06-25",
-      "last_recommendation": "AVOID",
-      "last_score": 3
+      "last_seen": "2026-07-01",
+      "last_recommendation": "WATCH",
+      "last_score": 9
     },
     "ADANIENT": {
       "first_seen": "2026-06-25",
@@ -1654,12 +1669,19 @@
           "score": 4,
           "price": 3865.6,
           "rsi": 43.8
+        },
+        {
+          "date": "2026-07-01",
+          "recommendation": "AVOID",
+          "score": 3,
+          "price": 3944.1,
+          "rsi": 49.6
         }
       ],
-      "consecutive_days": 1,
-      "last_seen": "2026-06-30",
-      "last_recommendation": "CAUTION",
-      "last_score": 4
+      "consecutive_days": 2,
+      "last_seen": "2026-07-01",
+      "last_recommendation": "AVOID",
+      "last_score": 3
     },
     "NATCOPHARM": {
       "first_seen": "2026-06-26",
@@ -1982,12 +2004,19 @@
           "score": -3,
           "price": 85.16,
           "rsi": 39.5
+        },
+        {
+          "date": "2026-07-01",
+          "recommendation": "AVOID",
+          "score": -5,
+          "price": 84.3,
+          "rsi": 37.2
         }
       ],
-      "consecutive_days": 2,
-      "last_seen": "2026-06-30",
+      "consecutive_days": 3,
+      "last_seen": "2026-07-01",
       "last_recommendation": "AVOID",
-      "last_score": -3
+      "last_score": -5
     },
     "RAMCOIND": {
       "first_seen": "2026-06-30",
@@ -1998,12 +2027,19 @@
           "score": 16,
           "price": 338.85,
           "rsi": 65.4
+        },
+        {
+          "date": "2026-07-01",
+          "recommendation": "BUY",
+          "score": 14,
+          "price": 334.1,
+          "rsi": 62.7
         }
       ],
-      "consecutive_days": 1,
-      "last_seen": "2026-06-30",
+      "consecutive_days": 2,
+      "last_seen": "2026-07-01",
       "last_recommendation": "BUY",
-      "last_score": 16
+      "last_score": 14
     },
     "TARIL": {
       "first_seen": "2026-06-30",
@@ -2126,12 +2162,19 @@
           "score": 5,
           "price": 2837.2,
           "rsi": 45.1
+        },
+        {
+          "date": "2026-07-01",
+          "recommendation": "WATCH",
+          "score": 12,
+          "price": 2962.0,
+          "rsi": 54.6
         }
       ],
-      "consecutive_days": 1,
-      "last_seen": "2026-06-30",
-      "last_recommendation": "CAUTION",
-      "last_score": 5
+      "consecutive_days": 2,
+      "last_seen": "2026-07-01",
+      "last_recommendation": "WATCH",
+      "last_score": 12
     },
     "SPMLINFRA": {
       "first_seen": "2026-06-30",
@@ -2142,12 +2185,19 @@
           "score": 3,
           "price": 196.82,
           "rsi": 48.5
+        },
+        {
+          "date": "2026-07-01",
+          "recommendation": "AVOID",
+          "score": 2,
+          "price": 194.77,
+          "rsi": 47.0
         }
       ],
-      "consecutive_days": 1,
-      "last_seen": "2026-06-30",
+      "consecutive_days": 2,
+      "last_seen": "2026-07-01",
       "last_recommendation": "AVOID",
-      "last_score": 3
+      "last_score": 2
     },
     "SYNCOMF": {
       "first_seen": "2026-06-30",
@@ -2180,6 +2230,198 @@
       "last_seen": "2026-06-30",
       "last_recommendation": "AVOID",
       "last_score": -7
+    },
+    "IKS": {
+      "first_seen": "2026-07-01",
+      "appearances": [
+        {
+          "date": "2026-07-01",
+          "recommendation": "STRONG BUY",
+          "score": 18,
+          "price": 1800.2,
+          "rsi": 68.2
+        }
+      ],
+      "consecutive_days": 1,
+      "last_seen": "2026-07-01",
+      "last_recommendation": "STRONG BUY",
+      "last_score": 18
+    },
+    "MARUTI": {
+      "first_seen": "2026-07-01",
+      "appearances": [
+        {
+          "date": "2026-07-01",
+          "recommendation": "BUY",
+          "score": 15,
+          "price": 14395.0,
+          "rsi": 67.5
+        }
+      ],
+      "consecutive_days": 1,
+      "last_seen": "2026-07-01",
+      "last_recommendation": "BUY",
+      "last_score": 15
+    },
+    "CAPACITE": {
+      "first_seen": "2026-07-01",
+      "appearances": [
+        {
+          "date": "2026-07-01",
+          "recommendation": "WATCH",
+          "score": 13,
+          "price": 267.0,
+          "rsi": 65.1
+        }
+      ],
+      "consecutive_days": 1,
+      "last_seen": "2026-07-01",
+      "last_recommendation": "WATCH",
+      "last_score": 13
+    },
+    "DELHIVERY": {
+      "first_seen": "2026-07-01",
+      "appearances": [
+        {
+          "date": "2026-07-01",
+          "recommendation": "WATCH",
+          "score": 13,
+          "price": 507.7,
+          "rsi": 70.0
+        }
+      ],
+      "consecutive_days": 1,
+      "last_seen": "2026-07-01",
+      "last_recommendation": "WATCH",
+      "last_score": 13
+    },
+    "CARTRADE": {
+      "first_seen": "2026-07-01",
+      "appearances": [
+        {
+          "date": "2026-07-01",
+          "recommendation": "WATCH",
+          "score": 12,
+          "price": 2813.4,
+          "rsi": 77.7
+        }
+      ],
+      "consecutive_days": 1,
+      "last_seen": "2026-07-01",
+      "last_recommendation": "WATCH",
+      "last_score": 12
+    },
+    "PAISALO": {
+      "first_seen": "2026-07-01",
+      "appearances": [
+        {
+          "date": "2026-07-01",
+          "recommendation": "WATCH",
+          "score": 12,
+          "price": 70.84,
+          "rsi": 83.3
+        }
+      ],
+      "consecutive_days": 1,
+      "last_seen": "2026-07-01",
+      "last_recommendation": "WATCH",
+      "last_score": 12
+    },
+    "RATEGAIN": {
+      "first_seen": "2026-07-01",
+      "appearances": [
+        {
+          "date": "2026-07-01",
+          "recommendation": "WATCH",
+          "score": 11,
+          "price": 902.95,
+          "rsi": 71.8
+        }
+      ],
+      "consecutive_days": 1,
+      "last_seen": "2026-07-01",
+      "last_recommendation": "WATCH",
+      "last_score": 11
+    },
+    "DEVIT": {
+      "first_seen": "2026-07-01",
+      "appearances": [
+        {
+          "date": "2026-07-01",
+          "recommendation": "CAUTION",
+          "score": 7,
+          "price": 28.38,
+          "rsi": 52.7
+        }
+      ],
+      "consecutive_days": 1,
+      "last_seen": "2026-07-01",
+      "last_recommendation": "CAUTION",
+      "last_score": 7
+    },
+    "POWERGRID": {
+      "first_seen": "2026-07-01",
+      "appearances": [
+        {
+          "date": "2026-07-01",
+          "recommendation": "CAUTION",
+          "score": 4,
+          "price": 287.55,
+          "rsi": 45.9
+        }
+      ],
+      "consecutive_days": 1,
+      "last_seen": "2026-07-01",
+      "last_recommendation": "CAUTION",
+      "last_score": 4
+    },
+    "SENCO": {
+      "first_seen": "2026-07-01",
+      "appearances": [
+        {
+          "date": "2026-07-01",
+          "recommendation": "AVOID",
+          "score": -5,
+          "price": 325.85,
+          "rsi": 42.7
+        }
+      ],
+      "consecutive_days": 1,
+      "last_seen": "2026-07-01",
+      "last_recommendation": "AVOID",
+      "last_score": -5
+    },
+    "WIPRO": {
+      "first_seen": "2026-07-01",
+      "appearances": [
+        {
+          "date": "2026-07-01",
+          "recommendation": "AVOID",
+          "score": -6,
+          "price": 170.13,
+          "rsi": 27.1
+        }
+      ],
+      "consecutive_days": 1,
+      "last_seen": "2026-07-01",
+      "last_recommendation": "AVOID",
+      "last_score": -6
+    },
+    "VEDL": {
+      "first_seen": "2026-07-01",
+      "appearances": [
+        {
+          "date": "2026-07-01",
+          "recommendation": "AVOID",
+          "score": -8,
+          "price": 275.55,
+          "rsi": 31.3
+        }
+      ],
+      "consecutive_days": 1,
+      "last_seen": "2026-07-01",
+      "last_recommendation": "AVOID",
+      "last_score": -8
     }
   }
 }
