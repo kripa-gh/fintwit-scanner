@@ -9,7 +9,8 @@
     "2026-06-29",
     "2026-06-30",
     "2026-07-01",
-    "2026-07-02"
+    "2026-07-02",
+    "2026-07-03"
   ],
   "tickers": {
     "FCL": {
@@ -514,12 +515,19 @@
           "score": 1,
           "price": 1950.0,
           "rsi": 55.4
+        },
+        {
+          "date": "2026-07-03",
+          "recommendation": "AVOID",
+          "score": 0,
+          "price": 1938.5,
+          "rsi": 54.0
         }
       ],
-      "consecutive_days": 1,
-      "last_seen": "2026-07-02",
+      "consecutive_days": 2,
+      "last_seen": "2026-07-03",
       "last_recommendation": "AVOID",
-      "last_score": 1
+      "last_score": 0
     },
     "BPCL": {
       "first_seen": "2026-06-25",
@@ -2687,6 +2695,22 @@
       "last_seen": "2026-07-02",
       "last_recommendation": "AVOID",
       "last_score": -10
+    },
+    "DCXINDIA": {
+      "first_seen": "2026-07-03",
+      "appearances": [
+        {
+          "date": "2026-07-03",
+          "recommendation": "WATCH",
+          "score": 9,
+          "price": 204.88,
+          "rsi": 57.9
+        }
+      ],
+      "consecutive_days": 1,
+      "last_seen": "2026-07-03",
+      "last_recommendation": "WATCH",
+      "last_score": 9
     }
   }
 }

@@ -1598,7 +1598,7 @@
       "target": 971.85,
       "setup_type": "pullback",
       "acted_on": null,
-      "ret_5d": null,
+      "ret_5d": 12.65,
       "ret_20d": null,
       "outcome": null,
       "scored": false
@@ -1614,7 +1614,7 @@
       "target": 2621.64,
       "setup_type": "pullback",
       "acted_on": null,
-      "ret_5d": null,
+      "ret_5d": -1.42,
       "ret_20d": null,
       "outcome": null,
       "scored": false
@@ -1630,7 +1630,7 @@
       "target": 531.66,
       "setup_type": "breakout",
       "acted_on": null,
-      "ret_5d": null,
+      "ret_5d": -3.97,
       "ret_20d": null,
       "outcome": null,
       "scored": false
@@ -1646,7 +1646,7 @@
       "target": 656.25,
       "setup_type": "pullback",
       "acted_on": null,
-      "ret_5d": null,
+      "ret_5d": 1.74,
       "ret_20d": null,
       "outcome": null,
       "scored": false
@@ -1662,7 +1662,7 @@
       "target": 34.62,
       "setup_type": "pullback",
       "acted_on": null,
-      "ret_5d": null,
+      "ret_5d": -7.21,
       "ret_20d": null,
       "outcome": null,
       "scored": false
@@ -1678,7 +1678,7 @@
       "target": 341.29,
       "setup_type": "pullback",
       "acted_on": null,
-      "ret_5d": null,
+      "ret_5d": 6.65,
       "ret_20d": null,
       "outcome": null,
       "scored": false
@@ -1694,7 +1694,7 @@
       "target": 164.95,
       "setup_type": "pullback",
       "acted_on": null,
-      "ret_5d": null,
+      "ret_5d": -1.62,
       "ret_20d": null,
       "outcome": null,
       "scored": false
@@ -1726,7 +1726,7 @@
       "target": 4247.55,
       "setup_type": "pullback",
       "acted_on": null,
-      "ret_5d": null,
+      "ret_5d": -1.43,
       "ret_20d": null,
       "outcome": null,
       "scored": false
@@ -1742,7 +1742,7 @@
       "target": 1083.7,
       "setup_type": "pullback",
       "acted_on": null,
-      "ret_5d": null,
+      "ret_5d": 3.07,
       "ret_20d": null,
       "outcome": null,
       "scored": false
@@ -1758,7 +1758,7 @@
       "target": 971.85,
       "setup_type": "pullback",
       "acted_on": null,
-      "ret_5d": null,
+      "ret_5d": 12.65,
       "ret_20d": null,
       "outcome": null,
       "scored": false
@@ -1774,7 +1774,7 @@
       "target": 2621.64,
       "setup_type": "pullback",
       "acted_on": null,
-      "ret_5d": null,
+      "ret_5d": -1.42,
       "ret_20d": null,
       "outcome": null,
       "scored": false
@@ -1790,7 +1790,7 @@
       "target": 531.66,
       "setup_type": "breakout",
       "acted_on": null,
-      "ret_5d": null,
+      "ret_5d": -3.97,
       "ret_20d": null,
       "outcome": null,
       "scored": false
@@ -1806,7 +1806,7 @@
       "target": 656.25,
       "setup_type": "pullback",
       "acted_on": null,
-      "ret_5d": null,
+      "ret_5d": 1.74,
       "ret_20d": null,
       "outcome": null,
       "scored": false
@@ -1822,7 +1822,7 @@
       "target": 34.62,
       "setup_type": "pullback",
       "acted_on": null,
-      "ret_5d": null,
+      "ret_5d": -7.21,
       "ret_20d": null,
       "outcome": null,
       "scored": false
@@ -1838,7 +1838,7 @@
       "target": 1096.03,
       "setup_type": "breakout",
       "acted_on": null,
-      "ret_5d": null,
+      "ret_5d": -5.26,
       "ret_20d": null,
       "outcome": null,
       "scored": false
@@ -1854,7 +1854,7 @@
       "target": 8483.31,
       "setup_type": "pullback",
       "acted_on": null,
-      "ret_5d": null,
+      "ret_5d": -2.28,
       "ret_20d": null,
       "outcome": null,
       "scored": false
@@ -1870,7 +1870,7 @@
       "target": 341.29,
       "setup_type": "pullback",
       "acted_on": null,
-      "ret_5d": null,
+      "ret_5d": 6.65,
       "ret_20d": null,
       "outcome": null,
       "scored": false
@@ -1886,7 +1886,7 @@
       "target": 462.95,
       "setup_type": "breakout",
       "acted_on": null,
-      "ret_5d": null,
+      "ret_5d": -2.44,
       "ret_20d": null,
       "outcome": null,
       "scored": false
@@ -1902,7 +1902,7 @@
       "target": 360.72,
       "setup_type": "pullback",
       "acted_on": null,
-      "ret_5d": null,
+      "ret_5d": -0.52,
       "ret_20d": null,
       "outcome": null,
       "scored": false
@@ -1918,7 +1918,7 @@
       "target": 164.95,
       "setup_type": "pullback",
       "acted_on": null,
-      "ret_5d": null,
+      "ret_5d": -1.62,
       "ret_20d": null,
       "outcome": null,
       "scored": false
@@ -1950,7 +1950,7 @@
       "target": 4247.55,
       "setup_type": "pullback",
       "acted_on": null,
-      "ret_5d": null,
+      "ret_5d": -1.43,
       "ret_20d": null,
       "outcome": null,
       "scored": false
@@ -3331,9 +3331,43 @@
       "ret_20d": null,
       "outcome": null,
       "scored": false
+    },
+    {
+      "date": "2026-07-03",
+      "ticker": "DCXINDIA",
+      "recommendation": "WATCH",
+      "score": 9,
+      "entry_price": 204.88,
+      "entry_zone": "\u20b9189\u2013\u20b9205",
+      "stop": 188.68,
+      "target": 253.48,
+      "setup_type": "pullback",
+      "origin": "telegram_only",
+      "acted_on": null,
+      "ret_5d": null,
+      "ret_20d": null,
+      "outcome": null,
+      "scored": false
+    },
+    {
+      "date": "2026-07-03",
+      "ticker": "WOCKPHARMA",
+      "recommendation": "AVOID",
+      "score": 0,
+      "entry_price": 1938.5,
+      "entry_zone": "\u20b91828\u2013\u20b91938",
+      "stop": 1827.65,
+      "target": 2271.05,
+      "setup_type": "pullback",
+      "origin": "telegram_only",
+      "acted_on": null,
+      "ret_5d": null,
+      "ret_20d": null,
+      "outcome": null,
+      "scored": false
     }
   ],
   "stats": {},
-  "last_updated": "2026-07-02T17:10:31.086277",
-  "last_scored": "2026-07-02"
+  "last_updated": "2026-07-03T16:17:14.600422",
+  "last_scored": "2026-07-03"
 }
