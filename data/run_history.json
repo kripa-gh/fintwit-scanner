@@ -10,7 +10,8 @@
     "2026-06-30",
     "2026-07-01",
     "2026-07-02",
-    "2026-07-03"
+    "2026-07-03",
+    "2026-07-06"
   ],
   "tickers": {
     "FCL": {
@@ -642,12 +643,19 @@
           "score": 1,
           "price": 3150.9,
           "rsi": 56.8
+        },
+        {
+          "date": "2026-07-06",
+          "recommendation": "CAUTION",
+          "score": 7,
+          "price": 3201.2,
+          "rsi": 61.3
         }
       ],
       "consecutive_days": 1,
-      "last_seen": "2026-06-25",
-      "last_recommendation": "AVOID",
-      "last_score": 1
+      "last_seen": "2026-07-06",
+      "last_recommendation": "CAUTION",
+      "last_score": 7
     },
     "WAAREEENER": {
       "first_seen": "2026-06-25",
@@ -2094,12 +2102,19 @@
           "score": 16,
           "price": 351.35,
           "rsi": 62.4
+        },
+        {
+          "date": "2026-07-06",
+          "recommendation": "CAUTION",
+          "score": 8,
+          "price": 341.25,
+          "rsi": 54.3
         }
       ],
       "consecutive_days": 1,
-      "last_seen": "2026-06-30",
-      "last_recommendation": "BUY",
-      "last_score": 16
+      "last_seen": "2026-07-06",
+      "last_recommendation": "CAUTION",
+      "last_score": 8
     },
     "SHYAMCENT": {
       "first_seen": "2026-06-30",
@@ -2307,12 +2322,19 @@
           "score": 8,
           "price": 14348.0,
           "rsi": 66.3
+        },
+        {
+          "date": "2026-07-06",
+          "recommendation": "WATCH",
+          "score": 10,
+          "price": 14456.0,
+          "rsi": 67.8
         }
       ],
-      "consecutive_days": 2,
-      "last_seen": "2026-07-02",
-      "last_recommendation": "CAUTION",
-      "last_score": 8
+      "consecutive_days": 1,
+      "last_seen": "2026-07-06",
+      "last_recommendation": "WATCH",
+      "last_score": 10
     },
     "CAPACITE": {
       "first_seen": "2026-07-01",
@@ -2711,6 +2733,134 @@
       "last_seen": "2026-07-03",
       "last_recommendation": "WATCH",
       "last_score": 9
+    },
+    "TVSMOTOR": {
+      "first_seen": "2026-07-06",
+      "appearances": [
+        {
+          "date": "2026-07-06",
+          "recommendation": "WATCH",
+          "score": 12,
+          "price": 3705.0,
+          "rsi": 67.1
+        }
+      ],
+      "consecutive_days": 1,
+      "last_seen": "2026-07-06",
+      "last_recommendation": "WATCH",
+      "last_score": 12
+    },
+    "LODHA": {
+      "first_seen": "2026-07-06",
+      "appearances": [
+        {
+          "date": "2026-07-06",
+          "recommendation": "WATCH",
+          "score": 9,
+          "price": 1095.9,
+          "rsi": 78.4
+        }
+      ],
+      "consecutive_days": 1,
+      "last_seen": "2026-07-06",
+      "last_recommendation": "WATCH",
+      "last_score": 9
+    },
+    "AXISBANK": {
+      "first_seen": "2026-07-06",
+      "appearances": [
+        {
+          "date": "2026-07-06",
+          "recommendation": "WATCH",
+          "score": 9,
+          "price": 1339.6,
+          "rsi": 50.7
+        }
+      ],
+      "consecutive_days": 1,
+      "last_seen": "2026-07-06",
+      "last_recommendation": "WATCH",
+      "last_score": 9
+    },
+    "RAYMOND": {
+      "first_seen": "2026-07-06",
+      "appearances": [
+        {
+          "date": "2026-07-06",
+          "recommendation": "CAUTION",
+          "score": 8,
+          "price": 622.85,
+          "rsi": 70.3
+        }
+      ],
+      "consecutive_days": 1,
+      "last_seen": "2026-07-06",
+      "last_recommendation": "CAUTION",
+      "last_score": 8
+    },
+    "CARBORUNIV": {
+      "first_seen": "2026-07-06",
+      "appearances": [
+        {
+          "date": "2026-07-06",
+          "recommendation": "CAUTION",
+          "score": 8,
+          "price": 1144.5,
+          "rsi": 55.2
+        }
+      ],
+      "consecutive_days": 1,
+      "last_seen": "2026-07-06",
+      "last_recommendation": "CAUTION",
+      "last_score": 8
+    },
+    "EICHERMOT": {
+      "first_seen": "2026-07-06",
+      "appearances": [
+        {
+          "date": "2026-07-06",
+          "recommendation": "CAUTION",
+          "score": 6,
+          "price": 7471.5,
+          "rsi": 54.9
+        }
+      ],
+      "consecutive_days": 1,
+      "last_seen": "2026-07-06",
+      "last_recommendation": "CAUTION",
+      "last_score": 6
+    },
+    "BAJAJ-AUTO": {
+      "first_seen": "2026-07-06",
+      "appearances": [
+        {
+          "date": "2026-07-06",
+          "recommendation": "AVOID",
+          "score": 3,
+          "price": 10036.5,
+          "rsi": 52.0
+        }
+      ],
+      "consecutive_days": 1,
+      "last_seen": "2026-07-06",
+      "last_recommendation": "AVOID",
+      "last_score": 3
+    },
+    "HEROMOTOCO": {
+      "first_seen": "2026-07-06",
+      "appearances": [
+        {
+          "date": "2026-07-06",
+          "recommendation": "AVOID",
+          "score": -2,
+          "price": 4944.4,
+          "rsi": 51.9
+        }
+      ],
+      "consecutive_days": 1,
+      "last_seen": "2026-07-06",
+      "last_recommendation": "AVOID",
+      "last_score": -2
     }
   }
 }
