@@ -1,11 +1,13 @@
 name: FinTwit Daily Scanner v5
 on:
   schedule:
-    # GitHub delays scheduled runs most at the top of the hour (:00), so these are
-    # offset by a few minutes to land in a less-contended queue slot. This reduces
-    # but does NOT eliminate delay — GitHub gives no on-time guarantee for free runners.
-    - cron: "2 3 * * 1-5"    # ~8:32 AM IST (03:02 UTC) — Pre-market brief
-    - cron: "37 10 * * 1-5"  # ~4:07 PM IST (10:37 UTC) — Main scan
+    # WHY POLLING: GitHub fires schedule events on free runners with a chronic
+    # 7-9 HOUR drift for this repo (measured 29 Jun-7 Jul 2026: the 03:02 UTC
+    # cron fired 11:44-12:48, the 10:37 cron fired 16:41-18:27). No cron value
+    # fixes systemic drift. But the event CADENCE survives the drift, so we
+    # poll every 15 min around the clock and let an IST wall-clock gate decide
+    # whether this fire is inside a send window. No-op fires exit in ~10s.
+    - cron: "4,19,34,49 * * * *"
   workflow_dispatch:
     inputs:
       mode:
@@ -17,8 +19,61 @@ on:
       min_mentions:
         description: "Min mentions"
         default: "1"
+
 jobs:
+  gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    outputs:
+      mode: ${{ steps.decide.outputs.mode }}
+    steps:
+      - name: Decide mode (IST wall-clock + dedupe)
+        id: decide
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EVENT:    ${{ github.event_name }}
+          IN_MODE:  ${{ github.event.inputs.mode }}
+        run: |
+          set -u
+          if [ "$EVENT" = "workflow_dispatch" ]; then
+            # Manual runs are intentional: no window, no dedupe, no marker.
+            echo "mode=${IN_MODE:-main}" >> "$GITHUB_OUTPUT"
+            echo "Gate: manual dispatch -> ${IN_MODE:-main}"
+            exit 0
+          fi
+          H=$(TZ=Asia/Kolkata date +%H); M=$(TZ=Asia/Kolkata date +%M)
+          DOW=$(TZ=Asia/Kolkata date +%u); TODAY=$(TZ=Asia/Kolkata date +%F)
+          T=$((10#$H * 60 + 10#$M)); MODE=none
+          if [ "$DOW" -le 5 ]; then
+            # Pre-market window 08:20-08:59 IST (market opens 09:15)
+            if [ "$T" -ge 500 ] && [ "$T" -lt 540 ];  then MODE=premarket; fi
+            # Main-scan window 15:55-16:54 IST (market closes 15:30)
+            if [ "$T" -ge 955 ] && [ "$T" -lt 1015 ]; then MODE=main; fi
+          fi
+          if [ "$MODE" != "none" ]; then
+            # Dedupe 1: marker committed by the last real run of this mode
+            LAST=$(gh api -H "Accept: application/vnd.github.raw" \
+                   "repos/$GITHUB_REPOSITORY/contents/data/schedule_marker.json" \
+                   2>/dev/null | python3 -c "import json,sys;print(json.load(sys.stdin).get('$MODE',''))" \
+                   2>/dev/null || echo "")
+            if [ "$LAST" = "$TODAY" ]; then
+              echo "Gate: $MODE already ran today ($TODAY) — skip"; MODE=none
+            fi
+          fi
+          if [ "$MODE" != "none" ]; then
+            # Dedupe 2: another run of this workflow already in flight
+            N=$(gh api "repos/$GITHUB_REPOSITORY/actions/workflows/daily_scan.yml/runs?status=in_progress&per_page=10" \
+                --jq "[.workflow_runs[] | select(.id != $GITHUB_RUN_ID)] | length" 2>/dev/null || echo 0)
+            if [ "${N:-0}" -gt 0 ]; then
+              echo "Gate: another run in progress — skip"; MODE=none
+            fi
+          fi
+          echo "mode=$MODE" >> "$GITHUB_OUTPUT"
+          echo "Gate: IST $H:$M dow=$DOW -> mode=$MODE"
+
   scan:
+    needs: gate
+    if: needs.gate.outputs.mode != 'none'
     runs-on: ubuntu-latest
     timeout-minutes: 35
     permissions:
@@ -55,10 +110,29 @@ jobs:
           ACCOUNT_SIZE:         ${{ secrets.ACCOUNT_SIZE }}
           RISK_PER_TRADE_PCT:   ${{ secrets.RISK_PER_TRADE_PCT }}
           TRADE_JOURNAL_SHEET_ID: ${{ secrets.TRADE_JOURNAL_SHEET_ID }}
-          # Mode
-          PREMARKET_MODE:       ${{ github.event.inputs.mode == 'premarket' && '1' || (github.event.schedule == '2 3 * * 1-5' && '1' || '0') }}
+          # Mode — decided by the IST gate, not by which cron string fired
+          PREMARKET_MODE:       ${{ needs.gate.outputs.mode == 'premarket' && '1' || '0' }}
           SEND_RUN_SUMMARY:     "0"
         run: python main.py
+      - name: Write schedule marker
+        # Scheduled runs only — a midday manual test must NOT suppress the
+        # evening scheduled scan. A duplicate email beats a missing one.
+        if: github.event_name == 'schedule'
+        env:
+          GATE_MODE: ${{ needs.gate.outputs.mode }}
+        run: |
+          python3 - <<'PYEOF'
+          import json, os
+          from datetime import datetime, timedelta, timezone
+          IST = timezone(timedelta(hours=5, minutes=30))
+          p = "data/schedule_marker.json"
+          try:
+              m = json.load(open(p))
+          except Exception:
+              m = {}
+          m[os.environ["GATE_MODE"]] = datetime.now(IST).strftime("%Y-%m-%d")
+          json.dump(m, open(p, "w"), indent=2)
+          PYEOF
       - name: Commit data files
         if: always()
         run: |
