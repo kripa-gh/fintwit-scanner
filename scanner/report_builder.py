@@ -183,6 +183,18 @@ def _stock_card(r, news_map, history):
 
     # Technical reasons
     reasons_html = "".join([f'<span style="background:#161b22;border:1px solid {BORDER};font-size:10px;padding:2px 7px;margin:2px 3px 2px 0;display:inline-block;color:{MUTED}">{rr}</span>' for rr in r.get("reasons",[])])
+    # Style playbook badges (Minervini / Weinstein) — evidence, not part of the score
+    sc = r.get("style_checks") or {}
+    style_html = ""
+    if sc.get("summary"):
+        m = sc.get("minervini") or {}
+        w = sc.get("weinstein") or {}
+        m_ok = m.get("pass"); w_ok = (w.get("stage") == 2)
+        badge_col = "#3fb950" if (m_ok and w_ok) else "#f5a623" if (m_ok or w_ok) else "#8b949e"
+        w_detail = w.get("detail", "")
+        summary_txt = sc.get("summary", "")
+        style_html = f'<div style="margin:4px 0 8px 0"><span style="border:1px solid {badge_col};color:{badge_col};font-family:monospace;font-size:10px;padding:2px 8px">\U0001F3DB {summary_txt}</span><span style="font-size:9px;color:{MUTED};margin-left:8px">{w_detail}</span></div>'
+    reasons_html = style_html + reasons_html
 
     # History sparkline
     try:

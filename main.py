@@ -143,6 +143,26 @@ def main():
         for m in telegram_tweets
     }
 
+    # Empirical source credibility (A5): earned weights from the A4 scoreboard
+    # replace hand-set priors as scored calls accumulate. A source with no track
+    # record keeps its prior; one with 20+ scored calls is judged on its record.
+    from scanner.trade_journal import compute_source_credibility, blend_credibility
+    source_emp = compute_source_credibility(journal)
+    if source_emp:
+        graded = {k: v for k, v in source_emp.items() if v["n"] >= 5}
+        logger.info(f"  → Empirical credibility active for {len(graded)} source(s) "
+                    f"({len(source_emp)} tracked)")
+
+    def _credibility(user: str) -> float:
+        """Blended credibility for a Twitter account or Telegram channel."""
+        if user in channel_cred_map:
+            prior = channel_cred_map[user]
+        else:
+            prior = (trader_db.get("accounts", {})
+                              .get(user, {})
+                              .get("recommended_weight", 1.0))
+        return blend_credibility(prior, source_emp.get(user))
+
     # ── STEP 2: Claude tweet intelligence ─────────────────────────────────────
     logger.info("STEP 2/8 — Claude tweet intelligence...")
     from scanner.tweet_intelligence import analyse_all_tweets, analyse_charts_for_tickers
@@ -180,18 +200,7 @@ def main():
 
     # Apply credibility weighting
     for t in tickers:
-        cred = []
-        for u in t.get("users", []):
-            if u in channel_cred_map:
-                # Telegram channel: use credibility from telegram_channels.py (0–1 scale)
-                cred.append(channel_cred_map[u])
-            else:
-                # Twitter account: use trader_db recommended_weight as before
-                cred.append(
-                    trader_db.get("accounts", {})
-                              .get(u, {})
-                              .get("recommended_weight", 1.0)
-                )
+        cred = [_credibility(u) for u in t.get("users", [])]
         avg_cred = sum(cred) / max(len(cred), 1)
         sig = tweet_signals.get(t["ticker"], {})
         t["weighted_score"] = round(
@@ -243,18 +252,9 @@ def main():
         if not actionable:
             continue  # passive chatter — skip
 
-        # Source-aware credibility: Telegram channel cred (0–1) for channel
-        # authors, trader_db recommended_weight for any Twitter authors.
-        cred = []
-        for u in sig.get("traders", []):
-            if u in channel_cred_map:
-                cred.append(channel_cred_map[u])
-            else:
-                cred.append(
-                    trader_db.get("accounts", {})
-                              .get(u, {})
-                              .get("recommended_weight", 1.0)
-                )
+        # Source-aware credibility: hand-set prior blended with each source's
+        # measured track record (see _credibility above).
+        cred = [_credibility(u) for u in sig.get("traders", [])]
         avg_cred = sum(cred) / max(len(cred), 1)
 
         # Telegram scoring — credibility × conviction × sentiment clarity.
@@ -372,16 +372,24 @@ def main():
     logger.info(f"  → {len(analysis_results)} stocks after filtering | Gate: {gate_status['mode']}")
 
     # Log recommendations to journal — entry_price is what makes each call measurable (A4)
+    ticker_sources = {t["ticker"]: t.get("users", []) for t in tickers}
     for r in analysis_results:
         log_recommendation(journal, r["ticker"], r["recommendation"], r["score"],
                           f"₹{r.get('suggested_stop',0):.0f}–₹{r.get('current_price',0):.0f}",
                           r.get("suggested_stop",0), r.get("suggested_target",0),
                           r.get("entry_context","unknown"), run_date,
                           entry_price=r.get("current_price"),
-                          origin=origin_map.get(r["ticker"].upper(), "unknown"))
+                          origin=origin_map.get(r["ticker"].upper(), "unknown"),
+                          sources=ticker_sources.get(r["ticker"], []))
 
     # A4: build the track-record scoreboard (hit-rate + avg forward return by score bucket)
     scoreboard = compute_call_scoreboard(journal)
+    by_src = scoreboard.get("by_source") or {}
+    if by_src:
+        ranked_src = list(by_src.items())
+        top = ranked_src[:3]; bottom = ranked_src[-2:] if len(ranked_src) > 3 else []
+        logger.info("  → Source track records (20d avg): " + "; ".join(
+            f"{k} {v['avg_ret_20d']:+.1f}% ({v['n']})" for k, v in top + bottom))
 
     # ── STEP 7: News + Claude stock intelligence ──────────────────────────────
     logger.info("STEP 7/8 — News + AI intelligence...")

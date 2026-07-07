@@ -353,6 +353,15 @@ def analyse_ticker(
         if sector in all_sectors:
             sector_trend = all_sectors[sector]
 
+    # Style templates (Minervini / Weinstein) — displayed evidence, NOT scored
+    # until the A4 scoreboard proves they predict forward returns.
+    try:
+        from scanner.style_templates import evaluate_styles
+        style_checks = evaluate_styles(df, wdf, nifty_close)
+    except Exception as _se:
+        logger.debug(f"Style templates failed for {ticker}: {_se}")
+        style_checks = {"minervini": None, "weinstein": None, "summary": ""}
+
     return {
         # Identity
         "ticker":             ticker,
@@ -418,6 +427,9 @@ def analyse_ticker(
         # Advanced factors (full dict for report)
         "advanced":       adv,
         "adv_score":      adv_score,
+
+        # World-class style playbooks (Minervini Trend Template, Weinstein stages)
+        "style_checks":   style_checks,
 
         # Market environment
         "env_score":      env_score,

@@ -221,6 +221,7 @@ def log_recommendation(
     run_date: str = None,
     entry_price: float = None,
     origin: str = "unknown",
+    sources: List[str] = None,
 ) -> Dict:
     """Log a system recommendation to the journal log.
 
@@ -240,6 +241,7 @@ def log_recommendation(
         "target":         target,
         "setup_type":     setup_type,
         "origin":         origin,   # telegram_only / twitter_only / both — for source-split scoring
+        "sources":        sorted(set(sources or [])),  # accounts/channels that flagged this — feeds empirical credibility
         "acted_on":       None,   # user can manually update
         "ret_5d":         None,   # forward returns (%), filled by score_pending_calls()
         "ret_20d":        None,
@@ -284,9 +286,15 @@ def _call_outcome(entry: Dict) -> Optional[str]:
 
 def _fill_forward_returns(symbol: str, entries: List[Dict]) -> None:
     """Fill ret_5d / ret_20d for one ticker's pending entries, in place.
-    Uses the price series' own index as the trading-day calendar, so 'N trading days
-    later' = N rows after the flag date — no holiday arithmetic, and the base is the
-    captured entry_price (the exact price the scanner acted on)."""
+
+    ANCHORING (bias fix): the main scan runs after the 3:30pm close, so the earliest
+    real fill is the NEXT session's OPEN. Returns are therefore measured from the
+    first bar strictly AFTER the signal date, entering at that bar's Open and exiting
+    at the Close h sessions later (exit bar = anchor + h - 1). Measuring from the
+    signal-day price — the old behaviour — credited the scanner an overnight gap no
+    user could ever capture, inflating every accuracy number the scoreboard produced.
+    The captured entry_price is kept for reference; anchor_price is what returns use.
+    """
     import yfinance as yf
     import pandas as pd
     try:
@@ -296,7 +304,10 @@ def _fill_forward_returns(symbol: str, entries: List[Dict]) -> None:
             return
         if isinstance(df.columns, pd.MultiIndex):
             df.columns = [c[0] for c in df.columns]
-        close = pd.to_numeric(df["Close"], errors="coerce").dropna()
+        close = pd.to_numeric(df["Close"], errors="coerce")
+        opens = pd.to_numeric(df["Open"],  errors="coerce") if "Open" in df else close
+        keep  = close.notna()
+        close, opens = close[keep], opens[keep]
     except Exception as e:
         logger.debug(f"Scoreboard price fetch failed for {symbol}: {e}")
         return
@@ -304,23 +315,28 @@ def _fill_forward_returns(symbol: str, entries: List[Dict]) -> None:
         return
     idx_dates = [d.date() for d in close.index]
     for e in entries:
-        entry_px = e.get("entry_price")
-        if not entry_px:
+        if not e.get("entry_price"):
             continue
         try:
             entry_d = date.fromisoformat(e["date"])
         except Exception:
             continue
-        pos = next((i for i, d in enumerate(idx_dates) if d >= entry_d), None)
+        # Anchor = first tradable bar strictly after the signal date
+        pos = next((i for i, d in enumerate(idx_dates) if d > entry_d), None)
         if pos is None:
             continue
+        base = float(opens.iloc[pos])
+        if base != base or base <= 0:          # NaN/zero Open guard
+            base = float(close.iloc[pos])
+        e["anchor_price"] = round(base, 2)
         for h in SCORE_HORIZONS:
             key = f"ret_{h}d"
             if e.get(key) is not None:
                 continue
-            if pos + h < len(close):
-                fwd = float(close.iloc[pos + h])
-                e[key] = round((fwd - entry_px) / entry_px * 100, 2)
+            exit_pos = pos + h - 1             # hold h sessions from anchor open
+            if exit_pos < len(close):
+                fwd = float(close.iloc[exit_pos])
+                e[key] = round((fwd - base) / base * 100, 2)
         if e.get(f"ret_{max(SCORE_HORIZONS)}d") is not None and not e.get("scored"):
             e["scored"]  = True
             e["outcome"] = _call_outcome(e)
@@ -331,6 +347,22 @@ def score_pending_calls(journal: Dict, today: date = None) -> Dict:
     tickers with at least one unscored call old enough to (possibly) score, and only
     fills horizons whose forward bar already exists. Safe to call every run."""
     today = today or date.today()
+
+    # ── One-time migration: entries scored under the old signal-day method (no
+    # anchor_price) carry overnight-gap bias. Reset them so they re-score under
+    # next-open anchoring — otherwise the scoreboard mixes two methodologies and
+    # every aggregate is uninterpretable. Idempotent: anchored entries untouched.
+    migrated = 0
+    for e in journal.get("log", []):
+        if e.get("scored") and "anchor_price" not in e:
+            for h in SCORE_HORIZONS:
+                e[f"ret_{h}d"] = None
+            e["scored"], e["outcome"] = False, None
+            migrated += 1
+    if migrated:
+        logger.info(f"Scoreboard: re-scoring {migrated} pre-anchoring call(s) "
+                    f"under next-open methodology")
+
     pending: Dict[str, List[Dict]] = {}
     for e in journal.get("log", []):
         if e.get("scored") or e.get("entry_price") is None:
@@ -398,6 +430,13 @@ def compute_call_scoreboard(journal: Dict) -> Dict:
         ogroups.setdefault(e.get("origin") or "unknown", []).append(e)
     by_origin = {k: _agg(v) for k, v in ogroups.items()}
 
+    # Per-source split — the "which accounts/channels actually earn their weight" table
+    sgroups: Dict[str, List[Dict]] = {}
+    for e in scored:
+        for src in e.get("sources", []) or []:
+            sgroups.setdefault(src, []).append(e)
+    by_source = {k: _agg(v) for k, v in sgroups.items() if len(v) >= 3}
+
     logged_dates = [e["date"] for e in log if e.get("entry_price") is not None]
     return {
         "scored_count":  len(scored),
@@ -406,9 +445,75 @@ def compute_call_scoreboard(journal: Dict) -> Dict:
         "by_score":      by_score,
         "by_rec":        by_rec,
         "by_origin":     by_origin,
+        "by_source":     dict(sorted(by_source.items(),
+                                     key=lambda kv: kv[1]["avg_ret_20d"] or -999,
+                                     reverse=True)),
         "first_logged":  min(logged_dates) if logged_dates else None,
         "has_data":      len(scored) >= 10,   # below this, the numbers are noise
     }
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# EMPIRICAL SOURCE CREDIBILITY — earned weights replace hand-set guesses
+#
+# Every scored call carries the accounts/channels that flagged it. Aggregating
+# per source gives each one a measured hit rate and average 20d forward return.
+# blend_credibility() shrinks each source's hand-set prior toward its empirical
+# weight as evidence accumulates: with 0 scored calls the prior stands untouched;
+# by SHRINK_N calls the data has fully taken over. A tipster channel with a
+# negative 20d average demotes itself automatically — no manual pruning.
+# ═══════════════════════════════════════════════════════════════════════════════
+
+MIN_SOURCE_CALLS = 5    # below this a source's stats are reported but weight is noise
+SHRINK_N         = 20   # scored calls at which empirical weight fully replaces prior
+_W_FLOOR, _W_CEIL = 0.20, 1.30
+
+
+def compute_source_credibility(journal: Dict) -> Dict[str, Dict]:
+    """Per-source empirical stats from scored calls.
+
+    Returns {source: {"n", "hit_rate", "avg_ret_20d", "empirical_weight"}}.
+    empirical_weight maps performance into the same 0–1.3 band the pipeline
+    already uses for credibility: 50% hit rate with 0% avg return ≈ 0.60
+    (neutral-ish), strong performers push toward 1.3, losers toward 0.20.
+    """
+    per: Dict[str, List[Dict]] = {}
+    for e in journal.get("log", []):
+        if e.get("outcome") not in ("win", "loss"):
+            continue
+        for src in e.get("sources", []) or []:
+            per.setdefault(src, []).append(e)
+
+    out: Dict[str, Dict] = {}
+    for src, entries in per.items():
+        n    = len(entries)
+        wins = sum(1 for e in entries if e.get("outcome") == "win")
+        hit  = wins / n * 100
+        r20  = [e["ret_20d"] for e in entries if e.get("ret_20d") is not None]
+        avg20 = (sum(r20) / len(r20)) if r20 else 0.0
+        # Weight: hit-rate term (±0.4 across 0–100%) + return term (clamped ±8% → ±0.32)
+        w = 0.60 + (hit - 50) / 50 * 0.40 + max(-8.0, min(8.0, avg20)) / 25
+        out[src] = {
+            "n":                n,
+            "hit_rate":         round(hit, 1),
+            "avg_ret_20d":      round(avg20, 2),
+            "empirical_weight": round(max(_W_FLOOR, min(_W_CEIL, w)), 3),
+        }
+    return out
+
+
+def blend_credibility(prior: float, emp: Optional[Dict]) -> float:
+    """Shrink the hand-set prior toward the source's empirical weight.
+
+    k = n / SHRINK_N (capped at 1): a source with 4 scored calls keeps 80% of its
+    prior; one with 20+ is judged entirely on its record. Sources with fewer than
+    MIN_SOURCE_CALLS scored calls keep the prior untouched — small-n hit rates
+    are coin flips, not evidence.
+    """
+    if not emp or emp.get("n", 0) < MIN_SOURCE_CALLS:
+        return prior
+    k = min(emp["n"] / SHRINK_N, 1.0)
+    return round(prior * (1 - k) + emp["empirical_weight"] * k, 3)
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
