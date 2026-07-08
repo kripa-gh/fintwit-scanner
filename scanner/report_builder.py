@@ -189,8 +189,11 @@ def _stock_card(r, news_map, history):
     if sc.get("summary"):
         m = sc.get("minervini") or {}
         w = sc.get("weinstein") or {}
-        m_ok = m.get("pass"); w_ok = (w.get("stage") == 2)
-        badge_col = "#3fb950" if (m_ok and w_ok) else "#f5a623" if (m_ok or w_ok) else "#8b949e"
+        t = sc.get("turtle") or {}
+        q = sc.get("qullamaggie") or {}
+        n_pass = sum([bool(m.get("pass")), w.get("stage") == 2,
+                      bool(t.get("pass")), bool(q.get("pass"))])
+        badge_col = "#3fb950" if n_pass >= 2 else "#f5a623" if n_pass == 1 else "#8b949e"
         w_detail = w.get("detail", "")
         summary_txt = sc.get("summary", "")
         style_html = f'<div style="margin:4px 0 8px 0"><span style="border:1px solid {badge_col};color:{badge_col};font-family:monospace;font-size:10px;padding:2px 8px">\U0001F3DB {summary_txt}</span><span style="font-size:9px;color:{MUTED};margin-left:8px">{w_detail}</span></div>'

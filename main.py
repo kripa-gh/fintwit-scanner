@@ -372,6 +372,7 @@ def main():
     logger.info(f"  → {len(analysis_results)} stocks after filtering | Gate: {gate_status['mode']}")
 
     # Log recommendations to journal — entry_price is what makes each call measurable (A4)
+    from scanner.style_templates import style_flags
     ticker_sources = {t["ticker"]: t.get("users", []) for t in tickers}
     for r in analysis_results:
         log_recommendation(journal, r["ticker"], r["recommendation"], r["score"],
@@ -380,7 +381,8 @@ def main():
                           r.get("entry_context","unknown"), run_date,
                           entry_price=r.get("current_price"),
                           origin=origin_map.get(r["ticker"].upper(), "unknown"),
-                          sources=ticker_sources.get(r["ticker"], []))
+                          sources=ticker_sources.get(r["ticker"], []),
+                          styles=style_flags(r.get("style_checks")))
 
     # A4: build the track-record scoreboard (hit-rate + avg forward return by score bucket)
     scoreboard = compute_call_scoreboard(journal)

@@ -222,6 +222,7 @@ def log_recommendation(
     entry_price: float = None,
     origin: str = "unknown",
     sources: List[str] = None,
+    styles: Dict = None,
 ) -> Dict:
     """Log a system recommendation to the journal log.
 
@@ -242,6 +243,7 @@ def log_recommendation(
         "setup_type":     setup_type,
         "origin":         origin,   # telegram_only / twitter_only / both — for source-split scoring
         "sources":        sorted(set(sources or [])),  # accounts/channels that flagged this — feeds empirical credibility
+        "styles":         styles or {},   # playbook pass/fail flags — feeds by_style lift analysis
         "acted_on":       None,   # user can manually update
         "ret_5d":         None,   # forward returns (%), filled by score_pending_calls()
         "ret_20d":        None,
@@ -437,6 +439,22 @@ def compute_call_scoreboard(journal: Dict) -> Dict:
             sgroups.setdefault(src, []).append(e)
     by_source = {k: _agg(v) for k, v in sgroups.items() if len(v) >= 3}
 
+    # Per-style split — do template-passing calls actually outperform failing
+    # ones? This is the probation gate: a playbook only earns score weight if
+    # its pass-group beats its fail-group here.
+    stgroups: Dict[str, Dict[str, List[Dict]]] = {}
+    for e in scored:
+        for k, v in (e.get("styles") or {}).items():
+            g = stgroups.setdefault(k, {"pass": [], "fail": []})
+            g["pass" if v else "fail"].append(e)
+    by_style = {}
+    for k, g in stgroups.items():
+        if len(g["pass"]) + len(g["fail"]) >= 5:
+            by_style[k] = {
+                "pass": _agg(g["pass"]) if g["pass"] else None,
+                "fail": _agg(g["fail"]) if g["fail"] else None,
+            }
+
     logged_dates = [e["date"] for e in log if e.get("entry_price") is not None]
     return {
         "scored_count":  len(scored),
@@ -445,6 +463,7 @@ def compute_call_scoreboard(journal: Dict) -> Dict:
         "by_score":      by_score,
         "by_rec":        by_rec,
         "by_origin":     by_origin,
+        "by_style":      by_style,
         "by_source":     dict(sorted(by_source.items(),
                                      key=lambda kv: kv[1]["avg_ret_20d"] or -999,
                                      reverse=True)),
