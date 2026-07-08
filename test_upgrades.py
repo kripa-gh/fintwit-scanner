@@ -125,3 +125,56 @@ print(f"TEST 3 PASS — good_channel w={g['empirical_weight']} "
       f"bad_channel w={b['empirical_weight']} | scoreboard by_source ranked")
 
 print("\nALL TESTS PASS")
+
+# ═══ TEST 4: Turtle + Qullamaggie templates ═════════════════════════════════
+from scanner.style_templates import donchian_turtle, qullamaggie_breakout, style_flags
+
+def ohlc(close_vals):
+    idx = pd.bdate_range(end=date.today(), periods=len(close_vals))
+    c = pd.Series(close_vals, index=idx, dtype=float)
+    return pd.DataFrame({"Close": c, "High": c * 1.022, "Low": c * 0.978})
+
+# Turtle: flat 100 for 99 bars then a bar at 115 → clean 20d/55d channel break
+t_up = donchian_turtle(ohlc([100.0]*99 + [115.0]))
+assert t_up["pass"] and t_up["criteria"]["breakout_55d"], t_up
+t_dn = donchian_turtle(ohlc(list(np.linspace(150, 100, 100))))
+assert not t_dn["pass"], t_dn
+
+# Qullamaggie: 40% leg (60 bars), tightening 14-bar flag ~8% deep, breakout bar
+leg  = list(np.linspace(100, 140, 60))
+flag = [135, 130, 133, 129, 132, 130.5, 131.5, 130.8, 131.2, 131.0,
+        131.1, 130.9, 131.0, 131.0]           # early wide, late tight
+pre  = [98.0] * (100 - 60 - 14 - 1)
+q_yes = qullamaggie_breakout(ohlc(pre + leg + flag + [142.0]))
+assert q_yes["pass"], q_yes
+assert q_yes["criteria"]["leg_30pct_run"] and q_yes["criteria"]["breakout_10d_high"], q_yes
+# Same structure, no breakout bar → trigger mandatory → fail
+q_no = qullamaggie_breakout(ohlc(pre + leg + flag + [131.0]))
+assert not q_no["pass"] and not q_no["criteria"]["breakout_10d_high"], q_no
+
+# style_flags shape for the journal
+fl = style_flags({"minervini": {"pass": True}, "weinstein": {"stage": 2},
+                  "turtle": t_up, "qullamaggie": q_yes})
+assert fl == {"minervini": True, "weinstein_s2": True, "turtle": True, "qullamaggie": True}, fl
+print("TEST 4 PASS — Turtle + Qullamaggie:", q_yes["note"])
+
+# ═══ TEST 5: by_style scoreboard split ══════════════════════════════════════
+j2 = {"log": [], "positions": [], "stats": {}}
+for i in range(12):
+    passing = i < 6
+    j2["log"].append({
+        "date": (date.today() - timedelta(days=40 + i)).isoformat(),
+        "ticker": f"S{i}", "recommendation": "BUY", "score": 15,
+        "entry_price": 100.0, "sources": ["ch"],
+        "styles": {"turtle": passing},
+        "ret_5d": 1.0, "ret_20d": 6.0 if passing else -2.0,
+        "outcome": "win" if passing else "loss", "scored": True, "origin": "both",
+    })
+sb2 = compute_call_scoreboard(j2)
+bs = sb2["by_style"]["turtle"]
+assert bs["pass"]["avg_ret_20d"] > bs["fail"]["avg_ret_20d"], bs
+assert bs["pass"]["n"] == 6 and bs["fail"]["n"] == 6, bs
+print(f"TEST 5 PASS — by_style lift measurable: turtle pass {bs['pass']['avg_ret_20d']}% "
+      f"vs fail {bs['fail']['avg_ret_20d']}%")
+
+print("\nALL TESTS PASS (incl. Turtle/Qullamaggie)")

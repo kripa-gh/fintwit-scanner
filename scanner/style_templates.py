@@ -159,6 +159,105 @@ def weinstein_stage(weekly_df: pd.DataFrame) -> Dict:
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
+# 3. DONCHIAN / TURTLE CHANNEL BREAKOUT
+# ═══════════════════════════════════════════════════════════════════════════════
+
+def donchian_turtle(daily_df: pd.DataFrame) -> Dict:
+    """Turtle entries: close breaks the prior 20-day (System 1) or 55-day
+    (System 2) high channel. A different *kind* of check from Minervini/
+    Weinstein — an event trigger, not a trend state — which is why it earns
+    a slot despite the momentum overlap."""
+    out = {"passed": 0, "total": 2, "pass": False, "criteria": {}, "note": ""}
+    close = _series(daily_df.get("Close")) if daily_df is not None else None
+    high  = _series(daily_df.get("High"))  if daily_df is not None else None
+    if close is None or len(close) < 60:
+        out["note"] = "insufficient history (<60 daily bars)"
+        return out
+    if high is None or len(high) != len(close):
+        high = close  # degrade gracefully to close-only channels
+    c = float(close.iloc[-1])
+    out["criteria"] = {
+        "breakout_20d": c > float(high.iloc[-21:-1].max()),
+        "breakout_55d": c > float(high.iloc[-56:-1].max()),
+    }
+    out["passed"] = sum(1 for v in out["criteria"].values() if v)
+    out["pass"]   = out["criteria"]["breakout_20d"]   # System 1 entry
+    if out["criteria"]["breakout_55d"]:
+        out["note"] = "55d channel break (System 2)"
+    return out
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# 4. QULLAMAGGIE-STYLE FLAG BREAKOUT (adapted)
+# ═══════════════════════════════════════════════════════════════════════════════
+
+def qullamaggie_breakout(daily_df: pd.DataFrame) -> Dict:
+    """Qullamaggie's breakout setup, price-only approximation: a strong
+    momentum leg (>=30% run), a contained consolidation (drawdown <=25% from
+    the leg peak), tightening daily ranges, elevated ADR%, and a breakout
+    through the 10-day closing high.
+
+    ADAPTATIONS, stated honestly: his flag-pivot is drawn by eye — the 10-day
+    high is a mechanical stand-in. His episodic-pivot setup (earnings gaps)
+    is NOT implemented here; it needs the BSE filings feed. His parabolic
+    short is out of scope for a long-biased scanner.
+    """
+    out = {"passed": 0, "total": 5, "pass": False, "criteria": {}, "note": ""}
+    if daily_df is None:
+        out["note"] = "no data"
+        return out
+    close = _series(daily_df.get("Close"))
+    high  = _series(daily_df.get("High"))
+    low   = _series(daily_df.get("Low"))
+    if close is None or len(close) < 100:
+        out["note"] = "insufficient history (<100 daily bars)"
+        return out
+    if high is None or low is None or len(high) != len(close) or len(low) != len(close):
+        high, low = close, close
+
+    n = len(close)
+    # Momentum leg: peak within the last ~75 bars EXCLUDING today (so a fresh
+    # breakout bar doesn't become its own "leg peak"), base = trough of the
+    # 40 bars preceding that peak.
+    look = close.iloc[-76:-1]
+    ip_rel  = int(look.values.argmax())
+    ip_abs  = (n - 76) + ip_rel
+    peak    = float(close.iloc[ip_abs])
+    base_sl = close.iloc[max(0, ip_abs - 60):ip_abs]
+    base    = float(base_sl.min()) if len(base_sl) else peak
+    leg_ok  = base > 0 and (peak / base - 1) >= 0.30
+
+    # Consolidation containment: since the peak, no close below 75% of it,
+    # and at least 5 sessions of digestion.
+    cons    = close.iloc[ip_abs:-1]
+    cons_ok = len(cons) >= 5 and float(cons.min()) >= peak * 0.75
+
+    # Range tightening: recent daily ranges narrower than the flag's early half
+    rng      = ((high - low) / close).iloc[ip_abs:-1]
+    tight_ok = (len(rng) >= 10
+                and float(rng.iloc[-5:].mean()) < float(rng.iloc[:len(rng)//2].mean()))
+
+    # ADR%: he trades movers — 20-day average daily range >= 3.5%
+    adr    = float(((high - low) / close).iloc[-20:].mean() * 100)
+    adr_ok = adr >= 3.5
+
+    # Trigger: today's close takes out the prior 10-day closing high
+    trig = float(close.iloc[-1]) > float(close.iloc[-11:-1].max())
+
+    out["criteria"] = {
+        "leg_30pct_run":       leg_ok,
+        "flag_drawdown_le25":  cons_ok,
+        "range_tightening":    tight_ok,
+        "adr20_ge_3.5pct":     adr_ok,
+        "breakout_10d_high":   trig,
+    }
+    out["passed"] = sum(1 for v in out["criteria"].values() if v)
+    out["pass"]   = trig and out["passed"] >= 4     # trigger is mandatory
+    out["note"]   = f"ADR20 {adr:.1f}% | leg {((peak/base-1)*100 if base>0 else 0):.0f}%"
+    return out
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
 # COMBINED EVALUATION
 # ═══════════════════════════════════════════════════════════════════════════════
 
@@ -168,7 +267,8 @@ def evaluate_styles(
     nifty_close: Optional[pd.Series] = None,
 ) -> Dict:
     """Run all style templates. Never raises — returns whatever could be computed."""
-    result = {"minervini": None, "weinstein": None, "summary": ""}
+    result = {"minervini": None, "weinstein": None, "turtle": None,
+              "qullamaggie": None, "summary": ""}
     try:
         result["minervini"] = minervini_trend_template(daily_df, nifty_close)
     except Exception as e:
@@ -178,6 +278,14 @@ def evaluate_styles(
             result["weinstein"] = weinstein_stage(weekly_df)
     except Exception as e:
         logger.debug(f"Weinstein check failed: {e}")
+    try:
+        result["turtle"] = donchian_turtle(daily_df)
+    except Exception as e:
+        logger.debug(f"Turtle check failed: {e}")
+    try:
+        result["qullamaggie"] = qullamaggie_breakout(daily_df)
+    except Exception as e:
+        logger.debug(f"Qullamaggie check failed: {e}")
 
     parts = []
     m = result["minervini"]
@@ -188,5 +296,28 @@ def evaluate_styles(
         parts.append(f"Weinstein Stage {w['stage']}"
                      + (" ✅" if w["stage"] == 2 else "")
                      + (" (fresh)" if w.get("fresh_stage2") else ""))
+    t = result["turtle"]
+    if t and t["total"]:
+        if t["pass"]:
+            parts.append("Turtle 20d ✅" + (" +55d" if t["criteria"].get("breakout_55d") else ""))
+    q = result["qullamaggie"]
+    if q and q["total"]:
+        parts.append(f"Qullamaggie {q['passed']}/5" + (" ✅" if q["pass"] else ""))
     result["summary"] = " | ".join(parts)
     return result
+
+
+def style_flags(style_checks: Optional[Dict]) -> Dict[str, bool]:
+    """Compact pass/fail booleans for journal logging — the shape the
+    scoreboard's by_style split aggregates on. One bool per playbook."""
+    sc = style_checks or {}
+    m = sc.get("minervini") or {}
+    w = sc.get("weinstein") or {}
+    t = sc.get("turtle") or {}
+    q = sc.get("qullamaggie") or {}
+    return {
+        "minervini":    bool(m.get("pass")),
+        "weinstein_s2": w.get("stage") == 2,
+        "turtle":       bool(t.get("pass")),
+        "qullamaggie":  bool(q.get("pass")),
+    }
