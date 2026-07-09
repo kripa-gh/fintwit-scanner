@@ -3945,9 +3945,635 @@
       "ret_20d": null,
       "outcome": null,
       "scored": false
+    },
+    {
+      "date": "2026-07-09",
+      "ticker": "HFCL",
+      "recommendation": "WATCH",
+      "score": 11,
+      "entry_price": 214.68,
+      "entry_zone": "\u20b9194\u2013\u20b9215",
+      "stop": 193.89,
+      "target": 277.05,
+      "setup_type": "pullback",
+      "origin": "twitter_only",
+      "sources": [
+        "SureshKBN"
+      ],
+      "styles": {
+        "minervini": true,
+        "weinstein_s2": true,
+        "turtle": false,
+        "qullamaggie": false
+      },
+      "acted_on": null,
+      "ret_5d": null,
+      "ret_20d": null,
+      "outcome": null,
+      "scored": false
+    },
+    {
+      "date": "2026-07-09",
+      "ticker": "WELSPUNLIV",
+      "recommendation": "WATCH",
+      "score": 8,
+      "entry_price": 166.53,
+      "entry_zone": "\u20b9155\u2013\u20b9167",
+      "stop": 154.55,
+      "target": 202.47,
+      "setup_type": "pullback",
+      "origin": "telegram_only",
+      "sources": [
+        "-1001306340643"
+      ],
+      "styles": {
+        "minervini": true,
+        "weinstein_s2": true,
+        "turtle": false,
+        "qullamaggie": false
+      },
+      "acted_on": null,
+      "ret_5d": null,
+      "ret_20d": null,
+      "outcome": null,
+      "scored": false
+    },
+    {
+      "date": "2026-07-09",
+      "ticker": "WELCORP",
+      "recommendation": "WATCH",
+      "score": 12,
+      "entry_price": 1601.9,
+      "entry_zone": "\u20b91479\u2013\u20b91602",
+      "stop": 1478.56,
+      "target": 1971.92,
+      "setup_type": "breakout",
+      "origin": "twitter_only",
+      "sources": [
+        "SureshKBN"
+      ],
+      "styles": {
+        "minervini": true,
+        "weinstein_s2": true,
+        "turtle": true,
+        "qullamaggie": false
+      },
+      "acted_on": null,
+      "ret_5d": null,
+      "ret_20d": null,
+      "outcome": null,
+      "scored": false
+    },
+    {
+      "date": "2026-07-09",
+      "ticker": "ABCAPITAL",
+      "recommendation": "WATCH",
+      "score": 13,
+      "entry_price": 397.35,
+      "entry_zone": "\u20b9374\u2013\u20b9397",
+      "stop": 374.4,
+      "target": 466.2,
+      "setup_type": "pullback",
+      "origin": "twitter_only",
+      "sources": [
+        "anandchokshi19"
+      ],
+      "styles": {
+        "minervini": true,
+        "weinstein_s2": true,
+        "turtle": false,
+        "qullamaggie": false
+      },
+      "acted_on": null,
+      "ret_5d": null,
+      "ret_20d": null,
+      "outcome": null,
+      "scored": false
+    },
+    {
+      "date": "2026-07-09",
+      "ticker": "HDFCBANK",
+      "recommendation": "WATCH",
+      "score": 12,
+      "entry_price": 817.55,
+      "entry_zone": "\u20b9785\u2013\u20b9818",
+      "stop": 785.27,
+      "target": 914.39,
+      "setup_type": "pullback",
+      "origin": "twitter_only",
+      "sources": [
+        "anandchokshi19"
+      ],
+      "styles": {
+        "minervini": false,
+        "weinstein_s2": false,
+        "turtle": false,
+        "qullamaggie": false
+      },
+      "acted_on": null,
+      "ret_5d": null,
+      "ret_20d": null,
+      "outcome": null,
+      "scored": false
+    },
+    {
+      "date": "2026-07-09",
+      "ticker": "AZAD",
+      "recommendation": "WATCH",
+      "score": 11,
+      "entry_price": 2476.1,
+      "entry_zone": "\u20b92249\u2013\u20b92476",
+      "stop": 2248.67,
+      "target": 3158.39,
+      "setup_type": "breakout",
+      "origin": "twitter_only",
+      "sources": [
+        "jitu_stock"
+      ],
+      "styles": {
+        "minervini": true,
+        "weinstein_s2": true,
+        "turtle": true,
+        "qullamaggie": true
+      },
+      "acted_on": null,
+      "ret_5d": null,
+      "ret_20d": null,
+      "outcome": null,
+      "scored": false
+    },
+    {
+      "date": "2026-07-09",
+      "ticker": "KAYNES",
+      "recommendation": "CAUTION",
+      "score": 7,
+      "entry_price": 3429.1,
+      "entry_zone": "\u20b93164\u2013\u20b93429",
+      "stop": 3164.12,
+      "target": 4224.04,
+      "setup_type": "breakout",
+      "origin": "twitter_only",
+      "sources": [
+        "jitu_stock"
+      ],
+      "styles": {
+        "minervini": false,
+        "weinstein_s2": false,
+        "turtle": true,
+        "qullamaggie": true
+      },
+      "acted_on": null,
+      "ret_5d": null,
+      "ret_20d": null,
+      "outcome": null,
+      "scored": false
+    },
+    {
+      "date": "2026-07-09",
+      "ticker": "ICICIBANK",
+      "recommendation": "WATCH",
+      "score": 13,
+      "entry_price": 1380.7,
+      "entry_zone": "\u20b91329\u2013\u20b91381",
+      "stop": 1329.14,
+      "target": 1535.38,
+      "setup_type": "pullback",
+      "origin": "twitter_only",
+      "sources": [
+        "anandchokshi19"
+      ],
+      "styles": {
+        "minervini": false,
+        "weinstein_s2": false,
+        "turtle": false,
+        "qullamaggie": false
+      },
+      "acted_on": null,
+      "ret_5d": null,
+      "ret_20d": null,
+      "outcome": null,
+      "scored": false
+    },
+    {
+      "date": "2026-07-09",
+      "ticker": "TORNTPHARM",
+      "recommendation": "CAUTION",
+      "score": 5,
+      "entry_price": 4898.2,
+      "entry_zone": "\u20b94706\u2013\u20b94898",
+      "stop": 4705.52,
+      "target": 5476.24,
+      "setup_type": "breakout",
+      "origin": "telegram_only",
+      "sources": [
+        "-1001642892147"
+      ],
+      "styles": {
+        "minervini": true,
+        "weinstein_s2": true,
+        "turtle": false,
+        "qullamaggie": false
+      },
+      "acted_on": null,
+      "ret_5d": null,
+      "ret_20d": null,
+      "outcome": null,
+      "scored": false
+    },
+    {
+      "date": "2026-07-09",
+      "ticker": "BHARTIARTL",
+      "recommendation": "WATCH",
+      "score": 13,
+      "entry_price": 1931.1,
+      "entry_zone": "\u20b91851\u2013\u20b91931",
+      "stop": 1850.82,
+      "target": 2171.94,
+      "setup_type": "breakout",
+      "origin": "twitter_only",
+      "sources": [
+        "anandchokshi19"
+      ],
+      "styles": {
+        "minervini": false,
+        "weinstein_s2": false,
+        "turtle": false,
+        "qullamaggie": false
+      },
+      "acted_on": null,
+      "ret_5d": null,
+      "ret_20d": null,
+      "outcome": null,
+      "scored": false
+    },
+    {
+      "date": "2026-07-09",
+      "ticker": "VENUSREM",
+      "recommendation": "CAUTION",
+      "score": 8,
+      "entry_price": 1702.5,
+      "entry_zone": "\u20b91586\u2013\u20b91702",
+      "stop": 1585.98,
+      "target": 2052.06,
+      "setup_type": "pullback",
+      "origin": "telegram_only",
+      "sources": [
+        "-1001729217563",
+        "-1001739800283"
+      ],
+      "styles": {
+        "minervini": true,
+        "weinstein_s2": true,
+        "turtle": false,
+        "qullamaggie": false
+      },
+      "acted_on": null,
+      "ret_5d": null,
+      "ret_20d": null,
+      "outcome": null,
+      "scored": false
+    },
+    {
+      "date": "2026-07-09",
+      "ticker": "PETRONET",
+      "recommendation": "CAUTION",
+      "score": 5,
+      "entry_price": 277.15,
+      "entry_zone": "\u20b9271\u2013\u20b9277",
+      "stop": 271.03,
+      "target": 295.51,
+      "setup_type": "pullback",
+      "origin": "telegram_only",
+      "sources": [
+        "-1001739800283"
+      ],
+      "styles": {
+        "minervini": false,
+        "weinstein_s2": true,
+        "turtle": false,
+        "qullamaggie": false
+      },
+      "acted_on": null,
+      "ret_5d": null,
+      "ret_20d": null,
+      "outcome": null,
+      "scored": false
+    },
+    {
+      "date": "2026-07-09",
+      "ticker": "M&M",
+      "recommendation": "AVOID",
+      "score": 3,
+      "entry_price": 3085.4,
+      "entry_zone": "\u20b92975\u2013\u20b93085",
+      "stop": 2974.81,
+      "target": 3417.17,
+      "setup_type": "pullback",
+      "origin": "twitter_only",
+      "sources": [
+        "anandchokshi19"
+      ],
+      "styles": {
+        "minervini": false,
+        "weinstein_s2": false,
+        "turtle": false,
+        "qullamaggie": false
+      },
+      "acted_on": null,
+      "ret_5d": null,
+      "ret_20d": null,
+      "outcome": null,
+      "scored": false
+    },
+    {
+      "date": "2026-07-09",
+      "ticker": "AXISBANK",
+      "recommendation": "AVOID",
+      "score": -1,
+      "entry_price": 1297.6,
+      "entry_zone": "\u20b91279\u2013\u20b91298",
+      "stop": 1279.28,
+      "target": 1352.56,
+      "setup_type": "pullback",
+      "origin": "twitter_only",
+      "sources": [
+        "anandchokshi19"
+      ],
+      "styles": {
+        "minervini": false,
+        "weinstein_s2": true,
+        "turtle": false,
+        "qullamaggie": false
+      },
+      "acted_on": null,
+      "ret_5d": null,
+      "ret_20d": null,
+      "outcome": null,
+      "scored": false
+    },
+    {
+      "date": "2026-07-09",
+      "ticker": "RELIANCE",
+      "recommendation": "AVOID",
+      "score": -3,
+      "entry_price": 1279.8,
+      "entry_zone": "\u20b91250\u2013\u20b91280",
+      "stop": 1249.88,
+      "target": 1369.56,
+      "setup_type": "pullback",
+      "origin": "twitter_only",
+      "sources": [
+        "anandchokshi19"
+      ],
+      "styles": {
+        "minervini": false,
+        "weinstein_s2": false,
+        "turtle": false,
+        "qullamaggie": false
+      },
+      "acted_on": null,
+      "ret_5d": null,
+      "ret_20d": null,
+      "outcome": null,
+      "scored": false
+    },
+    {
+      "date": "2026-07-09",
+      "ticker": "ITC",
+      "recommendation": "AVOID",
+      "score": -5,
+      "entry_price": 282.05,
+      "entry_zone": "\u20b9277\u2013\u20b9282",
+      "stop": 277.2,
+      "target": 296.6,
+      "setup_type": "pullback",
+      "origin": "telegram_only",
+      "sources": [
+        "-1001739800283"
+      ],
+      "styles": {
+        "minervini": false,
+        "weinstein_s2": false,
+        "turtle": false,
+        "qullamaggie": false
+      },
+      "acted_on": null,
+      "ret_5d": null,
+      "ret_20d": null,
+      "outcome": null,
+      "scored": false
+    },
+    {
+      "date": "2026-07-09",
+      "ticker": "DEEDEV",
+      "recommendation": "CAUTION",
+      "score": 4,
+      "entry_price": 677.5,
+      "entry_zone": "\u20b9627\u2013\u20b9678",
+      "stop": 626.67,
+      "target": 829.99,
+      "setup_type": "pullback",
+      "origin": "twitter_only",
+      "sources": [
+        "SureshKBN"
+      ],
+      "styles": {
+        "minervini": true,
+        "weinstein_s2": true,
+        "turtle": false,
+        "qullamaggie": false
+      },
+      "acted_on": null,
+      "ret_5d": null,
+      "ret_20d": null,
+      "outcome": null,
+      "scored": false
+    },
+    {
+      "date": "2026-07-09",
+      "ticker": "KOTAKBANK",
+      "recommendation": "AVOID",
+      "score": -4,
+      "entry_price": 377.15,
+      "entry_zone": "\u20b9365\u2013\u20b9377",
+      "stop": 364.72,
+      "target": 414.44,
+      "setup_type": "pullback",
+      "origin": "twitter_only",
+      "sources": [
+        "anandchokshi19"
+      ],
+      "styles": {
+        "minervini": false,
+        "weinstein_s2": false,
+        "turtle": false,
+        "qullamaggie": false
+      },
+      "acted_on": null,
+      "ret_5d": null,
+      "ret_20d": null,
+      "outcome": null,
+      "scored": false
+    },
+    {
+      "date": "2026-07-09",
+      "ticker": "SUZLON",
+      "recommendation": "AVOID",
+      "score": 0,
+      "entry_price": 53.7,
+      "entry_zone": "\u20b952\u2013\u20b954",
+      "stop": 52.18,
+      "target": 58.26,
+      "setup_type": "pullback",
+      "origin": "telegram_only",
+      "sources": [
+        "-1001729217563"
+      ],
+      "styles": {
+        "minervini": false,
+        "weinstein_s2": true,
+        "turtle": false,
+        "qullamaggie": false
+      },
+      "acted_on": null,
+      "ret_5d": null,
+      "ret_20d": null,
+      "outcome": null,
+      "scored": false
+    },
+    {
+      "date": "2026-07-09",
+      "ticker": "TCS",
+      "recommendation": "AVOID",
+      "score": -3,
+      "entry_price": 2049.5,
+      "entry_zone": "\u20b91957\u2013\u20b92050",
+      "stop": 1957.03,
+      "target": 2326.91,
+      "setup_type": "pullback",
+      "origin": "twitter_only",
+      "sources": [
+        "gaze_observer",
+        "nid_rockz"
+      ],
+      "styles": {
+        "minervini": false,
+        "weinstein_s2": false,
+        "turtle": false,
+        "qullamaggie": false
+      },
+      "acted_on": null,
+      "ret_5d": null,
+      "ret_20d": null,
+      "outcome": null,
+      "scored": false
+    },
+    {
+      "date": "2026-07-09",
+      "ticker": "BSE",
+      "recommendation": "AVOID",
+      "score": -3,
+      "entry_price": 3805.7,
+      "entry_zone": "\u20b93628\u2013\u20b93806",
+      "stop": 3627.61,
+      "target": 4339.97,
+      "setup_type": "pullback",
+      "origin": "telegram_only",
+      "sources": [
+        "-1001642892147"
+      ],
+      "styles": {
+        "minervini": true,
+        "weinstein_s2": true,
+        "turtle": false,
+        "qullamaggie": false
+      },
+      "acted_on": null,
+      "ret_5d": null,
+      "ret_20d": null,
+      "outcome": null,
+      "scored": false
+    },
+    {
+      "date": "2026-07-09",
+      "ticker": "STLTECH",
+      "recommendation": "CAUTION",
+      "score": 5,
+      "entry_price": 554.35,
+      "entry_zone": "\u20b9497\u2013\u20b9554",
+      "stop": 496.73,
+      "target": 727.21,
+      "setup_type": "pullback",
+      "origin": "twitter_only",
+      "sources": [
+        "SureshKBN"
+      ],
+      "styles": {
+        "minervini": true,
+        "weinstein_s2": true,
+        "turtle": false,
+        "qullamaggie": false
+      },
+      "acted_on": null,
+      "ret_5d": null,
+      "ret_20d": null,
+      "outcome": null,
+      "scored": false
+    },
+    {
+      "date": "2026-07-09",
+      "ticker": "VBL",
+      "recommendation": "AVOID",
+      "score": -6,
+      "entry_price": 481.4,
+      "entry_zone": "\u20b9467\u2013\u20b9481",
+      "stop": 467.38,
+      "target": 523.46,
+      "setup_type": "pullback",
+      "origin": "twitter_only",
+      "sources": [
+        "anandchokshi19"
+      ],
+      "styles": {
+        "minervini": false,
+        "weinstein_s2": true,
+        "turtle": false,
+        "qullamaggie": false
+      },
+      "acted_on": null,
+      "ret_5d": null,
+      "ret_20d": null,
+      "outcome": null,
+      "scored": false
+    },
+    {
+      "date": "2026-07-09",
+      "ticker": "OIL",
+      "recommendation": "AVOID",
+      "score": 0,
+      "entry_price": 423.05,
+      "entry_zone": "\u20b9404\u2013\u20b9423",
+      "stop": 404.44,
+      "target": 478.88,
+      "setup_type": "breakout",
+      "origin": "telegram_only",
+      "sources": [
+        "-1001729217563"
+      ],
+      "styles": {
+        "minervini": false,
+        "weinstein_s2": false,
+        "turtle": false,
+        "qullamaggie": false
+      },
+      "acted_on": null,
+      "ret_5d": null,
+      "ret_20d": null,
+      "outcome": null,
+      "scored": false
     }
   ],
   "stats": {},
-  "last_updated": "2026-07-09T10:25:14.482912",
+  "last_updated": "2026-07-09T10:53:24.748232",
   "last_scored": "2026-07-09"
 }
