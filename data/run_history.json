@@ -11,7 +11,8 @@
     "2026-07-01",
     "2026-07-02",
     "2026-07-03",
-    "2026-07-06"
+    "2026-07-06",
+    "2026-07-09"
   ],
   "tickers": {
     "FCL": {
@@ -842,12 +843,19 @@
           "score": 9,
           "price": 57.67,
           "rsi": 54.9
+        },
+        {
+          "date": "2026-07-09",
+          "recommendation": "AVOID",
+          "score": 0,
+          "price": 53.7,
+          "rsi": 39.9
         }
       ],
-      "consecutive_days": 4,
-      "last_seen": "2026-07-02",
-      "last_recommendation": "WATCH",
-      "last_score": 9
+      "consecutive_days": 1,
+      "last_seen": "2026-07-09",
+      "last_recommendation": "AVOID",
+      "last_score": 0
     },
     "BHARATCOAL": {
       "first_seen": "2026-06-25",
@@ -1728,12 +1736,19 @@
           "score": 3,
           "price": 3944.1,
           "rsi": 49.6
+        },
+        {
+          "date": "2026-07-09",
+          "recommendation": "AVOID",
+          "score": -3,
+          "price": 3805.7,
+          "rsi": 44.5
         }
       ],
-      "consecutive_days": 2,
-      "last_seen": "2026-07-01",
+      "consecutive_days": 1,
+      "last_seen": "2026-07-09",
       "last_recommendation": "AVOID",
-      "last_score": 3
+      "last_score": -3
     },
     "NATCOPHARM": {
       "first_seen": "2026-06-26",
@@ -2861,6 +2876,166 @@
       "last_seen": "2026-07-06",
       "last_recommendation": "AVOID",
       "last_score": -2
+    },
+    "GAUDIUMIVF": {
+      "first_seen": "2026-07-09",
+      "appearances": [
+        {
+          "date": "2026-07-09",
+          "recommendation": "BUY",
+          "score": 14,
+          "price": 119.18,
+          "rsi": 58.8
+        }
+      ],
+      "consecutive_days": 1,
+      "last_seen": "2026-07-09",
+      "last_recommendation": "BUY",
+      "last_score": 14
+    },
+    "WELSPUNLIV": {
+      "first_seen": "2026-07-09",
+      "appearances": [
+        {
+          "date": "2026-07-09",
+          "recommendation": "BUY",
+          "score": 14,
+          "price": 166.53,
+          "rsi": 60.1
+        }
+      ],
+      "consecutive_days": 1,
+      "last_seen": "2026-07-09",
+      "last_recommendation": "BUY",
+      "last_score": 14
+    },
+    "KALYANKJIL": {
+      "first_seen": "2026-07-09",
+      "appearances": [
+        {
+          "date": "2026-07-09",
+          "recommendation": "BUY",
+          "score": 14,
+          "price": 443.0,
+          "rsi": 69.8
+        }
+      ],
+      "consecutive_days": 1,
+      "last_seen": "2026-07-09",
+      "last_recommendation": "BUY",
+      "last_score": 14
+    },
+    "AZAD": {
+      "first_seen": "2026-07-09",
+      "appearances": [
+        {
+          "date": "2026-07-09",
+          "recommendation": "WATCH",
+          "score": 11,
+          "price": 2476.1,
+          "rsi": 72.7
+        }
+      ],
+      "consecutive_days": 1,
+      "last_seen": "2026-07-09",
+      "last_recommendation": "WATCH",
+      "last_score": 11
+    },
+    "VENUSREM": {
+      "first_seen": "2026-07-09",
+      "appearances": [
+        {
+          "date": "2026-07-09",
+          "recommendation": "CAUTION",
+          "score": 8,
+          "price": 1702.5,
+          "rsi": 52.8
+        }
+      ],
+      "consecutive_days": 1,
+      "last_seen": "2026-07-09",
+      "last_recommendation": "CAUTION",
+      "last_score": 8
+    },
+    "KAYNES": {
+      "first_seen": "2026-07-09",
+      "appearances": [
+        {
+          "date": "2026-07-09",
+          "recommendation": "CAUTION",
+          "score": 7,
+          "price": 3429.1,
+          "rsi": 57.5
+        }
+      ],
+      "consecutive_days": 1,
+      "last_seen": "2026-07-09",
+      "last_recommendation": "CAUTION",
+      "last_score": 7
+    },
+    "PETRONET": {
+      "first_seen": "2026-07-09",
+      "appearances": [
+        {
+          "date": "2026-07-09",
+          "recommendation": "CAUTION",
+          "score": 5,
+          "price": 277.15,
+          "rsi": 49.6
+        }
+      ],
+      "consecutive_days": 1,
+      "last_seen": "2026-07-09",
+      "last_recommendation": "CAUTION",
+      "last_score": 5
+    },
+    "TORNTPHARM": {
+      "first_seen": "2026-07-09",
+      "appearances": [
+        {
+          "date": "2026-07-09",
+          "recommendation": "CAUTION",
+          "score": 5,
+          "price": 4898.2,
+          "rsi": 76.9
+        }
+      ],
+      "consecutive_days": 1,
+      "last_seen": "2026-07-09",
+      "last_recommendation": "CAUTION",
+      "last_score": 5
+    },
+    "OIL": {
+      "first_seen": "2026-07-09",
+      "appearances": [
+        {
+          "date": "2026-07-09",
+          "recommendation": "AVOID",
+          "score": 0,
+          "price": 423.05,
+          "rsi": 42.7
+        }
+      ],
+      "consecutive_days": 1,
+      "last_seen": "2026-07-09",
+      "last_recommendation": "AVOID",
+      "last_score": 0
+    },
+    "ITC": {
+      "first_seen": "2026-07-09",
+      "appearances": [
+        {
+          "date": "2026-07-09",
+          "recommendation": "AVOID",
+          "score": -5,
+          "price": 282.05,
+          "rsi": 38.2
+        }
+      ],
+      "consecutive_days": 1,
+      "last_seen": "2026-07-09",
+      "last_recommendation": "AVOID",
+      "last_score": -5
     }
   }
 }
