@@ -12,7 +12,8 @@
     "2026-07-02",
     "2026-07-03",
     "2026-07-06",
-    "2026-07-09"
+    "2026-07-09",
+    "2026-07-10"
   ],
   "tickers": {
     "FCL": {
@@ -924,12 +925,19 @@
           "score": 8,
           "price": 1050.6,
           "rsi": 51.5
+        },
+        {
+          "date": "2026-07-10",
+          "recommendation": "BUY",
+          "score": 14,
+          "price": 1117.2,
+          "rsi": 67.3
         }
       ],
-      "consecutive_days": 2,
-      "last_seen": "2026-06-26",
-      "last_recommendation": "CAUTION",
-      "last_score": 8
+      "consecutive_days": 1,
+      "last_seen": "2026-07-10",
+      "last_recommendation": "BUY",
+      "last_score": 14
     },
     "ZENTEC": {
       "first_seen": "2026-06-25",
@@ -1095,10 +1103,17 @@
           "score": 10,
           "price": 2110.8,
           "rsi": 86.4
+        },
+        {
+          "date": "2026-07-10",
+          "recommendation": "WATCH",
+          "score": 10,
+          "price": 2221.2,
+          "rsi": 67.0
         }
       ],
-      "consecutive_days": 2,
-      "last_seen": "2026-06-27",
+      "consecutive_days": 1,
+      "last_seen": "2026-07-10",
       "last_recommendation": "WATCH",
       "last_score": 10
     },
@@ -1368,12 +1383,19 @@
           "score": 8,
           "price": 12013.0,
           "rsi": 53.9
+        },
+        {
+          "date": "2026-07-10",
+          "recommendation": "WATCH",
+          "score": 11,
+          "price": 13421.0,
+          "rsi": 67.5
         }
       ],
       "consecutive_days": 1,
-      "last_seen": "2026-06-26",
-      "last_recommendation": "CAUTION",
-      "last_score": 8
+      "last_seen": "2026-07-10",
+      "last_recommendation": "WATCH",
+      "last_score": 11
     },
     "OMPOWER": {
       "first_seen": "2026-06-25",
@@ -2026,12 +2048,19 @@
           "score": 5,
           "price": 201.76,
           "rsi": 47.6
+        },
+        {
+          "date": "2026-07-10",
+          "recommendation": "CAUTION",
+          "score": 8,
+          "price": 210.0,
+          "rsi": 55.7
         }
       ],
       "consecutive_days": 1,
-      "last_seen": "2026-06-29",
+      "last_seen": "2026-07-10",
       "last_recommendation": "CAUTION",
-      "last_score": 5
+      "last_score": 8
     },
     "AARTIDRUGS": {
       "first_seen": "2026-06-29",
@@ -2253,12 +2282,19 @@
           "score": 12,
           "price": 2035.9,
           "rsi": 53.7
+        },
+        {
+          "date": "2026-07-10",
+          "recommendation": "WATCH",
+          "score": 10,
+          "price": 2414.9,
+          "rsi": 67.1
         }
       ],
       "consecutive_days": 1,
-      "last_seen": "2026-06-30",
+      "last_seen": "2026-07-10",
       "last_recommendation": "WATCH",
-      "last_score": 12
+      "last_score": 10
     },
     "SOLARA": {
       "first_seen": "2026-06-30",
@@ -3027,12 +3063,19 @@
           "score": 8,
           "price": 1702.5,
           "rsi": 52.8
+        },
+        {
+          "date": "2026-07-10",
+          "recommendation": "CAUTION",
+          "score": 4,
+          "price": 1719.5,
+          "rsi": 54.0
         }
       ],
-      "consecutive_days": 1,
-      "last_seen": "2026-07-09",
+      "consecutive_days": 2,
+      "last_seen": "2026-07-10",
       "last_recommendation": "CAUTION",
-      "last_score": 8
+      "last_score": 4
     },
     "KAYNES": {
       "first_seen": "2026-07-09",
@@ -3254,12 +3297,19 @@
           "score": -3,
           "price": 2049.5,
           "rsi": 41.1
+        },
+        {
+          "date": "2026-07-10",
+          "recommendation": "AVOID",
+          "score": -4,
+          "price": 2069.0,
+          "rsi": 43.6
         }
       ],
-      "consecutive_days": 1,
-      "last_seen": "2026-07-09",
+      "consecutive_days": 2,
+      "last_seen": "2026-07-10",
       "last_recommendation": "AVOID",
-      "last_score": -3
+      "last_score": -4
     },
     "KOTAKBANK": {
       "first_seen": "2026-07-09",
@@ -3292,6 +3342,150 @@
       "last_seen": "2026-07-09",
       "last_recommendation": "AVOID",
       "last_score": -6
+    },
+    "EQUITASBNK": {
+      "first_seen": "2026-07-10",
+      "appearances": [
+        {
+          "date": "2026-07-10",
+          "recommendation": "BUY",
+          "score": 16,
+          "price": 82.24,
+          "rsi": 67.2
+        }
+      ],
+      "consecutive_days": 1,
+      "last_seen": "2026-07-10",
+      "last_recommendation": "BUY",
+      "last_score": 16
+    },
+    "GRAVITA": {
+      "first_seen": "2026-07-10",
+      "appearances": [
+        {
+          "date": "2026-07-10",
+          "recommendation": "WATCH",
+          "score": 12,
+          "price": 1854.6,
+          "rsi": 67.7
+        }
+      ],
+      "consecutive_days": 1,
+      "last_seen": "2026-07-10",
+      "last_recommendation": "WATCH",
+      "last_score": 12
+    },
+    "PAYTM": {
+      "first_seen": "2026-07-10",
+      "appearances": [
+        {
+          "date": "2026-07-10",
+          "recommendation": "WATCH",
+          "score": 10,
+          "price": 1341.8,
+          "rsi": 77.9
+        }
+      ],
+      "consecutive_days": 1,
+      "last_seen": "2026-07-10",
+      "last_recommendation": "WATCH",
+      "last_score": 10
+    },
+    "LLOYDSENGG": {
+      "first_seen": "2026-07-10",
+      "appearances": [
+        {
+          "date": "2026-07-10",
+          "recommendation": "WATCH",
+          "score": 9,
+          "price": 90.6,
+          "rsi": 61.8
+        }
+      ],
+      "consecutive_days": 1,
+      "last_seen": "2026-07-10",
+      "last_recommendation": "WATCH",
+      "last_score": 9
+    },
+    "TVSSCS": {
+      "first_seen": "2026-07-10",
+      "appearances": [
+        {
+          "date": "2026-07-10",
+          "recommendation": "WATCH",
+          "score": 9,
+          "price": 141.66,
+          "rsi": 63.0
+        }
+      ],
+      "consecutive_days": 1,
+      "last_seen": "2026-07-10",
+      "last_recommendation": "WATCH",
+      "last_score": 9
+    },
+    "BLUEJET": {
+      "first_seen": "2026-07-10",
+      "appearances": [
+        {
+          "date": "2026-07-10",
+          "recommendation": "CAUTION",
+          "score": 7,
+          "price": 624.05,
+          "rsi": 75.4
+        }
+      ],
+      "consecutive_days": 1,
+      "last_seen": "2026-07-10",
+      "last_recommendation": "CAUTION",
+      "last_score": 7
+    },
+    "PREMEXPLN": {
+      "first_seen": "2026-07-10",
+      "appearances": [
+        {
+          "date": "2026-07-10",
+          "recommendation": "CAUTION",
+          "score": 5,
+          "price": 687.5,
+          "rsi": 44.8
+        }
+      ],
+      "consecutive_days": 1,
+      "last_seen": "2026-07-10",
+      "last_recommendation": "CAUTION",
+      "last_score": 5
+    },
+    "ADANIPOWER": {
+      "first_seen": "2026-07-10",
+      "appearances": [
+        {
+          "date": "2026-07-10",
+          "recommendation": "AVOID",
+          "score": 1,
+          "price": 218.45,
+          "rsi": 42.9
+        }
+      ],
+      "consecutive_days": 1,
+      "last_seen": "2026-07-10",
+      "last_recommendation": "AVOID",
+      "last_score": 1
+    },
+    "IEX": {
+      "first_seen": "2026-07-10",
+      "appearances": [
+        {
+          "date": "2026-07-10",
+          "recommendation": "AVOID",
+          "score": 0,
+          "price": 119.64,
+          "rsi": 40.9
+        }
+      ],
+      "consecutive_days": 1,
+      "last_seen": "2026-07-10",
+      "last_recommendation": "AVOID",
+      "last_score": 0
     }
   }
 }
